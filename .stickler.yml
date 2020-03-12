@@ -1,0 +1,13 @@
+linters:
+  eslint:
+    config: './.eslintrc.json'
+    rubocop:
+      display_cop_names: true
+  files:
+    ignore:
+      - "bin/*"
+      - "db/*"
+      - "config/*"
+      - "Guardfile"
+      - "Rakefile"
+      - "vendor/cache/**/*"
