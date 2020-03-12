@@ -1,6 +1,9 @@
 linters:
+  eslint:
+    config: './.eslintrc.json'
   rubocop:
     display_cop_names: true
+    config: './rubocop.yml'
 files:
   ignore:
     - "bin/*"
