@@ -12,3 +12,4 @@ files:
     - "Guardfile"
     - "Rakefile"
     - "vendor/cache/**/*"
+    - "node_modules/**/*"
