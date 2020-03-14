@@ -4,19 +4,20 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Logo from '../assets/logo.png';
 
-class SigninForm extends React.Component {
+class SignupForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       email: '',
       password: '',
+      repeat: '',
     };
   }
 
   handleSubmit = event => {
     event.preventDefault();
-    const { email, password } = this.state;
-    axios.get(`v1/signin?email=${email}&password=${password}`)
+    const { email, password, repeat } = this.state;
+    axios.get(`v1/signup?email=${email}&password=${password}&repeat=${repeat}`)
       .then(response => {
         console.log(response.data);
       })
@@ -31,12 +32,14 @@ class SigninForm extends React.Component {
   }
 
   render() {
-    const { email, password } = this.state;
+    const { email, password, repeat } = this.state;
+    const equal = password === repeat;
     return (
-      <form className="sign-in-form" onSubmit={this.handleSubmit}>
+      <form className="sign-up-form" onSubmit={this.handleSubmit}>
         <img src={Logo} alt="logo" className="logo" />
         <i className="fas fa-envelope" />
         <i className="fas fa-lock" />
+        <i className="fas fa-lock repeat" />
         <input
           type="email"
           name="email"
@@ -54,11 +57,21 @@ class SigninForm extends React.Component {
           onChange={this.handleChange}
           required
         />
-        <button type="submit">Sign In</button>
-        <Link className="link" to="/signup">Or create a new account!</Link>
+
+        <input
+          type="password"
+          name="repeat"
+          value={repeat}
+          placeholder="Repeat password"
+          onChange={this.handleChange}
+          required
+        />
+        {equal ? '' : <div className="invalid">Passwords do not match.</div>}
+        <button type="submit">Sign Up</button>
+        <Link className="link" to="/">Already have an account?</Link>
       </form>
     );
   }
 }
 
-export default connect(null, null)(SigninForm);
+export default connect(null, null)(SignupForm);

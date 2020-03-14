@@ -1,5 +1,5 @@
 class V1::SessionsController < ApplicationController
   def sign_in
-    render json: { id: params[:id] }
+    render json: { email: params[:email], password: params[:password] }
   end
 end
