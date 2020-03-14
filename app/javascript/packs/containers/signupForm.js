@@ -17,11 +17,13 @@ class SignupForm extends React.Component {
   handleSubmit = event => {
     event.preventDefault();
     const { email, password, repeat } = this.state;
-    axios.get(`v1/signup?email=${email}&password=${password}&repeat=${repeat}`)
-      .then(response => {
-        console.log(response.data);
-      })
-      .catch(error => console.log(error));
+    if (password === repeat) {
+      axios.get(`v1/signup?email=${email}&password_digest=${password}&repeat=${repeat}`)
+        .then(response => {
+          console.log(response);
+        })
+        .catch(error => console.log(error));
+    }
   }
 
   handleChange = event => {
