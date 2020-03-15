@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import axios from 'axios';
 import Logo from '../assets/logo.png';
 
@@ -61,4 +61,4 @@ class SigninForm extends React.Component {
   }
 }
 
-export default connect(null, null)(SigninForm);
+export default withRouter(connect(null, null)(SigninForm));

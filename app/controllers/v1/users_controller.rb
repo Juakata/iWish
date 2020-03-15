@@ -7,12 +7,12 @@ class V1::UsersController < ApplicationController
                       token_digest: token)
       if @user.save
         cookies.permanent[:remember_token] = token
-        render json: { result: true }
+        render json: { result: "created" }
       else
-        render json: @user.errors, status: :unprocessable_entity
+        render json: { @user.errors, result: "user_errors" } 
       end
     else
-      render json: { result: "Passwords do not match." }
+      render json: { result: "bad_passwords" }
     end
   end
 end

@@ -1,6 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import {
+  Link, withRouter,
+} from 'react-router-dom';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 import Logo from '../assets/logo.png';
 
@@ -11,18 +14,22 @@ class SignupForm extends React.Component {
       email: '',
       password: '',
       repeat: '',
+      error: '',
     };
   }
 
   handleSubmit = event => {
     event.preventDefault();
     const { email, password, repeat } = this.state;
+    const { history } = this.props;
     if (password === repeat) {
       axios.get(`v1/signup?email=${email}&password_digest=${password}&repeat=${repeat}`)
         .then(response => {
-          console.log(response);
+          if (response.data.result) {
+            history.push('/home');
+          }
         })
-        .catch(error => console.log(error));
+        .catch(error => this.setState({ error }));
     }
   }
 
@@ -34,7 +41,9 @@ class SignupForm extends React.Component {
   }
 
   render() {
-    const { email, password, repeat } = this.state;
+    const {
+      email, password, repeat, error,
+    } = this.state;
     const equal = password === repeat;
     return (
       <form className="sign-up-form" onSubmit={this.handleSubmit}>
@@ -69,6 +78,7 @@ class SignupForm extends React.Component {
           required
         />
         {equal ? '' : <div className="invalid">Passwords do not match.</div>}
+        {error === '' ? '' : <p>{error}</p>}
         <button type="submit">Sign Up</button>
         <Link className="link" to="/">Already have an account?</Link>
       </form>
@@ -76,4 +86,8 @@ class SignupForm extends React.Component {
   }
 }
 
-export default connect(null, null)(SignupForm);
+SignupForm.propTypes = {
+  history: PropTypes.arrayOf(PropTypes.string).isRequired,
+};
+
+export default withRouter(connect(null, null)(SignupForm));

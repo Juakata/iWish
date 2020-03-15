@@ -1,7 +1,7 @@
 class User < ApplicationRecord
   before_save :encrypt_user
-  validates :email, presence: true
-  validates :password_digest, presence: true
+  validates :email, presence: true, uniqueness: { case_sensitive: false }
+  validates :password_digest, presence: true, length: { minumum: 8 }
 
   def self.digest(string)
     cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST : BCrypt::Engine.cost
