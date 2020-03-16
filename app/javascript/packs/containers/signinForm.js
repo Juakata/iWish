@@ -60,31 +60,33 @@ class SigninForm extends React.Component {
   render() {
     const { email, password, error } = this.state;
     return (
-      <form className="sign-in-form" onSubmit={this.handleSubmit}>
-        <img src={Logo} alt="logo" className="logo" />
-        <i className="fas fa-envelope" />
-        <i className="fas fa-lock" />
-        <input
-          type="email"
-          name="email"
-          value={email}
-          placeholder="Email"
-          onChange={this.handleChange}
-          required
-        />
+      <div className="background">
+        <form className="sign-in-form" onSubmit={this.handleSubmit}>
+          <img src={Logo} alt="logo" className="logo" />
+          <i className="fas fa-envelope" />
+          <i className="fas fa-lock" />
+          <input
+            type="email"
+            name="email"
+            value={email}
+            placeholder="Email"
+            onChange={this.handleChange}
+            required
+          />
 
-        <input
-          type="password"
-          name="password"
-          value={password}
-          placeholder="Password"
-          onChange={this.handleChange}
-          required
-        />
-        {error === '' ? '' : <p className="invalid">{error}</p>}
-        <button type="submit">Sign In</button>
-        <Link className="link" to="/signup">Or create a new account!</Link>
-      </form>
+          <input
+            type="password"
+            name="password"
+            value={password}
+            placeholder="Password"
+            onChange={this.handleChange}
+            required
+          />
+          {error === '' ? '' : <p className="invalid">{error}</p>}
+          <button type="submit">Sign In</button>
+          <Link className="link" to="/signup">Or create a new account!</Link>
+        </form>
+      </div>
     );
   }
 }

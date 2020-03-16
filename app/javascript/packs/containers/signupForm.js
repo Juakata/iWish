@@ -70,41 +70,43 @@ class SignupForm extends React.Component {
       email, password, repeat, error,
     } = this.state;
     return (
-      <form className="sign-up-form" onSubmit={this.handleSubmit}>
-        <img src={Logo} alt="logo" className="logo" />
-        <i className="fas fa-envelope" />
-        <i className="fas fa-lock" />
-        <i className="fas fa-lock repeat" />
-        <input
-          type="email"
-          name="email"
-          value={email}
-          placeholder="Email"
-          onChange={this.handleChange}
-          required
-        />
+      <div className="background">
+        <form className="sign-up-form" onSubmit={this.handleSubmit}>
+          <img src={Logo} alt="logo" className="logo" />
+          <i className="fas fa-envelope" />
+          <i className="fas fa-lock" />
+          <i className="fas fa-lock repeat" />
+          <input
+            type="email"
+            name="email"
+            value={email}
+            placeholder="Email"
+            onChange={this.handleChange}
+            required
+          />
 
-        <input
-          type="password"
-          name="password"
-          value={password}
-          placeholder="Password"
-          onChange={this.handleChange}
-          required
-        />
+          <input
+            type="password"
+            name="password"
+            value={password}
+            placeholder="Password"
+            onChange={this.handleChange}
+            required
+          />
 
-        <input
-          type="password"
-          name="repeat"
-          value={repeat}
-          placeholder="Repeat password"
-          onChange={this.handleChange}
-          required
-        />
-        {error === '' ? '' : <p className="invalid">{error}</p>}
-        <button type="submit">Sign Up</button>
-        <Link className="link" to="/">Already have an account?</Link>
-      </form>
+          <input
+            type="password"
+            name="repeat"
+            value={repeat}
+            placeholder="Repeat password"
+            onChange={this.handleChange}
+            required
+          />
+          {error === '' ? '' : <p className="invalid">{error}</p>}
+          <button type="submit">Sign Up</button>
+          <Link className="link" to="/">Already have an account?</Link>
+        </form>
+      </div>
     );
   }
 }
