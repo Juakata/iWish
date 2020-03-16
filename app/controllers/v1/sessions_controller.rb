@@ -5,10 +5,10 @@ class V1::SessionsController < ApplicationController
       if user.authenticate_token(params[:token])
         render json: { email: user.email }
       else
-        render json: { result: 'unverified' }
+        render json: { result: 'unverified' }, status: 404
       end
     else
-      render json: { result: 'Unable to find an account.' }
+      render json: { result: 'Unable to find an account.' }, status: 404
     end
   end
 
@@ -18,10 +18,10 @@ class V1::SessionsController < ApplicationController
       if user.authenticate_password(params[:password])
         log_in(user)
       else
-        render json: { result: 'Unable to verified account.' }
+        render json: { result: 'Unable to verified account.' }, status: :unprocessable_entity
       end
     else
-      render json: { result: 'Unable to find an account.' }
+      render json: { result: 'Unable to find an account.' }, status: 404
     end
   end
 
