@@ -3,7 +3,7 @@ class V1::SessionsController < ApplicationController
     user = User.find(params[:id])
     if user
       if user.authenticate_token(params[:token])
-        log_in(user)
+        render json: { email: user.email }
       else
         render json: { result: 'unverified' }
       end

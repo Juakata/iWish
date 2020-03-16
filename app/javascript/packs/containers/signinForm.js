@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { Link, withRouter } from 'react-router-dom';
 import axios from 'axios';
 import Logo from '../assets/logo.png';
+import { createSession } from '../actions/index';
 
 class SigninForm extends React.Component {
   constructor(props) {
@@ -17,7 +18,7 @@ class SigninForm extends React.Component {
 
   componentDidMount() {
     const decodedCookie = decodeURIComponent(document.cookie);
-    const { history } = this.props;
+    const { history, createSession } = this.props;
     if (decodedCookie !== '') {
       const ca = decodedCookie.split(';');
       const id = ca[0].split('=')[1];
@@ -25,6 +26,7 @@ class SigninForm extends React.Component {
       axios.get(`v1/autosignin?id=${id}&token=${token}`)
         .then(response => {
           if (response.data.email) {
+            createSession(response.data.email);
             history.push('/home');
           }
         })
@@ -35,10 +37,11 @@ class SigninForm extends React.Component {
   handleSubmit = event => {
     event.preventDefault();
     const { email, password } = this.state;
-    const { history } = this.props;
+    const { history, createSession } = this.props;
     axios.get(`v1/signin?email=${email}&password=${password}`)
       .then(response => {
         if (response.data.email) {
+          createSession(response.data.email);
           history.push('/home');
         } else {
           this.setState({ error: response.data.result });
@@ -88,6 +91,11 @@ class SigninForm extends React.Component {
 
 SigninForm.propTypes = {
   history: PropTypes.instanceOf(Object).isRequired,
+  createSession: PropTypes.func.isRequired,
 };
 
-export default withRouter(connect(null, null)(SigninForm));
+const mapDispatchToProps = dispatch => ({
+  createSession: user => dispatch(createSession(user)),
+});
+
+export default withRouter(connect(null, mapDispatchToProps)(SigninForm));

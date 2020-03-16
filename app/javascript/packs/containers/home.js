@@ -25,9 +25,11 @@ class Home extends React.Component {
 
   render() {
     const { test } = this.state;
+    const { session } = this.props;
     return (
       <div>
         <h1>{test}</h1>
+        <h1>{session}</h1>
         <button type="button" onClick={this.signout}>Sign Out</button>
       </div>
     );
@@ -36,6 +38,11 @@ class Home extends React.Component {
 
 Home.propTypes = {
   history: PropTypes.instanceOf(Object).isRequired,
+  session: PropTypes.string.isRequired,
 };
 
-export default withRouter(connect(null, null)(Home));
+const mapStateToProps = state => ({
+  session: state.session,
+});
+
+export default withRouter(connect(mapStateToProps, null)(Home));

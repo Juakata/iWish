@@ -6,6 +6,7 @@ import {
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import Logo from '../assets/logo.png';
+import { createSession } from '../actions/index';
 
 class SignupForm extends React.Component {
   constructor(props) {
@@ -21,12 +22,13 @@ class SignupForm extends React.Component {
   handleSubmit = event => {
     event.preventDefault();
     const { email, password, repeat } = this.state;
-    const { history } = this.props;
+    const { history, createSession } = this.props;
     if (password === repeat) {
       axios.get(`v1/signup?email=${email}&password_digest=${password}&repeat=${repeat}`)
         .then(response => {
           switch (response.data.result) {
             case 'created':
+              createSession(response.data.email);
               history.push('/home');
               break;
             case 'user_errors':
@@ -51,6 +53,11 @@ class SignupForm extends React.Component {
     this.setState({
       [name]: value,
     });
+    if (name === 'password') {
+      this.setState(state => ({
+        error: state.password.length < 8 ? 'Passwords is too short' : '',
+      }));
+    }
     if (name === 'repeat') {
       this.setState(state => ({
         error: state.password === state.repeat ? '' : 'Passwords do not match',
@@ -104,6 +111,11 @@ class SignupForm extends React.Component {
 
 SignupForm.propTypes = {
   history: PropTypes.instanceOf(Object).isRequired,
+  createSession: PropTypes.func.isRequired,
 };
 
-export default withRouter(connect(null, null)(SignupForm));
+const mapDispatchToProps = dispatch => ({
+  createSession: user => dispatch(createSession(user)),
+});
+
+export default withRouter(connect(null, mapDispatchToProps)(SignupForm));
