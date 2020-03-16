@@ -6,28 +6,28 @@ RSpec.describe V1::SessionsController, type: :controller do
   let(:valid_attributes) do
     {
       email: 'uzquiano@gmail.com',
-      password: '12345678',
+      password: '12345678'
     }
   end
 
   let(:invalid_attributes) do
     {
       email: 'uzquiano@gmail.com',
-      password: '45678',
+      password: '45678'
     }
   end
 
   let(:valid_attributes_auto) do
     {
       id: 1,
-      token: 'token',
+      token: 'token'
     }
   end
 
   let(:invalid_attributes_auto) do
     {
       id: 1,
-      token: 'asds',
+      token: 'asds'
     }
   end
 

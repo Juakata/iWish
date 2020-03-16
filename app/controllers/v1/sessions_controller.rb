@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class V1::SessionsController < ApplicationController
   def auto_sign_in
     user = User.find(params[:id])
