@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   namespace :v1, defaults: { format: 'json' } do
     get 'signin', to: 'sessions#sign_in'
+    get 'signout', to: 'sessions#sign_out'
+    get 'autosignin', to: 'sessions#auto_sign_in'
     get 'signup', to: 'users#create'
   end
 

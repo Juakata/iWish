@@ -25,8 +25,21 @@ class SignupForm extends React.Component {
     if (password === repeat) {
       axios.get(`v1/signup?email=${email}&password_digest=${password}&repeat=${repeat}`)
         .then(response => {
-          if (response.data.result) {
-            history.push('/home');
+          switch (response.data.result) {
+            case 'created':
+              history.push('/home');
+              break;
+            case 'user_errors':
+              if (response.data.user.password_digest) {
+                this.setState({ error: `Password ${response.data.user.password_digest}` });
+              } else {
+                this.setState({ error: 'Email has been already used.' });
+              }
+              break;
+            case 'bad_passwords':
+              this.setState({ error: 'Passwords did not match.' });
+              break;
+            default:
           }
         })
         .catch(error => this.setState({ error }));
@@ -38,13 +51,17 @@ class SignupForm extends React.Component {
     this.setState({
       [name]: value,
     });
+    if (name === 'repeat') {
+      this.setState(state => ({
+        error: state.password === state.repeat ? '' : 'Passwords do not match',
+      }));
+    }
   }
 
   render() {
     const {
       email, password, repeat, error,
     } = this.state;
-    const equal = password === repeat;
     return (
       <form className="sign-up-form" onSubmit={this.handleSubmit}>
         <img src={Logo} alt="logo" className="logo" />
@@ -77,8 +94,7 @@ class SignupForm extends React.Component {
           onChange={this.handleChange}
           required
         />
-        {equal ? '' : <div className="invalid">Passwords do not match.</div>}
-        {error === '' ? '' : <p>{error}</p>}
+        {error === '' ? '' : <p className="invalid">{error}</p>}
         <button type="submit">Sign Up</button>
         <Link className="link" to="/">Already have an account?</Link>
       </form>
@@ -87,7 +103,7 @@ class SignupForm extends React.Component {
 }
 
 SignupForm.propTypes = {
-  history: PropTypes.arrayOf(PropTypes.string).isRequired,
+  history: PropTypes.instanceOf(Object).isRequired,
 };
 
 export default withRouter(connect(null, null)(SignupForm));

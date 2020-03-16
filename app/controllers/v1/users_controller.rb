@@ -5,11 +5,13 @@ class V1::UsersController < ApplicationController
       @user = User.new(email: params[:email],
                       password_digest: params[:password_digest],
                       token_digest: token)
+      @user.encrypt_user
       if @user.save
+        cookies.permanent[:user_id] = @user.id
         cookies.permanent[:remember_token] = token
-        render json: { result: "created" }
+        render json: { result: "created", email: @user.email }
       else
-        render json: { @user.errors, result: "user_errors" } 
+        render json: { user: @user.errors, result: "user_errors" }
       end
     else
       render json: { result: "bad_passwords" }

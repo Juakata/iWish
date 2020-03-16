@@ -119,5 +119,10 @@ body {
 }
 
 .invalid {
-  color: red;
+  margin: 0;
+  width: 100%;
+  background: red;
+  color: white;
+  padding: 5px;
+  border-radius: 5px;
 }

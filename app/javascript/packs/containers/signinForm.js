@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { Link, withRouter } from 'react-router-dom';
 import axios from 'axios';
 import Logo from '../assets/logo.png';
@@ -10,17 +11,40 @@ class SigninForm extends React.Component {
     this.state = {
       email: '',
       password: '',
+      error: '',
     };
+  }
+
+  componentDidMount() {
+    const decodedCookie = decodeURIComponent(document.cookie);
+    const { history } = this.props;
+    if (decodedCookie !== '') {
+      const ca = decodedCookie.split(';');
+      const id = ca[0].split('=')[1];
+      const token = ca[1].split('=')[1];
+      axios.get(`v1/autosignin?id=${id}&token=${token}`)
+        .then(response => {
+          if (response.data.email) {
+            history.push('/home');
+          }
+        })
+        .catch(error => this.setState({ error }));
+    }
   }
 
   handleSubmit = event => {
     event.preventDefault();
     const { email, password } = this.state;
+    const { history } = this.props;
     axios.get(`v1/signin?email=${email}&password=${password}`)
       .then(response => {
-        console.log(response.data);
+        if (response.data.email) {
+          history.push('/home');
+        } else {
+          this.setState({ error: response.data.result });
+        }
       })
-      .catch(error => console.log(error));
+      .catch(error => this.setState({ error }));
   }
 
   handleChange = event => {
@@ -31,7 +55,7 @@ class SigninForm extends React.Component {
   }
 
   render() {
-    const { email, password } = this.state;
+    const { email, password, error } = this.state;
     return (
       <form className="sign-in-form" onSubmit={this.handleSubmit}>
         <img src={Logo} alt="logo" className="logo" />
@@ -54,11 +78,16 @@ class SigninForm extends React.Component {
           onChange={this.handleChange}
           required
         />
+        {error === '' ? '' : <p className="invalid">{error}</p>}
         <button type="submit">Sign In</button>
         <Link className="link" to="/signup">Or create a new account!</Link>
       </form>
     );
   }
 }
+
+SigninForm.propTypes = {
+  history: PropTypes.instanceOf(Object).isRequired,
+};
 
 export default withRouter(connect(null, null)(SigninForm));
