@@ -20,10 +20,10 @@ class V1::SessionsController < ApplicationController
       if user.authenticate_password(params[:password])
         log_in(user)
       else
-        render json: { result: 'Unable to verified account.' }, status: :unprocessable_entity
+        render json: { result: 'Unable to verify account.' }
       end
     else
-      render json: { result: 'Unable to find an account.' }, status: 404
+      render json: { result: 'Unable to find an account.' }
     end
   end
 

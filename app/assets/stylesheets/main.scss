@@ -29,9 +29,42 @@ body {
   padding: 0;
 }
 
+header {
+  background: #6e3c00;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 50% 50%;
+  box-shadow: 1px 0 10px black;
+}
+
+header ul {
+  list-style: none;
+  margin: 0;
+  padding: 20px 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+#ul-signout {
+  justify-content: flex-end;
+}
+
+.btn-out {
+  cursor: pointer;
+  background: transparent;
+  border: none;
+}
+
 ::placeholder {
   color: #ffffff;
   opacity: 1;
+}
+
+.i-header {
+  font-size: 25px;
+  width: 100%;
+  text-align: center;
 }
 
 .background {
@@ -49,6 +82,10 @@ body {
   right: 0;
   margin: auto;
   width: 200px;
+}
+
+.logoHome {
+  width: 100px;
 }
 
 .sign-in-form, .sign-up-form {
