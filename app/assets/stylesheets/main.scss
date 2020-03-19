@@ -124,7 +124,7 @@ header ul {
   transform: translateY(37%);
 }
 
-.fa-envelope, .fa-lock {
+.fa-envelope, .fa-lock, .my-user-icon {
   position: absolute;
   left: 50px;
   font-size: 22px;
@@ -138,6 +138,22 @@ header ul {
 
 .fa-lock {
   top: 200px;
+}
+
+.profile-icon {
+  position: absolute;
+  left: 25px;
+  font-size: 24px;
+  color: #ffffff;
+  text-shadow: 1px 1px 3px black;
+}
+
+.profile-i-user {
+  top: 205px;
+}
+
+.profile-i-date {
+  top: 285px;
 }
 
 .repeat {
@@ -194,4 +210,58 @@ header ul {
   color: white;
   padding: 5px;
   border-radius: 5px;
+}
+
+.profile-form {
+  position: relative;
+  text-align: center;
+  display: grid;
+  grid-gap: 30px;
+  justify-items: center;
+}
+
+.profile-form input{
+  width: 100%;
+  color: #ffffff;
+  font-weight: bold;
+  background: RGBA(69, 47, 0, .5);
+  border: none;
+  font-size: 20px;
+  border-radius: 20px;
+  padding: 10px 60px;
+  border-bottom: 2px white solid;
+}
+
+.profile-form button{
+  width: 40%;
+  background: #f5bc42;
+  border: none;
+  box-shadow: 1px 1px 3px black;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 17px;
+  color: white;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px black;
+  cursor: pointer;
+}
+
+.profile-form button:hover{
+  background: #fff;
+  color: #f5bc42;
+  text-shadow: none;
+  box-shadow: -1px -1px 3px black;
+}
+
+.lookIcon {
+  width: 165px;
+  height: 165px;
+  border-radius: 50%;
+  border: 3px solid white;
+  cursor: pointer;
+  transition: transform .5s;
+}
+
+.lookIcon:hover {
+  transform: scale(1.1);
 }

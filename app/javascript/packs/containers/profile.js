@@ -4,13 +4,15 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Header from '../components/header';
 import Logo from '../assets/logo.png';
+import Face from '../assets/bakiFace.png';
 import { destroySession } from '../actions/index';
 
 class Profile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      test: 'Profile ',
+      name: '',
+      date: '1995-03-12',
     };
   }
 
@@ -28,15 +30,47 @@ class Profile extends React.Component {
     }
   }
 
+  handleSubmit = event => {
+    event.preventDefault();
+    const { name } = this.state;
+    console.log(name);
+  }
+
+  handleChange = event => {
+    const { name, value } = event.target;
+    this.setState({
+      [name]: value,
+    });
+  }
+
   render() {
-    const { test } = this.state;
-    const { session, destroySession } = this.props;
+    const { name, date } = this.state;
+    const { destroySession } = this.props;
     return (
       <div>
         <Header source={Logo} out={destroySession} />
         <div className="container">
-          <span>{test}</span>
-          <span>{session}</span>
+          <form className="profile-form" onSubmit={this.handleSubmit}>
+            <i className="fas fa-user profile-icon profile-i-user" />
+            <i className="fas fa-calendar profile-icon profile-i-date" />
+            <img src={Face} className="lookIcon" alt="Icon" />
+            <input
+              type="text"
+              name="name"
+              value={name}
+              placeholder="Name"
+              onChange={this.handleChange}
+              required
+            />
+            <input
+              type="date"
+              name="date"
+              value={date}
+              onChange={this.handleChange}
+              required
+            />
+            <button type="submit">Save</button>
+          </form>
         </div>
       </div>
     );
