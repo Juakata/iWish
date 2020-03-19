@@ -62,7 +62,8 @@ RSpec.describe V1::SessionsController, type: :controller do
       it 'should not let the user sign in' do
         create(:user)
         get :sign_in, params: invalid_attributes
-        expect(response).to have_http_status(:unprocessable_entity)
+        expected = { result: 'Unable to verify account.' }.to_json
+        expect(response.body).to eq(expected)
       end
     end
   end
