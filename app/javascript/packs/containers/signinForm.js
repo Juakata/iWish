@@ -18,8 +18,14 @@ class SigninForm extends React.Component {
 
   componentDidMount() {
     const decodedCookie = decodeURIComponent(document.cookie);
-    const { history, createSession } = this.props;
-    if (decodedCookie !== '') {
+    const { history, createSession, session } = this.props;
+    if (session !== 'destroy' && session !== '') {
+      history.push('/home');
+    } else if (session === 'destroy') {
+      axios.get('v1/signout')
+        .then(() => {})
+        .catch(() => {});
+    } else if (decodedCookie !== '') {
       const ca = decodedCookie.split(';');
       const id = ca[0].split('=')[1];
       const token = ca[1].split('=')[1];
@@ -94,10 +100,15 @@ class SigninForm extends React.Component {
 SigninForm.propTypes = {
   history: PropTypes.instanceOf(Object).isRequired,
   createSession: PropTypes.func.isRequired,
+  session: PropTypes.string.isRequired,
 };
+
+const mapStateToProps = state => ({
+  session: state.session,
+});
 
 const mapDispatchToProps = dispatch => ({
   createSession: user => dispatch(createSession(user)),
 });
 
-export default withRouter(connect(null, mapDispatchToProps)(SigninForm));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SigninForm));

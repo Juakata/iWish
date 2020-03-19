@@ -6,11 +6,11 @@ import Header from '../components/header';
 import Logo from '../assets/logo.png';
 import { destroySession } from '../actions/index';
 
-class Home extends React.Component {
+class Events extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      test: 'Home ',
+      test: 'Events ',
     };
   }
 
@@ -43,7 +43,7 @@ class Home extends React.Component {
   }
 }
 
-Home.propTypes = {
+Events.propTypes = {
   history: PropTypes.instanceOf(Object).isRequired,
   session: PropTypes.string.isRequired,
   destroySession: PropTypes.func.isRequired,
@@ -57,4 +57,4 @@ const mapDispatchToProps = dispatch => ({
   destroySession: () => dispatch(destroySession()),
 });
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Home));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Events));

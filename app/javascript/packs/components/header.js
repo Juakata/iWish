@@ -4,34 +4,44 @@ import PropTypes from 'prop-types';
 
 const Header = ({ source, out }) => (
   <header>
-    <ul>
+    <ul id="ul-home">
       <li>
         <Link className="link" to="/home">
           <img src={source} alt="logo" className="logoHome" />
         </Link>
       </li>
+    </ul>
+    <ul>
       <li>
-        <Link className="link" to="/home">
-          <i className="fas fa-user i-header" />
-          <p>Profile</p>
+        <Link className="link" to="/profile">
+          <div>
+            <i className="fas fa-user i-header" />
+            <p>Profile</p>
+          </div>
         </Link>
       </li>
       <li>
-        <Link className="link" to="/home">
-          <i className="fas fa-calendar-alt i-header" />
-          <p>Events</p>
+        <Link className="link" to="/events">
+          <div>
+            <i className="fas fa-calendar-alt i-header" />
+            <p>Events</p>
+          </div>
         </Link>
       </li>
       <li>
-        <Link className="link" to="/home">
-          <i className="fas fa-users i-header" />
-          <p>Groups</p>
+        <Link className="link" to="/groups">
+          <div>
+            <i className="fas fa-users i-header" />
+            <p>Groups</p>
+          </div>
         </Link>
       </li>
       <li>
-        <Link className="link" to="/home">
-          <i className="fas fa-user-friends i-header" />
-          <p>Friends</p>
+        <Link className="link" to="/friends">
+          <div>
+            <i className="fas fa-user-friends i-header" />
+            <p>Friends</p>
+          </div>
         </Link>
       </li>
     </ul>
