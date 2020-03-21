@@ -20,6 +20,7 @@ select:-webkit-autofill:hover,
 select:-webkit-autofill:focus {
   border-bottom: solid black 1px;
   -webkit-text-fill-color: white;
+  -webkit-text-size: 20px;
   -webkit-box-shadow: 0 0 0px 1000px transparent inset;
   transition: background-color 5000s ease-in-out 0s;
 }
@@ -54,6 +55,19 @@ header ul {
 #ul-signout {
   justify-content: flex-end;
   clip-path: polygon(20% 0%, 80% 0%, 100% 0, 100% 86%, 68% 100%, 31% 100%, 0 100%, 0 0);
+}
+
+#img-btn {
+  background: transparent;
+  padding: 0;
+  width: auto;
+  border-radius: 50%;
+  box-shadow: none;
+  padding: 5px 5px 0 5px;
+}
+
+#img-btn:hover {
+  box-shadow: 0 0 5px black;
 }
 
 .container {
@@ -149,11 +163,11 @@ header ul {
 }
 
 .profile-i-user {
-  top: 205px;
+  top: 213px;
 }
 
-.profile-i-date {
-  top: 285px;
+.profile-i-birthday {
+  top: 293px;
 }
 
 .repeat {
@@ -262,6 +276,40 @@ header ul {
   transition: transform .5s;
 }
 
-.lookIcon:hover {
-  transform: scale(1.1);
+.cover-img-selector {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: RGBA(0, 0, 0, .3);
+  z-index: 1;
+  padding: 20px;
+}
+
+.imagesSelector {
+  background: #fff0d6;
+  max-width: 900px;
+  margin: 0 auto;
+  margin-top: 10vh;
+  height: 80vh;
+  padding: 10px;
+  border-radius: 20px;
+  box-shadow: 0 0 5px black;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  overflow: auto;
+}
+
+.img-btn-selector {
+  background: transparent;
+  padding: 0;
+  border: none;
+  width: auto;
+  border-radius: 50%;
+  box-shadow: none;
+}
+
+.img-btn-selector:hover {
+  background: RGBA(240, 152, 0, .3);
 }
