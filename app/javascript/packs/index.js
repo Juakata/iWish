@@ -7,6 +7,7 @@ import rootReducer from './reducers/index';
 
 const data = {
   session: '',
+  profile: {},
 };
 
 const store = createStore(rootReducer, data);

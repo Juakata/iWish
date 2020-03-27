@@ -5,7 +5,7 @@ class V1::ProfilesController < ApplicationController
     user = User.find_by(email: params[:email])
     if user
       if user.profile
-        user.profile.update_attribute(
+        user.profile.update_attributes(
           name: params[:name],
           birthday: params[:birthday],
           picture: params[:picture]
