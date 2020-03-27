@@ -1,12 +1,12 @@
-const GET_PROFILE = 'GET_PROFILE';
+const CREATE_PROFILE = 'CREATE_PROFILE';
 
-const facesReducer = (state = {}, action) => {
+const createProfile = (state = {}, action) => {
   switch (action.type) {
-    case GET_PROFILE:
+    case CREATE_PROFILE:
       return action.profile;
     default:
       return state;
   }
 };
 
-export default facesReducer;
+export default createProfile;

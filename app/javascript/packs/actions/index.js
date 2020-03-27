@@ -20,7 +20,7 @@ import Face18 from '../assets/faces/woman9.jpg';
 const CREATE_SESSION = 'CREATE_SESSION';
 const DESTROY_SESSION = 'DESTROY_SESSION';
 const GET_FACES = 'GET_FACES';
-const GET_PROFILE = 'GET_PROFILE';
+const CREATE_PROFILE = 'CREATE_PROFILE';
 
 const faces = [
   { id: 1, src: Face }, { id: 2, src: Face2 }, { id: 3, src: Face3 },
@@ -45,11 +45,11 @@ const getFaces = () => ({
   faces,
 });
 
-const getProfile = profile => ({
-  type: GET_PROFILE,
+const createProfile = profile => ({
+  type: CREATE_PROFILE,
   profile,
 });
 
 export {
-  createSession, destroySession, getFaces, getProfile,
+  createSession, destroySession, getFaces, createProfile,
 };

@@ -5,18 +5,18 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import Header from '../components/header';
 import Logo from '../assets/logo.png';
-import Face from '../assets/bakiFace.png';
 import { destroySession, getFaces } from '../actions/index';
 import ImgBtn from '../components/imgBtn';
 
 class Profile extends React.Component {
   constructor(props) {
     super(props);
+    const { profile } = props;
     this.state = {
-      name: '',
-      birthday: '1995-03-12',
+      name: profile.name,
+      birthday: profile.birthday,
       openWindow: false,
-      picture: Face,
+      picture: profile.picture,
     };
   }
 
@@ -24,16 +24,6 @@ class Profile extends React.Component {
     const { session, history } = this.props;
     if (session === '') {
       history.push('/');
-    } else {
-      axios.get(`v1/getprofile?email=${session}`)
-        .then(response => {
-          this.setState({
-            name: response.data.name,
-            birthday: response.data.birthday,
-            picture: response.data.picture,
-          });
-        })
-        .catch(() => {});
     }
   }
 
@@ -84,11 +74,11 @@ class Profile extends React.Component {
       <div>
         <Header source={Logo} out={destroySession} />
         {openWindow && (
-          <div className="cover-img-selector" onClick={this.handleWindow}>
+          <button type="button" className="cover-img-selector" onClick={this.handleWindow}>
             <div className="imagesSelector">
               {images}
             </div>
-          </div>
+          </button>
         )}
         <div className="container">
           <form className="profile-form" onSubmit={this.handleSubmit}>
@@ -104,7 +94,7 @@ class Profile extends React.Component {
               required
             />
             <input
-              type="birthday"
+              type="date"
               name="birthday"
               value={birthday}
               onChange={this.handleChange}
@@ -123,10 +113,12 @@ Profile.propTypes = {
   session: PropTypes.string.isRequired,
   destroySession: PropTypes.func.isRequired,
   getFaces: PropTypes.func.isRequired,
+  profile: PropTypes.instanceOf(Object).isRequired,
 };
 
 const mapStateToProps = state => ({
   session: state.session,
+  profile: state.profile,
 });
 
 const mapDispatchToProps = dispatch => ({
