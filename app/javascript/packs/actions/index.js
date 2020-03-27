@@ -21,6 +21,7 @@ const CREATE_SESSION = 'CREATE_SESSION';
 const DESTROY_SESSION = 'DESTROY_SESSION';
 const GET_FACES = 'GET_FACES';
 const CREATE_PROFILE = 'CREATE_PROFILE';
+const ADD_WISH = 'ADD_WISH';
 
 const faces = [
   { id: 1, src: Face }, { id: 2, src: Face2 }, { id: 3, src: Face3 },
@@ -50,6 +51,11 @@ const createProfile = profile => ({
   profile,
 });
 
+const addWish = wish => ({
+  type: ADD_WISH,
+  wish,
+});
+
 export {
-  createSession, destroySession, getFaces, createProfile,
+  createSession, destroySession, getFaces, createProfile, addWish,
 };

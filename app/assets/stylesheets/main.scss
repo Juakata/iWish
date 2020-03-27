@@ -70,6 +70,70 @@ header ul {
   box-shadow: 0 0 5px black;
 }
 
+.cont-title-list {
+  margin-top: 60px;
+  background: RGBA(143, 62, 0, 0.7);
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 0 5px grey;
+  text-align: center;
+}
+
+.mylist-btn {
+  position: relative;
+  text-align: center;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.profile-form-list {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: auto;
+  top: 30%;
+  z-index: 2;
+  background: #ffd5a1;
+  padding: 20px;
+  box-shadow: 0 0 5px black;
+  border-radius: 10px;
+  max-width: 500px;
+  display: grid;
+  grid-gap: 20px;
+  justify-items: center;
+}
+
+.profile-form-list textarea {
+  width: 100%;
+  border-radius: 10px;
+  height: 100px;
+  background: #fff5e8;
+  padding: 10px;
+}
+
+.mylist-btn:hover .my-plus {
+  color: white;
+}
+
+.mylist-btn:hover .title {
+  color: #f5bc42;
+}
+
+.my-plus {
+  position: absolute;
+  color: #f5bc42;
+  text-shadow: 1px 1px 3px black;
+  top: 30%;
+  left: 105%;
+  font-size: 22px;
+}
+
+.title {
+  color: white;
+  text-shadow: 1px 1px 3px black;
+}
+
 .container {
   height: 83vh;
   background: #ffd5a1;
@@ -174,7 +238,7 @@ header ul {
   top: 265px;
 }
 
-.sign-in-form input, .sign-up-form input {
+.sign-in-form input, .sign-up-form input, .profile-form-list input {
   width: 100%;
   color: #fff;
   outline: none;
@@ -187,7 +251,7 @@ header ul {
   border-radius: 10px;
 }
 
-.sign-in-form button, .sign-up-form button {
+.sign-in-form button, .sign-up-form button, .profile-form-list button {
   outline: none;
   width: 50%;
   height: 40px;
@@ -199,7 +263,7 @@ header ul {
   transition: width .6s, background .6s;
 }
 
-.sign-in-form button:hover, .sign-up-form button:hover {
+.sign-in-form button:hover, .sign-up-form button:hover, .profile-form-list button:hover {
   width: 100%;
   background: white;
   color: #e0b000;

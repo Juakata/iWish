@@ -6,6 +6,8 @@ Rails.application.routes.draw do
     get 'signup', to: 'users#create'
     get 'setprofile', to: 'profiles#create'
     get 'getprofile', to: 'profiles#show'
+    get 'createwish', to: 'wishes#create'
+    get 'getwishes', to: 'wishes#get_wishes'
   end
 
   get '*page', to: 'static#index', constraints: ->(req) do
