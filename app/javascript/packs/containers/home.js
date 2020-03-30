@@ -38,7 +38,7 @@ class Home extends React.Component {
                   profile = {
                     name: response.data.name,
                     birthday: response.data.birthday,
-                    picture: response.data.picture,
+                    picture: response.data.picture === '' ? Face : response.data.picture,
                     wishes,
                   };
                   createProfile(profile);
@@ -46,7 +46,7 @@ class Home extends React.Component {
                   profile = {
                     name: response.data.name,
                     birthday: response.data.birthday,
-                    picture: response.data.picture,
+                    picture: response.data.picture === '' ? Face : response.data.picture,
                     wishes: [],
                   };
                   createProfile(profile);

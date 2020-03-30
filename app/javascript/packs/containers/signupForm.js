@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import Fingerprint2 from 'fingerprintjs2';
 import {
   Link, withRouter,
 } from 'react-router-dom';
@@ -16,15 +17,60 @@ class SignupForm extends React.Component {
       password: '',
       repeat: '',
       error: '',
+      key: '',
     };
+  }
+
+  componentDidMount() {
+    if (window.requestIdleCallback) {
+      requestIdleCallback(() => {
+        Fingerprint2.get(components => {
+          this.setState({
+            key: components[0].value.replace(';', ','),
+          });
+          const decodedCookie = decodeURIComponent(document.cookie);
+          const { history, createSession, session } = this.props;
+          if (session !== 'destroy' && session !== '') {
+            history.push('/home');
+          } else if (session === 'destroy') {
+            axios.get('v1/signout')
+              .then(() => {})
+              .catch(() => {});
+          } else if (decodedCookie !== '') {
+            const ca = decodedCookie.split(';');
+            const id = ca[0].split('=')[1];
+            const token = ca[1].split('=')[1];
+            const { key } = this.state;
+            axios.get(`v1/autosignin?id=${id}&token=${token}&key=${key}`)
+              .then(response => {
+                if (response.data.email) {
+                  createSession(response.data.email);
+                  history.push('/home');
+                }
+              })
+              .catch(error => this.setState({ error }));
+          }
+        });
+      });
+    } else {
+      setTimeout(() => {
+        Fingerprint2.get(components => {
+          this.setState({
+            key: components[0].value.replace(';', ','),
+          });
+        });
+      }, 500);
+    }
   }
 
   handleSubmit = event => {
     event.preventDefault();
-    const { email, password, repeat } = this.state;
+    const {
+      email, password, repeat, key,
+    } = this.state;
     const { history, createSession } = this.props;
-    if (password === repeat) {
-      axios.get(`v1/signup?email=${email}&password_digest=${password}&repeat=${repeat}`)
+    if (password === repeat && password.length > 7) {
+      axios.get(`v1/signup?email=${email}&password_digest=${password}&repeat=${repeat}&key=${key}`)
         .then(response => {
           switch (response.data.result) {
             case 'created':
@@ -114,10 +160,15 @@ class SignupForm extends React.Component {
 SignupForm.propTypes = {
   history: PropTypes.instanceOf(Object).isRequired,
   createSession: PropTypes.func.isRequired,
+  session: PropTypes.string.isRequired,
 };
+
+const mapStateToProps = state => ({
+  session: state.session,
+});
 
 const mapDispatchToProps = dispatch => ({
   createSession: user => dispatch(createSession(user)),
 });
 
-export default withRouter(connect(null, mapDispatchToProps)(SignupForm));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SignupForm));
