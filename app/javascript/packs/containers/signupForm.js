@@ -7,6 +7,7 @@ import {
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import Logo from '../assets/logo.png';
+import Background from '../assets/background.jpg';
 import { createSession } from '../actions/index';
 
 class SignupForm extends React.Component {
@@ -22,6 +23,7 @@ class SignupForm extends React.Component {
   }
 
   componentDidMount() {
+    document.querySelector('.background').style.backgroundImage = `url(${Background})`;
     if (window.requestIdleCallback) {
       requestIdleCallback(() => {
         Fingerprint2.get(components => {

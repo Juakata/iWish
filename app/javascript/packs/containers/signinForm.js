@@ -5,6 +5,7 @@ import { Link, withRouter } from 'react-router-dom';
 import axios from 'axios';
 import Fingerprint2 from 'fingerprintjs2';
 import Logo from '../assets/logo.png';
+import Background from '../assets/background.jpg';
 import { createSession } from '../actions/index';
 
 class SigninForm extends React.Component {
@@ -19,6 +20,7 @@ class SigninForm extends React.Component {
   }
 
   componentDidMount() {
+    document.querySelector('.background').style.backgroundImage = `url(${Background})`;
     if (window.requestIdleCallback) {
       requestIdleCallback(() => {
         Fingerprint2.get(components => {
