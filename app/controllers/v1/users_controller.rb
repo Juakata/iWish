@@ -5,8 +5,7 @@ class V1::UsersController < ApplicationController
     if params[:password_digest] == params[:repeat]
       token = User.new_token
       @user = User.new(email: params[:email],
-                       password_digest: params[:password_digest],
-                       token_digest: token)
+                       password_digest: params[:password_digest])
       @user.encrypt_user
       if @user.save
         cookies.permanent[:user_id] = @user.id

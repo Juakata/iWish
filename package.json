@@ -12,6 +12,7 @@
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-plugin-jsx-a11y": "^6.2.3",
+    "fingerprintjs2": "^2.1.0",
     "postcss-flexbugs-fixes": "^4.2.0",
     "postcss-import": "^12.0.1",
     "postcss-preset-env": "^6.7.0",

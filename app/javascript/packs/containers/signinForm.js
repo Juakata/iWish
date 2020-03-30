@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Link, withRouter } from 'react-router-dom';
 import axios from 'axios';
+import Fingerprint2 from 'fingerprintjs2';
 import Logo from '../assets/logo.png';
 import { createSession } from '../actions/index';
 
@@ -13,38 +14,57 @@ class SigninForm extends React.Component {
       email: '',
       password: '',
       error: '',
+      key: '',
     };
   }
 
   componentDidMount() {
-    const decodedCookie = decodeURIComponent(document.cookie);
-    const { history, createSession, session } = this.props;
-    if (session !== 'destroy' && session !== '') {
-      history.push('/home');
-    } else if (session === 'destroy') {
-      axios.get('v1/signout')
-        .then(() => {})
-        .catch(() => {});
-    } else if (decodedCookie !== '') {
-      const ca = decodedCookie.split(';');
-      const id = ca[0].split('=')[1];
-      const token = ca[1].split('=')[1];
-      axios.get(`v1/autosignin?id=${id}&token=${token}`)
-        .then(response => {
-          if (response.data.email) {
-            createSession(response.data.email);
+    if (window.requestIdleCallback) {
+      requestIdleCallback(() => {
+        Fingerprint2.get(components => {
+          this.setState({
+            key: components[0].value.replace(';', ','),
+          });
+          const decodedCookie = decodeURIComponent(document.cookie);
+          const { history, createSession, session } = this.props;
+          if (session !== 'destroy' && session !== '') {
             history.push('/home');
+          } else if (session === 'destroy') {
+            axios.get('v1/signout')
+              .then(() => {})
+              .catch(() => {});
+          } else if (decodedCookie !== '') {
+            const ca = decodedCookie.split(';');
+            const id = ca[0].split('=')[1];
+            const token = ca[1].split('=')[1];
+            const { key } = this.state;
+            axios.get(`v1/autosignin?id=${id}&token=${token}&key=${key}`)
+              .then(response => {
+                if (response.data.email) {
+                  createSession(response.data.email);
+                  history.push('/home');
+                }
+              })
+              .catch(error => this.setState({ error }));
           }
-        })
-        .catch(error => this.setState({ error }));
+        });
+      });
+    } else {
+      setTimeout(() => {
+        Fingerprint2.get(components => {
+          this.setState({
+            key: components[0].value.replace(';', ','),
+          });
+        });
+      }, 500);
     }
   }
 
   handleSubmit = event => {
     event.preventDefault();
-    const { email, password } = this.state;
+    const { email, password, key } = this.state;
     const { history, createSession } = this.props;
-    axios.get(`v1/signin?email=${email}&password=${password}`)
+    axios.get(`v1/signin?email=${email}&password=${password}&key=${key}`)
       .then(response => {
         if (response.data.email) {
           createSession(response.data.email);
