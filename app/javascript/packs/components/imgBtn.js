@@ -2,17 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const ImgBtn = ({
-  source, id, onClick, className,
+  source, id, onClick, classBtn, classImg,
 }) => (
   <button
     type="button"
-    className={className}
+    className={classBtn}
     id={id}
     onClick={onClick}
   >
     <img
       src={source}
-      className="lookIcon"
+      className={classImg}
       alt="Icon"
     />
   </button>
@@ -22,11 +22,13 @@ ImgBtn.propTypes = {
   source: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
-  className: PropTypes.string,
+  classBtn: PropTypes.string,
+  classImg: PropTypes.string,
 };
 
 ImgBtn.defaultProps = {
-  className: 'img-btn-selector',
+  classBtn: 'img-btn-selector',
+  classImg: 'lookIcon',
 };
 
 export default ImgBtn;

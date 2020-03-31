@@ -89,6 +89,12 @@ class Profile extends React.Component {
     this.setState(state => ({
       openWindow: !state.openWindow,
     }));
+    const { openWindow } = this.state;
+    if (!openWindow) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
   }
 
   handlePicture = face => {
@@ -119,11 +125,18 @@ class Profile extends React.Component {
       <div>
         <Header source={Logo} menu={this.menu} out={destroySession} />
         {openWindow && (
-          <button type="button" className="cover-img-selector" onClick={this.handleWindow}>
+          <div
+            type="button"
+            tabIndex={0}
+            role="button"
+            className="cover-img-selector"
+            onClick={this.handleWindow}
+            onKeyPress={this.onKeyPressHandler}
+          >
             <div className="imagesSelector">
               {images}
             </div>
-          </button>
+          </div>
         )}
         {openForm && (
           <div className="cover-img-selector">
@@ -152,7 +165,7 @@ class Profile extends React.Component {
           <form id="profileform" className="profile-form" onSubmit={this.handleSubmit}>
             <i className="fas fa-user profile-icon profile-i-user" />
             <i className="fas fa-calendar profile-icon profile-i-birthday" />
-            <ImgBtn source={picture} id="img-btn" onClick={this.handleWindow} />
+            <ImgBtn source={picture} classImg="lookIcon mainIcon" id="img-btn" onClick={this.handleWindow} />
             <input
               type="text"
               name="name"

@@ -77,26 +77,26 @@ const Header = ({
       </li>
       <li>
         <Link className="link" to="/events">
-          <div>
+          <button type="button" onClick={menu}>
             <i className="fas fa-calendar-alt i-header" />
             <p>Events</p>
-          </div>
+          </button>
         </Link>
       </li>
       <li>
         <Link className="link" to="/groups">
-          <div>
+          <button type="button" onClick={menu}>
             <i className="fas fa-users i-header" />
             <p>Groups</p>
-          </div>
+          </button>
         </Link>
       </li>
       <li>
         <Link className="link" to="/friends">
-          <div>
+          <button type="button" onClick={menu}>
             <i className="fas fa-user-friends i-header" />
             <p>Friends</p>
-          </div>
+          </button>
         </Link>
       </li>
     </ul>
