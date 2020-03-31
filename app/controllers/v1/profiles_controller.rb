@@ -27,10 +27,12 @@ class V1::ProfilesController < ApplicationController
 
   def show
     user = User.find_by(email: params[:email])
-    if user.profile
-      render json: user.profile
-    else
-      render json: { result: 'not_found' }
+    if user
+      if user.profile
+        render json: user.profile
+      else
+        render json: { result: 'not_found' }
+      end
     end
   end
 end

@@ -5,7 +5,9 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import Header from '../components/header';
 import Logo from '../assets/logo.png';
-import { destroySession, getFaces, addWish } from '../actions/index';
+import {
+  destroySession, getFaces, addWish, openMenu,
+} from '../actions/index';
 import ImgBtn from '../components/imgBtn';
 
 class Profile extends React.Component {
@@ -26,7 +28,7 @@ class Profile extends React.Component {
 
   componentDidMount() {
     const { session, history } = this.props;
-    if (session === '') {
+    if (session === '' || session === 'destroy') {
       history.push('/');
     }
   }
@@ -95,6 +97,12 @@ class Profile extends React.Component {
     });
   }
 
+  menu = () => {
+    const { functions, openMenu } = this.props;
+    const { open } = functions;
+    openMenu(open);
+  }
+
   render() {
     const {
       name, birthday, openWindow, picture, openForm,
@@ -109,7 +117,7 @@ class Profile extends React.Component {
     ));
     return (
       <div>
-        <Header source={Logo} out={destroySession} />
+        <Header source={Logo} menu={this.menu} out={destroySession} />
         {openWindow && (
           <button type="button" className="cover-img-selector" onClick={this.handleWindow}>
             <div className="imagesSelector">
@@ -184,17 +192,21 @@ Profile.propTypes = {
   getFaces: PropTypes.func.isRequired,
   profile: PropTypes.instanceOf(Object).isRequired,
   addWish: PropTypes.func.isRequired,
+  functions: PropTypes.instanceOf(Object).isRequired,
+  openMenu: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   session: state.session,
   profile: state.profile,
+  functions: state.functions,
 });
 
 const mapDispatchToProps = dispatch => ({
   destroySession: () => dispatch(destroySession()),
   getFaces: () => dispatch(getFaces()),
   addWish: wish => dispatch(addWish(wish)),
+  openMenu: open => dispatch(openMenu(open)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Profile));

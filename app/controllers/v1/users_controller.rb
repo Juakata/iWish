@@ -14,7 +14,7 @@ class V1::UsersController < ApplicationController
         session.save
         profile = @user.build_profile(
           name: '',
-          birthday: '',
+          birthday: '1998-06-18',
           picture: ''
         )
         profile.save

@@ -6,7 +6,9 @@ import PropTypes from 'prop-types';
 import Header from '../components/header';
 import Face from '../assets/bakiFace.png';
 import Logo from '../assets/logo.png';
-import { destroySession, createProfile, addWish } from '../actions/index';
+import {
+  destroySession, createProfile, addWish, openMenu,
+} from '../actions/index';
 
 class Home extends React.Component {
   constructor(props) {
@@ -18,7 +20,7 @@ class Home extends React.Component {
 
   componentDidMount() {
     const { session, history, createProfile } = this.props;
-    if (session === '') {
+    if (session === '' || session === 'destroy') {
       history.push('/');
     } else {
       let profile;
@@ -74,12 +76,18 @@ class Home extends React.Component {
     }
   }
 
+  menu = () => {
+    const { functions, openMenu } = this.props;
+    const { open } = functions;
+    openMenu(open);
+  }
+
   render() {
     const { test } = this.state;
     const { session, destroySession } = this.props;
     return (
       <div>
-        <Header source={Logo} out={destroySession} />
+        <Header source={Logo} menu={this.menu} out={destroySession} />
         <div className="container">
           <span>{test}</span>
           <span>{session}</span>
@@ -94,16 +102,20 @@ Home.propTypes = {
   session: PropTypes.string.isRequired,
   destroySession: PropTypes.func.isRequired,
   createProfile: PropTypes.func.isRequired,
+  functions: PropTypes.instanceOf(Object).isRequired,
+  openMenu: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   session: state.session,
+  functions: state.functions,
 });
 
 const mapDispatchToProps = dispatch => ({
   destroySession: () => dispatch(destroySession()),
   createProfile: profile => dispatch(createProfile(profile)),
   addWish: wish => dispatch(addWish(wish)),
+  openMenu: open => dispatch(openMenu(open)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Home));

@@ -21,11 +21,13 @@ class V1::WishesController < ApplicationController
 
   def get_wishes
     user = User.find_by(email: params[:email])
-    profile = user.profile
-    if profile
-      render json: profile.wishes
-    else
-      render json: { result: 'not_found'}
+    if user
+      profile = user.profile
+      if profile
+        render json: profile.wishes
+      else
+        render json: { result: 'not_found'}
+      end
     end
   end
 end

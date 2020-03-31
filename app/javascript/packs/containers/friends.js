@@ -16,7 +16,7 @@ class Friends extends React.Component {
 
   componentDidMount() {
     const { session, history } = this.props;
-    if (session === '') {
+    if (session === '' || session === 'destroy') {
       history.push('/');
     }
   }

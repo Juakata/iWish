@@ -22,6 +22,7 @@ const DESTROY_SESSION = 'DESTROY_SESSION';
 const GET_FACES = 'GET_FACES';
 const CREATE_PROFILE = 'CREATE_PROFILE';
 const ADD_WISH = 'ADD_WISH';
+const OPEN_MENU = 'OPEN_MENU';
 
 const faces = [
   { id: 1, src: Face }, { id: 2, src: Face2 }, { id: 3, src: Face3 },
@@ -56,6 +57,11 @@ const addWish = wish => ({
   wish,
 });
 
+const openMenu = open => ({
+  type: OPEN_MENU,
+  open,
+});
+
 export {
-  createSession, destroySession, getFaces, createProfile, addWish,
+  createSession, destroySession, getFaces, createProfile, addWish, openMenu,
 };
