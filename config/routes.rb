@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   get '*page', to: 'static#index', constraints: ->(req) do
     !req.xhr? && req.format.html?
   end
-
+  get '/service-worker.js' => "service_worker#service_worker"
+  get '/manifest.json' => "service_worker#manifest"
   root 'static#index'
 end
