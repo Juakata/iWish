@@ -15,10 +15,12 @@ require('channels');
 // const images = require.context('../images', true)
 // const imagePath = (name) => images(name, true)
 
-if (navigator.serviceWorker) {
-  navigator.serviceWorker.register('/service-worker.js', { scope: './' })
-    .then(reg => {
-      console.log('[Companion]', 'Service worker registered!');
-      console.log(reg);
+if ('serviceWorker' in navigator) {
+  console.log('Will the service worker register?');
+  navigator.serviceWorker.register('service-worker.js')
+    .then(() => {
+      console.log('Yes, it did.');
+    }).catch(err => {
+      console.log('No it did not. This happened:', err);
     });
 }
