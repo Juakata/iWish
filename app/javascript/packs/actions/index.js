@@ -23,6 +23,8 @@ const GET_FACES = 'GET_FACES';
 const CREATE_PROFILE = 'CREATE_PROFILE';
 const ADD_WISH = 'ADD_WISH';
 const OPEN_MENU = 'OPEN_MENU';
+const UPDATE_WISH = 'UPDATE_WISH';
+const DELETE_WISH = 'DELETE_WISH';
 
 const faces = [
   { id: 1, src: Face }, { id: 2, src: Face2 }, { id: 3, src: Face3 },
@@ -57,6 +59,16 @@ const addWish = wish => ({
   wish,
 });
 
+const updateWish = wish => ({
+  type: UPDATE_WISH,
+  wish,
+});
+
+const deleteWish = id => ({
+  type: DELETE_WISH,
+  id,
+});
+
 const openMenu = open => ({
   type: OPEN_MENU,
   open,
@@ -64,4 +76,5 @@ const openMenu = open => ({
 
 export {
   createSession, destroySession, getFaces, createProfile, addWish, openMenu,
+  updateWish, deleteWish,
 };

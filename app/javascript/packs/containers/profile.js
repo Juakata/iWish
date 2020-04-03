@@ -4,9 +4,10 @@ import { withRouter } from 'react-router-dom';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import Header from '../components/header';
+import Wish from '../components/wish';
 import Logo from '../assets/logo.png';
 import {
-  destroySession, getFaces, addWish, openMenu,
+  destroySession, getFaces, addWish, openMenu, updateWish,
 } from '../actions/index';
 import ImgBtn from '../components/imgBtn';
 
@@ -23,6 +24,7 @@ class Profile extends React.Component {
       title: '',
       description: '',
       wishes: typeof profile.wishes !== 'undefined' ? profile.wishes : [],
+      wishCreated: false,
     };
   }
 
@@ -40,28 +42,40 @@ class Profile extends React.Component {
     }
   }
 
+  fixWindow = open => {
+    if (!open) {
+      window.scrollTo(0, 0);
+      document.body.scrollTo = 0;
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+  }
+
   handleWishList = () => {
     this.setState(state => ({
       openForm: !state.openForm,
       title: '',
       description: '',
     }));
+    const { openForm } = this.state;
+    this.fixWindow(openForm);
   }
 
   handleSubmit = event => {
     event.preventDefault();
-    const { id } = event.target;
+    const { id } = event.target[event.target.length - 1];
     const { session, addWish } = this.props;
     const {
       name, birthday, picture, title, description, wishes,
     } = this.state;
     switch (id) {
-      case 'profileform':
+      case 'btnProfile':
         axios.get(`v1/setprofile?email=${session}&name=${name}&birthday=${birthday}&picture=${picture}`)
           .then(() => {})
           .catch(() => {});
         break;
-      case 'wishlistform':
+      case 'btnAddWish':
         axios.get(`v1/createwish?email=${session}&title=${title}&description=${description}`)
           .then(() => {
             const wish = {
@@ -70,6 +84,19 @@ class Profile extends React.Component {
               description,
             };
             addWish(wish);
+          })
+          .catch(() => {});
+        this.handleWishList();
+        break;
+      case 'btnUpdateWish':
+        axios.get(`v1/updatewish?email=${session}&id=${id}&title=${title}&description=${description}`)
+          .then(() => {
+            const wish = {
+              id: wishes.length + 1,
+              title,
+              description,
+            };
+            updateWish(wish);
           })
           .catch(() => {});
         this.handleWishList();
@@ -90,11 +117,7 @@ class Profile extends React.Component {
       openWindow: !state.openWindow,
     }));
     const { openWindow } = this.state;
-    if (!openWindow) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'auto';
-    }
+    this.fixWindow(openWindow);
   }
 
   handlePicture = face => {
@@ -109,13 +132,30 @@ class Profile extends React.Component {
     openMenu(open);
   }
 
+  handleWish = wish => {
+    this.setState(state => ({
+      openForm: !state.openForm,
+      title: wish.title,
+      description: wish.description,
+      wishCreated: true,
+    }));
+    const { openForm } = this.state;
+    this.fixWindow(openForm);
+  }
+
   render() {
     const {
       name, birthday, openWindow, picture, openForm,
-      title, description, wishes,
+      title, description, wishes, wishCreated,
     } = this.state;
     const wishesRender = wishes.map(wish => (
-      <div key={wish.id}>{wish.title}</div>
+      <Wish
+        key={wish.id}
+        id={wish.id}
+        title={wish.title}
+        description={wish.description}
+        onClick={() => this.handleWish(wish)}
+      />
     ));
     const { destroySession, getFaces } = this.props;
     const images = getFaces().faces.map(face => (
@@ -156,13 +196,23 @@ class Profile extends React.Component {
                 onChange={this.handleChange}
                 required
               />
-              <button type="submit">Save</button>
-              <button type="button" onClick={this.handleWishList}>Close</button>
+              {!wishCreated && (
+                <div className="btnsCont">
+                  <button type="button" onClick={this.handleWishList}>Close</button>
+                  <button id="btnAddWish" type="submit">Save</button>
+                </div>
+              )}
+              {wishCreated && (
+                <div className="btnsCont">
+                  <button type="button" onClick={this.handleWishList}>Delete</button>
+                  <button id="btnUpdateWish" type="submit">Update</button>
+                </div>
+              )}
             </form>
           </div>
         )}
         <div className="container">
-          <form id="profileform" className="profile-form" onSubmit={this.handleSubmit}>
+          <form className="profile-form" onSubmit={this.handleSubmit}>
             <i className="fas fa-user profile-icon profile-i-user" />
             <i className="fas fa-calendar profile-icon profile-i-birthday" />
             <ImgBtn source={picture} classImg="lookIcon mainIcon" id="img-btn" onClick={this.handleWindow} />
@@ -181,7 +231,7 @@ class Profile extends React.Component {
               onChange={this.handleChange}
               required
             />
-            <button type="submit">Save</button>
+            <button id="btnProfile" type="submit">Save</button>
           </form>
           <div className="cont-title-list">
             <button className="mylist-btn" onClick={this.handleWishList} type="button">

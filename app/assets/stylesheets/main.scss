@@ -137,7 +137,7 @@ header ul {
 }
 
 .container {
-  height: 83vh;
+  min-height: 83vh;
   background: #ffd5a1;
   max-width: 84%;
   margin: 0 auto;
@@ -258,7 +258,7 @@ header ul {
 
 .sign-in-form button, .sign-up-form button, .profile-form-list button {
   outline: none;
-  width: 50%;
+  width: 25%;
   height: 40px;
   background: #e0b000;
   cursor: pointer;
@@ -269,7 +269,7 @@ header ul {
 }
 
 .sign-in-form button:hover, .sign-up-form button:hover, .profile-form-list button:hover {
-  width: 100%;
+  width: 50%;
   background: white;
   color: #e0b000;
   font-weight: bold;
@@ -366,7 +366,7 @@ header ul {
   max-width: 900px;
   margin: 0 auto;
   margin-top: 10vh;
-  height: 80vh;
+  height: 70vh;
   padding: 10px;
   border-radius: 20px;
   box-shadow: 0 0 5px black;
@@ -404,9 +404,72 @@ header ul {
   display: none;
 }
 
+.cont-wishes {
+  display: grid;
+  background: #ffd5ba;
+  padding: 10px;
+  border-radius: 20px;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 5px;
+}
+
+.btn-wish {
+  background: #ffc391;
+  border-radius: 10px;
+  padding: 0;
+  position: relative;
+  border: none;
+  box-shadow: 0 0 4px black;
+  cursor: pointer;
+}
+
+.btn-wish:hover {
+  background: transparent;
+}
+
+.btn-wish:hover h2 {
+  background: white;
+  color: #913900;
+}
+
+.cont-wishes h2 {
+  color: white;
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0;
+  width: 100%;
+  font-size: 16px;
+  background: #913900;
+  padding: 5px;
+  border: 1px solid #ff6400;
+  border-radius: 10px;
+}
+
+.cont-wishes p {
+  margin-top: 40px;
+}
+
+.btnsCont {
+  width: 100%;
+  text-align: center;
+}
+
+
+@media(max-width: 900px) {
+  .cont-wishes {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media(max-width: 700px) {
   header {
     grid-template-columns: 50% 50%;
+  }
+
+  .cont-wishes {
+    grid-template-columns: repeat(1, 1fr);
+    grid-gap: 15px;
   }
 
   #ul-home{
