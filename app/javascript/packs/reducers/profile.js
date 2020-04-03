@@ -3,23 +3,26 @@ const ADD_WISH = 'ADD_WISH';
 const UPDATE_WISH = 'UPDATE_WISH';
 const DELETE_WISH = 'DELETE_WISH';
 
-const createProfile = (state = [], action) => {
+const profileReducer = (state = {}, action) => {
+  const clone = { ...state };
+  let wish;
   switch (action.type) {
     case CREATE_PROFILE:
       return action.profile;
     case ADD_WISH:
-      return Object.create(state).wishes.push(action.wish);
+      clone.wishes.push(action.wish);
+      return {};
     case UPDATE_WISH:
-      return [
-        ...state.slice(0, action.wish.id),
-        action.wish,
-        ...state.slice(action.wish.id + 1, action.length),
-      ];
+      wish = clone.wishes.find(wish => wish.id === action.wish.id);
+      wish.title = action.wish.title;
+      wish.description = action.wish.description;
+      return clone;
     case DELETE_WISH:
-      return state.filter(wish => wish.id !== action.id);
+      clone.wishes = clone.wishes.filter(wish => wish.id !== action.id);
+      return clone;
     default:
       return state;
   }
 };
 
-export default createProfile;
+export default profileReducer;

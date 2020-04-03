@@ -7,7 +7,7 @@ import Header from '../components/header';
 import Wish from '../components/wish';
 import Logo from '../assets/logo.png';
 import {
-  destroySession, getFaces, addWish, openMenu, updateWish,
+  destroySession, getFaces, addWish, openMenu, updateWish, deleteWish,
 } from '../actions/index';
 import ImgBtn from '../components/imgBtn';
 
@@ -21,9 +21,9 @@ class Profile extends React.Component {
       openWindow: false,
       openForm: false,
       picture: typeof profile.picture !== 'undefined' ? profile.picture : '',
+      wishId: -1,
       title: '',
       description: '',
-      wishes: typeof profile.wishes !== 'undefined' ? profile.wishes : [],
       wishCreated: false,
     };
   }
@@ -57,17 +57,29 @@ class Profile extends React.Component {
       openForm: !state.openForm,
       title: '',
       description: '',
+      wishCreated: false,
     }));
     const { openForm } = this.state;
     this.fixWindow(openForm);
   }
 
+  deleteWish = () => {
+    const { wishId } = this.state;
+    const { deleteWish, session } = this.props;
+    axios.get(`v1/deletewish?email=${session}&wishId=${wishId}`)
+      .then(() => {
+        deleteWish(wishId);
+      })
+      .catch(() => {});
+    this.handleWishList();
+  }
+
   handleSubmit = event => {
     event.preventDefault();
     const { id } = event.target[event.target.length - 1];
-    const { session, addWish } = this.props;
+    const { session, addWish, updateWish } = this.props;
     const {
-      name, birthday, picture, title, description, wishes,
+      name, birthday, picture, wishId, title, description, wishes,
     } = this.state;
     switch (id) {
       case 'btnProfile':
@@ -79,7 +91,7 @@ class Profile extends React.Component {
         axios.get(`v1/createwish?email=${session}&title=${title}&description=${description}`)
           .then(() => {
             const wish = {
-              id: wishes.length + 1,
+              id: wishes[wishes.length - 1].id + 1,
               title,
               description,
             };
@@ -89,14 +101,17 @@ class Profile extends React.Component {
         this.handleWishList();
         break;
       case 'btnUpdateWish':
-        axios.get(`v1/updatewish?email=${session}&id=${id}&title=${title}&description=${description}`)
+        axios.get(`v1/updatewish?email=${session}&wishId=${wishId}&title=${title}&description=${description}`)
           .then(() => {
             const wish = {
-              id: wishes.length + 1,
+              id: wishId,
               title,
               description,
             };
             updateWish(wish);
+            this.setState({
+              wishCreated: false,
+            });
           })
           .catch(() => {});
         this.handleWishList();
@@ -135,6 +150,7 @@ class Profile extends React.Component {
   handleWish = wish => {
     this.setState(state => ({
       openForm: !state.openForm,
+      wishId: wish.id,
       title: wish.title,
       description: wish.description,
       wishCreated: true,
@@ -146,8 +162,10 @@ class Profile extends React.Component {
   render() {
     const {
       name, birthday, openWindow, picture, openForm,
-      title, description, wishes, wishCreated,
+      title, description, wishCreated,
     } = this.state;
+    const { profile } = this.props;
+    const wishes = typeof profile.wishes !== 'undefined' ? profile.wishes : [];
     const wishesRender = wishes.map(wish => (
       <Wish
         key={wish.id}
@@ -204,7 +222,7 @@ class Profile extends React.Component {
               )}
               {wishCreated && (
                 <div className="btnsCont">
-                  <button type="button" onClick={this.handleWishList}>Delete</button>
+                  <button type="button" onClick={this.deleteWish}>Delete</button>
                   <button id="btnUpdateWish" type="submit">Update</button>
                 </div>
               )}
@@ -257,6 +275,8 @@ Profile.propTypes = {
   addWish: PropTypes.func.isRequired,
   functions: PropTypes.instanceOf(Object).isRequired,
   openMenu: PropTypes.func.isRequired,
+  updateWish: PropTypes.func.isRequired,
+  deleteWish: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -270,6 +290,8 @@ const mapDispatchToProps = dispatch => ({
   getFaces: () => dispatch(getFaces()),
   addWish: wish => dispatch(addWish(wish)),
   openMenu: open => dispatch(openMenu(open)),
+  updateWish: wish => dispatch(updateWish(wish)),
+  deleteWish: wishId => dispatch(deleteWish(wishId)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Profile));

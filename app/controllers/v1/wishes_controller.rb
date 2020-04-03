@@ -24,6 +24,34 @@ class V1::WishesController < ApplicationController
     if user
       profile = user.profile
       if profile
+        render json: profile.wishes.order(created_at: :asc)
+      else
+        render json: { result: 'not_found'}
+      end
+    end
+  end
+
+  def update_wish
+    user = User.find_by(email: params[:email])
+    if user
+      profile = user.profile
+      if profile
+        wish = user.profile.wishes.find(params[:wishId])
+        wish.update_attributes(title: params[:title], description: params[:description])
+        render json: profile.wishes
+      else
+        render json: { result: 'not_found'}
+      end
+    end
+  end
+
+  def delete_wish
+    user = User.find_by(email: params[:email])
+    if user
+      profile = user.profile
+      if profile
+        wish = profile.wishes.find(params[:wishId])
+        wish.destroy
         render json: profile.wishes
       else
         render json: { result: 'not_found'}

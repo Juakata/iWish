@@ -8,6 +8,8 @@ Rails.application.routes.draw do
     get 'getprofile', to: 'profiles#show'
     get 'createwish', to: 'wishes#create'
     get 'getwishes', to: 'wishes#get_wishes'
+    get 'updatewish', to: 'wishes#update_wish'
+    get 'deletewish', to: 'wishes#delete_wish'
   end
 
   get '*page', to: 'static#index', constraints: ->(req) do
