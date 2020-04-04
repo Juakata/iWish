@@ -8,7 +8,8 @@ class User < ApplicationRecord
   validates :password_digest, presence: true, length: { minimum: 8 }
   has_one :profile
   has_many :sessions
-
+  has_many :friends
+  
   def self.digest(string)
     cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST : BCrypt::Engine.cost
     BCrypt::Password.create(string, cost: cost)

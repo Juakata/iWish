@@ -145,6 +145,10 @@ header ul {
   box-shadow: 0 5px 10px black;
 }
 
+.remove-padding {
+  padding: 0;
+}
+
 .btn-out {
   cursor: pointer;
   background: transparent;
@@ -572,5 +576,9 @@ header ul {
     padding: 25px;
     position: relative;
     z-index: 1;
+  }
+
+  .remove-padding {
+    padding: 0;
   }
 }

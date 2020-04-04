@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import Header from '../components/header';
 import Logo from '../assets/logo.png';
 import { destroySession, openMenu } from '../actions/index';
+import BtnsHeader from '../components/btnsHeader';
 
 class Friends extends React.Component {
   constructor(props) {
@@ -34,15 +35,24 @@ class Friends extends React.Component {
     openMenu(open);
   }
 
+  handleMyFriends = () => {
+
+  }
+
+  handleNewFriends = () => {
+
+  }
+
   render() {
-    const { test } = this.state;
-    const { session, destroySession } = this.props;
+    const { destroySession } = this.props;
     return (
       <div>
         <Header source={Logo} menu={this.menu} out={destroySession} />
-        <div className="container">
-          <span>{test}</span>
-          <span>{session}</span>
+        <div className="container remove-padding">
+          <BtnsHeader
+            handleMyFriends={this.handleMyFriends}
+            handleNewFriends={this.handleNewFriends}
+          />
         </div>
       </div>
     );
