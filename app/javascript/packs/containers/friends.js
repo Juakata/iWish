@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import axios from 'axios';
 import PropTypes from 'prop-types';
 import Header from '../components/header';
 import Logo from '../assets/logo.png';
@@ -11,7 +12,9 @@ class Friends extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      test: 'Friends ',
+      sent: [],
+      received: [],
+      newRequests: [],
     };
   }
 
@@ -19,6 +22,16 @@ class Friends extends React.Component {
     const { session, history } = this.props;
     if (session === '' || session === 'destroy') {
       history.push('/');
+    } else {
+      axios.get(`v1/allrequests?email=${session}`)
+        .then(response => {
+          this.setState({
+            sent: response.data.sent,
+            received: response.data.received,
+            newRequests: response.data.new,
+          });
+        })
+        .catch(() => {});
     }
   }
 
@@ -45,6 +58,21 @@ class Friends extends React.Component {
 
   render() {
     const { destroySession } = this.props;
+    const { sent, received, newRequests } = this.state;
+    const renderNewRequests = newRequests.map(request => (
+      <div className="request-cont" key={request.id}>
+        <img src={request.picture} alt="user" />
+        <section>
+          <h2>{request.name}</h2>
+          <div>
+            <button type="button">
+              <i className="fas fa-user-plus" />
+              Add Friend
+            </button>
+          </div>
+        </section>
+      </div>
+    ));
     return (
       <div>
         <Header source={Logo} menu={this.menu} out={destroySession} />
@@ -53,6 +81,7 @@ class Friends extends React.Component {
             handleMyFriends={this.handleMyFriends}
             handleNewFriends={this.handleNewFriends}
           />
+          {renderNewRequests}
         </div>
       </div>
     );

@@ -29,3 +29,53 @@
   background: #ffe9ab;
   color: #fcba03;
 }
+
+.request-cont {
+  display: grid;
+  grid-template-columns: 20% 80%;
+  background: RGBA(0, 0, 0, 0.3);
+  width: 70%;
+  margin: 0 auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.request-cont img{
+  width: 100px;
+  border-radius: 50%;
+  margin: 0 auto;
+}
+
+.request-cont h2{
+  margin: 10px 0;
+}
+
+.request-cont section{
+  display: inline-block;
+  padding: 20px;
+  margin: 0;
+}
+
+@media(max-width: 900px) {
+  .request-cont {
+    grid-template-columns: 30% 70%;
+  }
+}
+
+@media(max-width: 700px) {
+  .request-cont {
+    width: 80%;
+  }
+}
+
+@media(max-width: 500px) {
+  .request-cont {
+    width: 90%;
+  }
+
+  .request-cont h2{
+    font-size: 18px;
+  }
+}

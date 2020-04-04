@@ -27,6 +27,7 @@ class SigninForm extends React.Component {
           this.setState({
             key: components[0].value.replace(';', ','),
           });
+          console.log(components);
           const decodedCookie = decodeURIComponent(document.cookie);
           const { history, createSession, session } = this.props;
           if (session !== 'destroy' && session !== '') {
