@@ -33,6 +33,7 @@ body {
   background: #ffd4b3;
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
 }
 
 header {
@@ -564,6 +565,10 @@ header ul {
 }
 
 @media(max-width: 500px) {
+  body {
+    overflow-x: hidden;
+  }
+
   #ul-home{
     clip-path: none;
   }
