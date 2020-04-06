@@ -35,6 +35,7 @@ class Friends extends React.Component {
     } else {
       axios.get(`v1/allrequests?email=${session}`)
         .then(response => {
+          console.log(response);
           this.setState({
             sent: response.data.sent,
             received: response.data.received,
@@ -104,6 +105,15 @@ class Friends extends React.Component {
     }, 1500);
   }
 
+  addFriend = id => {
+    const { session } = this.props;
+    axios.get(`v1/addfriend?email=${session}&id=${id}`)
+      .then(response => {
+        console.log(response.data.result);
+      })
+      .catch(() => {});
+  }
+
   render() {
     const { destroySession } = this.props;
     const {
@@ -116,6 +126,7 @@ class Friends extends React.Component {
         key={request.id}
         name={request.name}
         text="Add Friend"
+        onClick={() => this.addFriend(request.id)}
       />
     ));
     const renderReceivedRequests = received.map(request => (

@@ -12,6 +12,7 @@ Rails.application.routes.draw do
     get 'deletewish', to: 'wishes#delete_wish'
     get 'allrequests', to: 'friends#all_requests'
     get 'getfriends', to: 'friends#get_friends'
+    get 'addfriend', to: 'friends#add_friend'
   end
 
   get '*page', to: 'static#index', constraints: ->(req) do
