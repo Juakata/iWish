@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     get 'updatewish', to: 'wishes#update_wish'
     get 'deletewish', to: 'wishes#delete_wish'
     get 'allrequests', to: 'friends#all_requests'
+    get 'getfriends', to: 'friends#get_friends'
   end
 
   get '*page', to: 'static#index', constraints: ->(req) do

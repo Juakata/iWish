@@ -4,10 +4,10 @@ class V1::FriendsController < ApplicationController
   def get_friends
     user = User.find_by(email: params[:email])
     if user
-      ids = Friends.select(:sender).where('receiver = (?) AND status = TRUE', user.id)
-      ids += Friends.select(:receiver).where('sender = (?)  AND status = TRUE', user.id)
-
-      render json: { friends: ids }
+      ids = Friends.select(:sender).where('receiver = (?) AND status = TRUE', user.id).to_a
+      ids += Friends.select(:receiver).where('sender = (?)  AND status = TRUE', user.id).to_a
+      friends = Profile.where('user_id IN (?)', ids)
+      render json: { friends: friends }
     else
       render json: { result: 'Not found.' }
     end

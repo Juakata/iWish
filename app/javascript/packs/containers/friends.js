@@ -7,6 +7,8 @@ import Header from '../components/header';
 import Logo from '../assets/logo.png';
 import { destroySession, openMenu } from '../actions/index';
 import BtnsHeader from '../components/btnsHeader';
+import Friend from '../components/friend';
+import HandleRequests from '../components/handleRequests';
 
 class Friends extends React.Component {
   constructor(props) {
@@ -15,6 +17,8 @@ class Friends extends React.Component {
       sent: [],
       received: [],
       newRequests: [],
+      friends: [],
+      myFriends: true,
     };
   }
 
@@ -29,6 +33,13 @@ class Friends extends React.Component {
             sent: response.data.sent,
             received: response.data.received,
             newRequests: response.data.new,
+          });
+        })
+        .catch(() => {});
+      axios.get(`v1/getfriends?email=${session}`)
+        .then(response => {
+          this.setState({
+            friends: response.data.friends,
           });
         })
         .catch(() => {});
@@ -49,29 +60,38 @@ class Friends extends React.Component {
   }
 
   handleMyFriends = () => {
-
+    this.setState({
+      myFriends: true,
+    });
   }
 
   handleNewFriends = () => {
-
+    this.setState({
+      myFriends: false,
+    });
   }
 
   render() {
     const { destroySession } = this.props;
-    const { sent, received, newRequests } = this.state;
+    const {
+      sent, received, newRequests, friends, myFriends,
+    } = this.state;
     const renderNewRequests = newRequests.map(request => (
-      <div className="request-cont" key={request.id}>
-        <img src={request.picture} alt="user" />
-        <section>
-          <h2>{request.name}</h2>
-          <div>
-            <button type="button">
-              <i className="fas fa-user-plus" />
-              Add Friend
-            </button>
-          </div>
-        </section>
-      </div>
+      <Friend
+        source={request.picture}
+        key={request.id}
+        name={request.name}
+        text="Add Friend"
+      />
+    ));
+    const renderFriends = friends.map(friend => (
+      <Friend
+        source={friend.picture}
+        key={friend.id}
+        name={friend.name}
+        text="Delete friend"
+        icon="fas fa-user-minus"
+      />
     ));
     return (
       <div>
@@ -81,7 +101,9 @@ class Friends extends React.Component {
             handleMyFriends={this.handleMyFriends}
             handleNewFriends={this.handleNewFriends}
           />
-          {renderNewRequests}
+          <HandleRequests />
+          {myFriends && renderFriends}
+          {!myFriends && renderNewRequests}
         </div>
       </div>
     );
