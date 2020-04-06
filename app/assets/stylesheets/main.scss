@@ -142,6 +142,7 @@ header ul {
 }
 
 .container {
+  overflow-x: hidden;
   min-height: 83vh;
   background: #ffd5a1;
   max-width: 84%;
@@ -565,10 +566,6 @@ header ul {
 }
 
 @media(max-width: 500px) {
-  body {
-    overflow-x: hidden;
-  }
-
   #ul-home{
     clip-path: none;
   }
