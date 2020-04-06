@@ -1,3 +1,7 @@
+#h2R2 {
+  transform: translateX(800%);
+}
+
 .btn-friends-cont {
   filter: drop-shadow(-1px 6px 3px rgba(50, 50, 0, 0.5));
   width: 100%;
@@ -59,6 +63,48 @@
   display: inline-block;
   padding: 20px;
   margin: 0;
+}
+
+.requests-container {
+  display: flex;
+  width: 80%;
+  margin: 0 auto;
+  margin-top: 10px;
+  justify-content: space-around;
+}
+
+.requests-container button {
+  border-radius: 5px;
+  font-size: 40px;
+  cursor: pointer;
+  background: #7a3500;
+  color: white;
+  border: none;
+}
+
+.h2request-cont {
+  background: RGBA(153, 66, 0, 0.5);
+  width: 100%;
+  text-align: center;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+  position: relative;
+  height: 50px;
+}
+
+.requests-container h2 {
+  display: inline-block;
+  width: 100px;
+  color: RGBA(255, 243, 71, 0.7);
+  text-shadow: 1px 1px 1px #632400;
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 9;
+  margin: auto;
+  margin-top: 11px;
+  transition: transform 1s;
 }
 
 @media(max-width: 900px) {

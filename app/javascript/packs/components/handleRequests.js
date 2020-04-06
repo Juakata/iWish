@@ -2,21 +2,32 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const HandleRequests = ({
-  backwardAction, furtherAction,
+  backwardAction, text, text2, change,
 }) => (
-  <div className="request-cont">
-    <button onClick={backwardAction} type="button">
-      <i className="fas fa-step-backward" />
-    </button>
-    <button onClick={furtherAction} type="button">
-      <i className="fas fa-step-forward" />
+  <div className="requests-container">
+    {!change && (
+    <div className="h2request-cont">
+      <h2 id="h2R1">{text}</h2>
+      <h2 id="h2R2">{text2}</h2>
+    </div>
+    )}
+    {change && (
+    <div className="h2request-cont">
+      <h2 id="h2R2">{text2}</h2>
+      <h2 id="h2R1">{text}</h2>
+    </div>
+    )}
+    <button id="btn-backR" onClick={backwardAction} type="button">
+      <i className="fas fa-arrow-circle-left" />
     </button>
   </div>
 );
 
 HandleRequests.propTypes = {
   backwardAction: PropTypes.func.isRequired,
-  furtherAction: PropTypes.func.isRequired,
+  text: PropTypes.string.isRequired,
+  text2: PropTypes.string.isRequired,
+  change: PropTypes.bool.isRequired,
 };
 
 export default HandleRequests;

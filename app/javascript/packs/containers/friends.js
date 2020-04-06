@@ -19,6 +19,12 @@ class Friends extends React.Component {
       newRequests: [],
       friends: [],
       myFriends: true,
+      txt1: 'Received',
+      txt2: 'New',
+      txt3: 'Sent',
+      times: 0,
+      change: false,
+      turns: 1,
     };
   }
 
@@ -71,10 +77,38 @@ class Friends extends React.Component {
     });
   }
 
+  backwardAction = () => {
+    const r1 = document.getElementById('h2R1');
+    const r2 = document.getElementById('h2R2');
+    const btnBackR = document.getElementById('btn-backR');
+    btnBackR.style.pointerEvents = 'none';
+    r1.style.transform = 'translateX(-800%)';
+    r2.style.transform = 'translateX(0)';
+    setTimeout(() => {
+      r1.style.opacity = '0';
+    }, 1000);
+    setTimeout(() => {
+      r1.style.opacity = '1';
+      const aux = r1.id;
+      r1.id = r2.id;
+      r2.id = aux;
+      btnBackR.style.pointerEvents = 'auto';
+      this.setState(state => ({
+        txt1: state.txt2,
+        txt2: state.txt3,
+        txt3: state.txt1,
+        change: (state.txt1 !== 'New' && state.turns % 2 !== 0) || (state.txt1 === 'New' && state.turns % 2 === 0),
+        times: state.times === 2 ? 0 : state.times + 1,
+        turns: state.times === 2 ? state.turns + 1 : state.turns,
+      }));
+    }, 1500);
+  }
+
   render() {
     const { destroySession } = this.props;
     const {
       sent, received, newRequests, friends, myFriends,
+      txt1, txt2, change,
     } = this.state;
     const renderNewRequests = newRequests.map(request => (
       <Friend
@@ -82,6 +116,22 @@ class Friends extends React.Component {
         key={request.id}
         name={request.name}
         text="Add Friend"
+      />
+    ));
+    const renderReceivedRequests = received.map(request => (
+      <Friend
+        source={request.picture}
+        key={request.id}
+        name={request.name}
+        text="Accept"
+      />
+    ));
+    const renderSentRequests = sent.map(request => (
+      <Friend
+        source={request.picture}
+        key={request.id}
+        name={request.name}
+        text="Cancel"
       />
     ));
     const renderFriends = friends.map(friend => (
@@ -101,9 +151,19 @@ class Friends extends React.Component {
             handleMyFriends={this.handleMyFriends}
             handleNewFriends={this.handleNewFriends}
           />
-          <HandleRequests />
           {myFriends && renderFriends}
-          {!myFriends && renderNewRequests}
+          {!myFriends && (
+            <HandleRequests
+              backwardAction={this.backwardAction}
+              furtherAction={this.furtherAction}
+              text={txt1}
+              text2={txt2}
+              change={change}
+            />
+          )}
+          {!myFriends && txt1 === 'New' && renderNewRequests}
+          {!myFriends && txt1 === 'Received' && renderReceivedRequests }
+          {!myFriends && txt1 === 'Sent' && renderSentRequests}
         </div>
       </div>
     );
