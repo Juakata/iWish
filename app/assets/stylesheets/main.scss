@@ -578,6 +578,10 @@ header ul {
     max-width: 300px;
   }
 
+  .sign-in-form button, .sign-up-form button, .profile-form-list button{
+    width: 50%;
+  }
+
   .container {
     max-width: 100%;
     padding: 25px;
