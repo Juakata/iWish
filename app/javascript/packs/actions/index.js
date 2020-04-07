@@ -25,6 +25,7 @@ const ADD_WISH = 'ADD_WISH';
 const OPEN_MENU = 'OPEN_MENU';
 const UPDATE_WISH = 'UPDATE_WISH';
 const DELETE_WISH = 'DELETE_WISH';
+const CREATE_REQUESTS = 'CREATE_REQUESTS';
 
 const faces = [
   { id: 1, src: Face }, { id: 2, src: Face2 }, { id: 3, src: Face3 },
@@ -74,7 +75,14 @@ const openMenu = open => ({
   open,
 });
 
+const createRequests = ({ received, newRequests, sent }) => ({
+  type: CREATE_REQUESTS,
+  received,
+  newRequests,
+  sent,
+});
+
 export {
   createSession, destroySession, getFaces, createProfile, addWish, openMenu,
-  updateWish, deleteWish,
+  updateWish, deleteWish, createRequests,
 };

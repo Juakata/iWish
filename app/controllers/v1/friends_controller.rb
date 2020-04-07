@@ -36,7 +36,7 @@ class V1::FriendsController < ApplicationController
       received = Profile.where('user_id IN (?)', id_senders)
       sent = Profile.where('user_id IN (?)', id_receivers)
       new = Profile.where('user_id NOT IN (?)', ids)
-      render json: { received: received, sent: sent, new: new }
+      render json: { received: received, newRequests: new, sent: sent }
     else
       render json: { result: 'Not found.' }
     end
@@ -59,6 +59,19 @@ class V1::FriendsController < ApplicationController
       end
     else
       render json: { result: 'Not found.' }
+    end
+  end
+
+  def cancel_request
+    sender = User.find_by(email: params[:email])
+    receiver = Profile.find(params[:id]).user
+
+    friend = Friend.where('sender = (?) AND receiver = (?)', sender.id, receiver.id).first
+    if friend
+      friend.destroy
+      render json: { result: 'Canceled.' }
+    else
+      render json: { result: 'Realation: not found.' }
     end
   end
 end

@@ -9,6 +9,7 @@ const data = {
   session: '',
   profile: {},
   functions: { open: true },
+  requests: {},
 };
 
 const store = createStore(rootReducer, data);

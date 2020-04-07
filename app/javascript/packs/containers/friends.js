@@ -14,9 +14,6 @@ class Friends extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      sent: [],
-      received: [],
-      newRequests: [],
       friends: [],
       myFriends: true,
       txt1: 'Received',
@@ -33,16 +30,6 @@ class Friends extends React.Component {
     if (session === '' || session === 'destroy') {
       history.push('/');
     } else {
-      axios.get(`v1/allrequests?email=${session}`)
-        .then(response => {
-          console.log(response);
-          this.setState({
-            sent: response.data.sent,
-            received: response.data.received,
-            newRequests: response.data.new,
-          });
-        })
-        .catch(() => {});
       axios.get(`v1/getfriends?email=${session}`)
         .then(response => {
           this.setState({
@@ -109,7 +96,24 @@ class Friends extends React.Component {
     const { session } = this.props;
     axios.get(`v1/addfriend?email=${session}&id=${id}`)
       .then(response => {
-        console.log(response.data.result);
+        if (response.data.result === 'Created.') {
+          this.setState(state => ({
+            newRequests: state.newRequests.filter(req => req.id !== id),
+          }));
+        }
+      })
+      .catch(() => {});
+  }
+
+  cancelRequest = id => {
+    const { session } = this.props;
+    axios.get(`v1/cancelrequest?email=${session}&id=${id}`)
+      .then(response => {
+        if (response.data.result === 'Canceled.') {
+          this.setState(state => ({
+            sent: state.sent.filter(req => req.id !== id),
+          }));
+        }
       })
       .catch(() => {});
   }
@@ -117,9 +121,10 @@ class Friends extends React.Component {
   render() {
     const { destroySession } = this.props;
     const {
-      sent, received, newRequests, friends, myFriends,
-      txt1, txt2, change,
+      friends, myFriends, txt1, txt2, change,
     } = this.state;
+    const { requests } = this.props;
+    const { received, newRequests, sent } = requests;
     const renderNewRequests = newRequests.map(request => (
       <Friend
         source={request.picture}
@@ -129,6 +134,7 @@ class Friends extends React.Component {
         onClick={() => this.addFriend(request.id)}
       />
     ));
+
     const renderReceivedRequests = received.map(request => (
       <Friend
         source={request.picture}
@@ -143,6 +149,7 @@ class Friends extends React.Component {
         key={request.id}
         name={request.name}
         text="Cancel"
+        onClick={() => this.cancelRequest(request.id)}
       />
     ));
     const renderFriends = friends.map(friend => (
@@ -154,6 +161,7 @@ class Friends extends React.Component {
         icon="fas fa-user-minus"
       />
     ));
+
     return (
       <div>
         <Header source={Logo} menu={this.menu} out={destroySession} />
@@ -187,11 +195,13 @@ Friends.propTypes = {
   destroySession: PropTypes.func.isRequired,
   functions: PropTypes.instanceOf(Object).isRequired,
   openMenu: PropTypes.func.isRequired,
+  requests: PropTypes.instanceOf(Object).isRequired,
 };
 
 const mapStateToProps = state => ({
   session: state.session,
   functions: state.functions,
+  requests: state.requests,
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -7,7 +7,7 @@ import Header from '../components/header';
 import Face from '../assets/bakiFace.png';
 import Logo from '../assets/logo.png';
 import {
-  destroySession, createProfile, addWish, openMenu,
+  destroySession, createProfile, addWish, openMenu, createRequests,
 } from '../actions/index';
 
 class Home extends React.Component {
@@ -23,6 +23,12 @@ class Home extends React.Component {
     if (session === '' || session === 'destroy') {
       history.push('/');
     } else {
+      axios.get(`v1/allrequests?email=${session}`)
+        .then(response => {
+          const { createRequests } = this.props;
+          createRequests(response.data);
+        })
+        .catch(() => {});
       let profile;
       axios.get(`v1/getprofile?email=${session}`)
         .then(response => {
@@ -104,6 +110,7 @@ Home.propTypes = {
   createProfile: PropTypes.func.isRequired,
   functions: PropTypes.instanceOf(Object).isRequired,
   openMenu: PropTypes.func.isRequired,
+  createRequests: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -116,6 +123,7 @@ const mapDispatchToProps = dispatch => ({
   createProfile: profile => dispatch(createProfile(profile)),
   addWish: wish => dispatch(addWish(wish)),
   openMenu: open => dispatch(openMenu(open)),
+  createRequests: requests => dispatch(createRequests(requests)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Home));
