@@ -37,22 +37,36 @@ body {
 }
 
 header {
-  margin: 0;
+  position: fixed;
   display: grid;
   grid-template-columns: 25% 50% 25%;
   filter: drop-shadow(-1px 6px 3px rgba(50, 50, 0, 0.5));
-  position: relative;
   z-index: 2;
+  width: 100%;
+  top: 0;
+  left: 0;
 }
 
 header ul {
-  background: RGBA(143, 62, 0, .7);
+  background: RGBA(143, 62, 0, 1);
   list-style: none;
   margin: 0;
-  padding: 20px 50px;
+  padding: 10px 40px;
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
+}
+
+#menu-cover {
+  border: none;
+  display: none;
+  position: fixed;
+  background: RGBA(0, 0, 0, .5);
+  top: 0;
+  left: 0;
+  z-index: 4;
+  width: 100%;
+  height: 100vh;
 }
 
 #ul-home{
@@ -143,12 +157,13 @@ header ul {
 
 .container {
   overflow-x: hidden;
-  min-height: 83vh;
+  min-height: 85vh;
   background: #ffd5a1;
   max-width: 84%;
   margin: 0 auto;
   padding: 50px;
   box-shadow: 0 5px 10px black;
+  margin-top: 125px;
 }
 
 .remove-padding {
@@ -195,6 +210,8 @@ header ul {
 
 .logoHome {
   width: 100px;
+  position: relative;
+  z-index: 5;
 }
 
 .sign-in-form, .sign-up-form {
@@ -516,8 +533,8 @@ header ul {
     flex-direction: column;
     align-items: center;
     position: absolute;
-    top: 75px;
-    left: 77px;
+    top: 70px;
+    left: 68px;
     border-radius: 50px;
     padding: 5px;
     z-index: 5;

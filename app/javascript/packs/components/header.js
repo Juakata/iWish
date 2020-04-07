@@ -6,6 +6,12 @@ const Header = ({
   source, out, menu,
 }) => (
   <header>
+    <button
+      type="button"
+      id="menu-cover"
+      onClick={menu}
+      aria-label="Out"
+    />
     <ul id="ul-home">
       <li>
         <Link className="link link-home" to="/home">
