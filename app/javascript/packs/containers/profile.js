@@ -42,16 +42,6 @@ class Profile extends React.Component {
     }
   }
 
-  fixWindow = open => {
-    if (!open) {
-      window.scrollTo(0, 0);
-      document.body.scrollTo = 0;
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'auto';
-    }
-  }
-
   handleWishList = () => {
     this.setState(state => ({
       openForm: !state.openForm,
@@ -59,8 +49,6 @@ class Profile extends React.Component {
       description: '',
       wishCreated: false,
     }));
-    const { openForm } = this.state;
-    this.fixWindow(openForm);
   }
 
   deleteWish = () => {
@@ -131,8 +119,6 @@ class Profile extends React.Component {
     this.setState(state => ({
       openWindow: !state.openWindow,
     }));
-    const { openWindow } = this.state;
-    this.fixWindow(openWindow);
   }
 
   handlePicture = face => {
@@ -155,8 +141,6 @@ class Profile extends React.Component {
       description: wish.description,
       wishCreated: true,
     }));
-    const { openForm } = this.state;
-    this.fixWindow(openForm);
   }
 
   render() {
