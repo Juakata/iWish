@@ -26,6 +26,13 @@ const OPEN_MENU = 'OPEN_MENU';
 const UPDATE_WISH = 'UPDATE_WISH';
 const DELETE_WISH = 'DELETE_WISH';
 const CREATE_REQUESTS = 'CREATE_REQUESTS';
+const ADD_NEW = 'ADD_NEW';
+const ADD_SENT = 'ADD_SENT';
+const REMOVE_NEW = 'REMOVE_NEW';
+const REMOVE_SENT = 'REMOVE_SENT';
+const REMOVE_RECEIVED = 'REMOVE_RECEIVED';
+const ADD_FRIEND = 'ADD_FRIEND';
+const REMOVE_FRIEND = 'REMOVE_FRIEND';
 
 const faces = [
   { id: 1, src: Face }, { id: 2, src: Face2 }, { id: 3, src: Face3 },
@@ -75,14 +82,53 @@ const openMenu = open => ({
   open,
 });
 
-const createRequests = ({ received, newRequests, sent }) => ({
+const createRequests = ({
+  friends, received, newRequests, sent,
+}) => ({
   type: CREATE_REQUESTS,
+  friends,
   received,
   newRequests,
   sent,
 });
 
+const addSent = sent => ({
+  type: ADD_SENT,
+  sent,
+});
+
+const addNew = newRequest => ({
+  type: ADD_NEW,
+  newRequest,
+});
+
+const removeNew = id => ({
+  type: REMOVE_NEW,
+  id,
+});
+
+const removeSent = id => ({
+  type: REMOVE_SENT,
+  id,
+});
+
+const removeReceived = id => ({
+  type: REMOVE_RECEIVED,
+  id,
+});
+
+const addFriend = friend => ({
+  type: ADD_FRIEND,
+  friend,
+});
+
+const removeFriend = id => ({
+  type: REMOVE_FRIEND,
+  id,
+});
+
 export {
   createSession, destroySession, getFaces, createProfile, addWish, openMenu,
-  updateWish, deleteWish, createRequests,
+  updateWish, deleteWish, createRequests, addSent, addNew, removeNew, removeSent,
+  removeReceived, addFriend, removeFriend,
 };

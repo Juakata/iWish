@@ -4,8 +4,8 @@ class V1::FriendsController < ApplicationController
   def get_friends
     user = User.find_by(email: params[:email])
     if user
-      ids = Friend.select(:sender).where('receiver = (?) AND status = TRUE', user.id).to_a
-      ids += Friend.select(:receiver).where('sender = (?)  AND status = TRUE', user.id).to_a
+      ids = get_array(Friend.select(:sender).where('receiver = (?) AND status = TRUE', user.id), 'sender')
+      ids += get_array(Friend.select(:receiver).where('sender = (?)  AND status = TRUE', user.id), 'receiver')
       friends = Profile.where('user_id IN (?)', ids)
       render json: { friends: friends }
     else
@@ -13,30 +13,21 @@ class V1::FriendsController < ApplicationController
     end
   end
 
-  def get_array (obj, option)
-    arr = []
-    if option == 'receiver'
-      obj.each do |e|
-        arr.push(e[:receiver])
-      end
-    else
-      obj.each do |e|
-        arr.push(e[:sender])
-      end
-    end
-    arr
-  end
-
   def all_requests
     user = User.find_by(email: params[:email])
     if user
+      ids = get_array(Friend.select(:sender).where('receiver = (?) AND status = TRUE', user.id), 'sender')
+      ids += get_array(Friend.select(:receiver).where('sender = (?)  AND status = TRUE', user.id), 'receiver')
+      friends = Profile.where('user_id IN (?)', ids)
+
       id_senders = get_array(Friend.select(:sender).where('receiver = (?) AND status = FALSE', user.id), 'sender')
       id_receivers = get_array(Friend.select(:receiver).where('sender = (?) AND status = FALSE', user.id), 'receiver')
-      ids = id_senders + id_receivers + [user.id]
+      ids_new = id_senders + id_receivers + ids + [user.id]
+
       received = Profile.where('user_id IN (?)', id_senders)
       sent = Profile.where('user_id IN (?)', id_receivers)
-      new = Profile.where('user_id NOT IN (?)', ids)
-      render json: { received: received, newRequests: new, sent: sent }
+      new = Profile.where('user_id NOT IN (?)', ids_new)
+      render json: { friends: friends, received: received, newRequests: new, sent: sent }
     else
       render json: { result: 'Not found.' }
     end
@@ -62,16 +53,46 @@ class V1::FriendsController < ApplicationController
     end
   end
 
-  def cancel_request
+  def accept_friend
+    receiver = User.find_by(email: params[:email])
+    sender = Profile.find(params[:id]).user
+
+    friend = Friend.where('sender = (?) AND receiver = (?)', sender.id, receiver.id).first
+    if friend
+      friend.update_attribute(:status, true)
+      render json: { result: 'Accepted' }
+    else
+      render json: { result: 'Realation: not found.' }
+    end
+  end
+
+  def destroy_relation
     sender = User.find_by(email: params[:email])
     receiver = Profile.find(params[:id]).user
 
     friend = Friend.where('sender = (?) AND receiver = (?)', sender.id, receiver.id).first
+    friend = Friend.where('sender = (?) AND receiver = (?)', receiver.id, sender.id).first unless friend
     if friend
       friend.destroy
-      render json: { result: 'Canceled.' }
+      render json: { result: 'Destroy' }
     else
       render json: { result: 'Realation: not found.' }
     end
+  end
+
+  private
+
+  def get_array (obj, option)
+    arr = []
+    if option == 'receiver'
+      obj.each do |e|
+        arr.push(e[:receiver])
+      end
+    else
+      obj.each do |e|
+        arr.push(e[:sender])
+      end
+    end
+    arr
   end
 end

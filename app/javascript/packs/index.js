@@ -9,7 +9,12 @@ const data = {
   session: '',
   profile: {},
   functions: { open: true },
-  requests: {},
+  requests: {
+    friends: [],
+    received: [],
+    newRequests: [],
+    sent: [],
+  },
 };
 
 const store = createStore(rootReducer, data);

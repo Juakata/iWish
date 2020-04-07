@@ -96,10 +96,16 @@
 .request-cont #accept {
   background: RGBA(0, 212, 35, .7);
   padding: 5px;
-  border: none;
+  border: 1px RGBA(0, 212, 35, .7) solid;
   border-radius: 5px;
   color: white;
   cursor: pointer;
+}
+
+.request-cont #accept:hover {
+  background: white;
+  color: RGBA(0, 212, 35, .7);
+  border: 1px RGBA(0, 212, 35, .7) solid;
 }
 
 .request-cont #accept i{

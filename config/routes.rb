@@ -13,7 +13,8 @@ Rails.application.routes.draw do
     get 'allrequests', to: 'friends#all_requests'
     get 'getfriends', to: 'friends#get_friends'
     get 'addfriend', to: 'friends#add_friend'
-    get 'cancelrequest', to: 'friends#cancel_request'
+    get 'acceptfriend', to: 'friends#accept_friend'
+    get 'destroyrelation', to: 'friends#destroy_relation'
   end
 
   get '*page', to: 'static#index', constraints: ->(req) do

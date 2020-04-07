@@ -5,7 +5,10 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import Header from '../components/header';
 import Logo from '../assets/logo.png';
-import { destroySession, openMenu } from '../actions/index';
+import {
+  destroySession, openMenu, addNew, addSent, removeNew, removeSent,
+  removeReceived, removeFriend, addFriend,
+} from '../actions/index';
 import BtnsHeader from '../components/btnsHeader';
 import Friend from '../components/friend';
 import HandleRequests from '../components/handleRequests';
@@ -14,7 +17,6 @@ class Friends extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      friends: [],
       myFriends: true,
       txt1: 'Received',
       txt2: 'New',
@@ -29,14 +31,6 @@ class Friends extends React.Component {
     const { session, history } = this.props;
     if (session === '' || session === 'destroy') {
       history.push('/');
-    } else {
-      axios.get(`v1/getfriends?email=${session}`)
-        .then(response => {
-          this.setState({
-            friends: response.data.friends,
-          });
-        })
-        .catch(() => {});
     }
   }
 
@@ -74,13 +68,6 @@ class Friends extends React.Component {
     r2.style.transform = 'translateX(0)';
     setTimeout(() => {
       r1.style.opacity = '0';
-    }, 1000);
-    setTimeout(() => {
-      r1.style.opacity = '1';
-      const aux = r1.id;
-      r1.id = r2.id;
-      r2.id = aux;
-      btnBackR.style.pointerEvents = 'auto';
       this.setState(state => ({
         txt1: state.txt2,
         txt2: state.txt3,
@@ -89,30 +76,69 @@ class Friends extends React.Component {
         times: state.times === 2 ? 0 : state.times + 1,
         turns: state.times === 2 ? state.turns + 1 : state.turns,
       }));
+    }, 1000);
+    setTimeout(() => {
+      r1.style.opacity = '1';
+      const aux = r1.id;
+      r1.id = r2.id;
+      r2.id = aux;
+      btnBackR.style.pointerEvents = 'auto';
     }, 1500);
   }
 
   addFriend = id => {
-    const { session } = this.props;
+    const {
+      session, removeNew, requests, addSent,
+    } = this.props;
     axios.get(`v1/addfriend?email=${session}&id=${id}`)
       .then(response => {
         if (response.data.result === 'Created.') {
-          this.setState(state => ({
-            newRequests: state.newRequests.filter(req => req.id !== id),
-          }));
+          const sent = requests.newRequests.filter(ele => ele.id === id)[0];
+          addSent(sent);
+          removeNew(id);
         }
       })
       .catch(() => {});
   }
 
   cancelRequest = id => {
-    const { session } = this.props;
-    axios.get(`v1/cancelrequest?email=${session}&id=${id}`)
+    const {
+      session, removeSent, addNew, requests,
+    } = this.props;
+    axios.get(`v1/destroyrelation?email=${session}&id=${id}`)
       .then(response => {
-        if (response.data.result === 'Canceled.') {
-          this.setState(state => ({
-            sent: state.sent.filter(req => req.id !== id),
-          }));
+        if (response.data.result === 'Destroy') {
+          const newRequest = requests.sent.filter(ele => ele.id === id)[0];
+          addNew(newRequest);
+          removeSent(id);
+        }
+      })
+      .catch(() => {});
+  }
+
+  acceptFriend = id => {
+    const {
+      session, removeReceived, addFriend, requests,
+    } = this.props;
+    axios.get(`v1/acceptfriend?email=${session}&id=${id}`)
+      .then(() => {
+        const friend = requests.received.filter(ele => ele.id === id)[0];
+        removeReceived(id);
+        addFriend(friend);
+      })
+      .catch(() => {});
+  }
+
+  deleteFriend = id => {
+    const {
+      session, removeFriend, addNew, requests,
+    } = this.props;
+    axios.get(`v1/destroyrelation?email=${session}&id=${id}`)
+      .then(response => {
+        if (response.data.result === 'Destroy') {
+          const newRequest = requests.friends.filter(ele => ele.id === id)[0];
+          addNew(newRequest);
+          removeFriend(id);
         }
       })
       .catch(() => {});
@@ -121,10 +147,12 @@ class Friends extends React.Component {
   render() {
     const { destroySession } = this.props;
     const {
-      friends, myFriends, txt1, txt2, change,
+      myFriends, txt1, txt2, change,
     } = this.state;
     const { requests } = this.props;
-    const { received, newRequests, sent } = requests;
+    const {
+      friends, received, newRequests, sent,
+    } = requests;
     const renderNewRequests = newRequests.map(request => (
       <Friend
         source={request.picture}
@@ -141,6 +169,7 @@ class Friends extends React.Component {
         key={request.id}
         name={request.name}
         text="Accept"
+        onClick={() => this.acceptFriend(request.id)}
       />
     ));
     const renderSentRequests = sent.map(request => (
@@ -149,6 +178,7 @@ class Friends extends React.Component {
         key={request.id}
         name={request.name}
         text="Cancel"
+        icon="fas fa-user-minus"
         onClick={() => this.cancelRequest(request.id)}
       />
     ));
@@ -159,6 +189,7 @@ class Friends extends React.Component {
         name={friend.name}
         text="Delete friend"
         icon="fas fa-user-minus"
+        onClick={() => this.deleteFriend(friend.id)}
       />
     ));
 
@@ -196,6 +227,13 @@ Friends.propTypes = {
   functions: PropTypes.instanceOf(Object).isRequired,
   openMenu: PropTypes.func.isRequired,
   requests: PropTypes.instanceOf(Object).isRequired,
+  addNew: PropTypes.func.isRequired,
+  addSent: PropTypes.func.isRequired,
+  removeNew: PropTypes.func.isRequired,
+  removeSent: PropTypes.func.isRequired,
+  removeReceived: PropTypes.func.isRequired,
+  removeFriend: PropTypes.func.isRequired,
+  addFriend: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -207,6 +245,13 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   destroySession: () => dispatch(destroySession()),
   openMenu: open => dispatch(openMenu(open)),
+  addNew: newRequest => dispatch(addNew(newRequest)),
+  addSent: sent => dispatch(addSent(sent)),
+  removeNew: id => dispatch(removeNew(id)),
+  removeSent: id => dispatch(removeSent(id)),
+  removeReceived: id => dispatch(removeReceived(id)),
+  removeFriend: id => dispatch(removeFriend(id)),
+  addFriend: friend => dispatch(addFriend(friend)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Friends));
