@@ -11,7 +11,7 @@ const profileReducer = (state = {}, action) => {
       return action.profile;
     case ADD_WISH:
       clone.wishes.push(action.wish);
-      return {};
+      return clone;
     case UPDATE_WISH:
       wish = clone.wishes.find(wish => wish.id === action.wish.id);
       wish.title = action.wish.title;

@@ -30,6 +30,7 @@ class Friends extends React.Component {
       name: '',
       source: '',
       birthday: '',
+      wishes: [],
     };
   }
 
@@ -152,20 +153,27 @@ class Friends extends React.Component {
 
   profileAction = friend => {
     if (friend !== 0) {
-      const { name, picture, birthday } = friend;
+      const {
+        id, name, birthday, picture,
+      } = friend;
       const month = birthday.split('-')[1];
       const day = birthday.split('-')[2];
       const year = birthday.split('-')[0];
-      this.setState(state => ({
-        showFriend: !state.showFriend,
-        name,
-        source: picture,
-        birthday: <HumanDate
-          month={month}
-          day={day}
-          year={year}
-        />,
-      }));
+      axios.get(`v1/getwishes?id=${id}`)
+        .then(response => {
+          this.setState(state => ({
+            showFriend: !state.showFriend,
+            name,
+            source: picture,
+            wishes: response.data,
+            birthday: <HumanDate
+              month={month}
+              day={day}
+              year={year}
+            />,
+          }));
+        })
+        .catch(() => {});
     } else {
       this.setState(state => ({
         showFriend: !state.showFriend,
@@ -177,7 +185,7 @@ class Friends extends React.Component {
     const { destroySession } = this.props;
     const {
       myFriends, txt1, txt2, change, showFriend,
-      name, source, birthday,
+      name, source, birthday, wishes,
     } = this.state;
     const { requests } = this.props;
     const {
@@ -258,6 +266,7 @@ class Friends extends React.Component {
             goBack={() => this.profileAction(0)}
             source={source}
             birthday={birthday}
+            wishes={wishes}
           />
         )}
       </div>

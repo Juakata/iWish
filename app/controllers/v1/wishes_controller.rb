@@ -20,9 +20,11 @@ class V1::WishesController < ApplicationController
   end
 
   def get_wishes
-    user = User.find_by(email: params[:email])
-    if user
-      profile = user.profile
+    user = User.find_by(email: params[:email]) if params[:email]
+    profile = Profile.find(params[:id]) if params[:id]
+
+    if user || profile
+      profile = user.profile unless profile
       if profile
         render json: profile.wishes.order(created_at: :asc)
       else

@@ -67,8 +67,10 @@ class Profile extends React.Component {
     const { id } = event.target[event.target.length - 1];
     const { session, addWish, updateWish } = this.props;
     const {
-      name, birthday, picture, wishId, title, description, wishes,
+      name, birthday, picture, wishId, title, description,
     } = this.state;
+    const { profile } = this.props;
+    const { wishes } = profile;
     switch (id) {
       case 'btnProfile':
         axios.get(`v1/setprofile?email=${session}&name=${name}&birthday=${birthday}&picture=${picture}`)
