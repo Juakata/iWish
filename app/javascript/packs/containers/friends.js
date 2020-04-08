@@ -12,11 +12,13 @@ import {
 import BtnsHeader from '../components/btnsHeader';
 import Friend from '../components/friend';
 import HandleRequests from '../components/handleRequests';
+import ShowFriend from '../components/showFriend';
 
 class Friends extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      showFriend: false,
       myFriends: true,
       txt1: 'Received',
       txt2: 'New',
@@ -24,6 +26,7 @@ class Friends extends React.Component {
       times: 0,
       change: false,
       turns: 1,
+      name: '',
     };
   }
 
@@ -144,77 +147,102 @@ class Friends extends React.Component {
       .catch(() => {});
   }
 
+  profileAction = (friend = null) => {
+    if (friend !== null) {
+      const { name } = friend;
+      this.setState(state => ({
+        showFriend: !state.showFriend,
+        name,
+      }));
+    } else {
+      this.setState(state => ({
+        showFriend: !state.showFriend,
+      }));
+    }
+  }
+
   render() {
     const { destroySession } = this.props;
     const {
-      myFriends, txt1, txt2, change,
+      myFriends, txt1, txt2, change, showFriend,
+      name,
     } = this.state;
     const { requests } = this.props;
     const {
       friends, received, newRequests, sent,
     } = requests;
-    const renderNewRequests = newRequests.map(request => (
-      <Friend
-        source={request.picture}
-        key={request.id}
-        name={request.name}
-        text="Add Friend"
-        onClick={() => this.addFriend(request.id)}
-      />
-    ));
+    let renderFriends; let renderNewRequests;
+    let renderSentRequests; let renderReceivedRequests;
+    if (!showFriend) {
+      renderNewRequests = newRequests.map(request => (
+        <Friend
+          source={request.picture}
+          key={request.id}
+          name={request.name}
+          text="Add Friend"
+          onClick={() => this.addFriend(request.id)}
+        />
+      ));
 
-    const renderReceivedRequests = received.map(request => (
-      <Friend
-        source={request.picture}
-        key={request.id}
-        name={request.name}
-        text="Accept"
-        onClick={() => this.acceptFriend(request.id)}
-      />
-    ));
-    const renderSentRequests = sent.map(request => (
-      <Friend
-        source={request.picture}
-        key={request.id}
-        name={request.name}
-        text="Cancel"
-        icon="fas fa-user-minus"
-        onClick={() => this.cancelRequest(request.id)}
-      />
-    ));
-    const renderFriends = friends.map(friend => (
-      <Friend
-        source={friend.picture}
-        key={friend.id}
-        name={friend.name}
-        text="Delete friend"
-        icon="fas fa-user-minus"
-        onClick={() => this.deleteFriend(friend.id)}
-      />
-    ));
+      renderReceivedRequests = received.map(request => (
+        <Friend
+          source={request.picture}
+          key={request.id}
+          name={request.name}
+          text="Accept"
+          onClick={() => this.acceptFriend(request.id)}
+        />
+      ));
+      renderSentRequests = sent.map(request => (
+        <Friend
+          source={request.picture}
+          key={request.id}
+          name={request.name}
+          text="Cancel"
+          icon="fas fa-user-minus"
+          onClick={() => this.cancelRequest(request.id)}
+        />
+      ));
+      renderFriends = friends.map(friend => (
+        <Friend
+          source={friend.picture}
+          key={friend.id}
+          name={friend.name}
+          text="Delete friend"
+          icon="fas fa-user-minus"
+          onClick={() => this.deleteFriend(friend.id)}
+          profileAction={() => this.profileAction(friend)}
+          status
+        />
+      ));
+    }
 
     return (
       <div>
         <Header source={Logo} menu={this.menu} out={destroySession} />
-        <div className="container remove-padding">
-          <BtnsHeader
-            handleMyFriends={this.handleMyFriends}
-            handleNewFriends={this.handleNewFriends}
-          />
-          {myFriends && renderFriends}
-          {!myFriends && (
-            <HandleRequests
-              backwardAction={this.backwardAction}
-              furtherAction={this.furtherAction}
-              text={txt1}
-              text2={txt2}
-              change={change}
+        {!showFriend ? (
+          <div className="container remove-padding">
+            <BtnsHeader
+              handleMyFriends={this.handleMyFriends}
+              handleNewFriends={this.handleNewFriends}
             />
-          )}
-          {!myFriends && txt1 === 'New' && renderNewRequests}
-          {!myFriends && txt1 === 'Received' && renderReceivedRequests }
-          {!myFriends && txt1 === 'Sent' && renderSentRequests}
-        </div>
+            {myFriends && renderFriends}
+            {!myFriends && (
+              <HandleRequests
+                backwardAction={this.backwardAction}
+                furtherAction={this.furtherAction}
+                text={txt1}
+                text2={txt2}
+                change={change}
+              />
+            )}
+            {!myFriends && txt1 === 'New' && renderNewRequests}
+            {!myFriends && txt1 === 'Received' && renderReceivedRequests }
+            {!myFriends && txt1 === 'Sent' && renderSentRequests}
+          </div>
+        ) : (
+          <ShowFriend name={name} goBack={this.profileAction} />
+        )}
       </div>
     );
   }
