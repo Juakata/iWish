@@ -155,6 +155,10 @@
   border: 2px white solid;
 }
 
+.fa-birthday-cake {
+  margin-right: 5px;
+}
+
 @media(max-width: 900px) {
   .request-cont {
     grid-template-columns: 30% 70%;

@@ -13,6 +13,7 @@ import BtnsHeader from '../components/btnsHeader';
 import Friend from '../components/friend';
 import HandleRequests from '../components/handleRequests';
 import ShowFriend from '../components/showFriend';
+import HumanDate from '../components/humanDate';
 
 class Friends extends React.Component {
   constructor(props) {
@@ -27,6 +28,8 @@ class Friends extends React.Component {
       change: false,
       turns: 1,
       name: '',
+      source: '',
+      birthday: '',
     };
   }
 
@@ -147,12 +150,21 @@ class Friends extends React.Component {
       .catch(() => {});
   }
 
-  profileAction = (friend = null) => {
-    if (friend !== null) {
-      const { name } = friend;
+  profileAction = friend => {
+    if (friend !== 0) {
+      const { name, picture, birthday } = friend;
+      const month = birthday.split('-')[1];
+      const day = birthday.split('-')[2];
+      const year = birthday.split('-')[0];
       this.setState(state => ({
         showFriend: !state.showFriend,
         name,
+        source: picture,
+        birthday: <HumanDate
+          month={month}
+          day={day}
+          year={year}
+        />,
       }));
     } else {
       this.setState(state => ({
@@ -165,7 +177,7 @@ class Friends extends React.Component {
     const { destroySession } = this.props;
     const {
       myFriends, txt1, txt2, change, showFriend,
-      name,
+      name, source, birthday,
     } = this.state;
     const { requests } = this.props;
     const {
@@ -241,7 +253,12 @@ class Friends extends React.Component {
             {!myFriends && txt1 === 'Sent' && renderSentRequests}
           </div>
         ) : (
-          <ShowFriend name={name} goBack={this.profileAction} />
+          <ShowFriend
+            name={name}
+            goBack={() => this.profileAction(0)}
+            source={source}
+            birthday={birthday}
+          />
         )}
       </div>
     );
