@@ -31,6 +31,8 @@ class Friends extends React.Component {
       source: '',
       birthday: '',
       sendWishGivers: {},
+      renderGivers: '',
+      currentWish: '',
     };
   }
 
@@ -151,15 +153,6 @@ class Friends extends React.Component {
       .catch(() => {});
   }
 
-  showGivers = id => {
-    const { wishesgivers } = this.props;
-    const givers = wishesgivers.filter(givers => givers.id === id);
-    const renderGivers = givers.map(giver => (
-      <div key={giver.id}>{giver.name}</div>
-    ));
-    return renderGivers;
-  }
-
   profileAction = friend => {
     if (friend !== 0) {
       const {
@@ -188,11 +181,45 @@ class Friends extends React.Component {
     }
   }
 
+  hideGivers = () => {
+    const giversCont = document.getElementById('givers-btns-cont');
+    giversCont.style.display = 'none';
+  }
+
+  addMeAsGiver = wish => {
+    const { session } = this.props;
+    axios.get(`v1/addgiver?email=${session}&id=${wish}`)
+      .then(() => {
+        this.hideGivers();
+      })
+      .catch(() => {});
+  }
+
+  showGivers = ids => {
+    console.log("test");
+    const { profile, wish } = ids;
+    const { wishesgivers } = this.props;
+    console.log(wishesgivers);
+    const wishGivers = wishesgivers.filter(wishGiver => wishGiver.id === profile);
+    const givers = wishGivers[0].wishgivers.filter(wishGiver => wishGiver.id === wish);
+    const renderGivers = givers[0].givers.map(giver => (
+      <div className="giver-cont" key={giver.id}>
+        <img src={giver.picture} alt="giver" />
+        <span>{giver.name}</span>
+      </div>
+    ));
+    document.getElementById('givers-btns-cont').style.display = 'flex';
+    this.setState({
+      renderGivers,
+      currentWish: wish,
+    });
+  }
+
   render() {
     const { destroySession } = this.props;
     const {
-      myFriends, txt1, txt2, change, showFriend,
-      name, source, birthday, sendWishGivers,
+      myFriends, txt1, txt2, change, showFriend, name,
+      source, birthday, sendWishGivers, renderGivers, currentWish,
     } = this.state;
     const { requests } = this.props;
     const {
@@ -276,7 +303,19 @@ class Friends extends React.Component {
               birthday={birthday}
               handleGivers={id => this.handleGivers(id)}
               wishesgivers={sendWishGivers}
+              showGivers={(event, ids) => this.showGivers(event, ids)}
             />
+            <div id="givers-btns-cont">
+              <button onClick={this.hideGivers} type="button">
+                <i className="fas fa-times" />
+              </button>
+              <div className="givers-cont">
+                {renderGivers}
+              </div>
+              <button onClick={() => this.addMeAsGiver(currentWish)} type="button">
+                <i className="fas fa-user-plus" />
+              </button>
+            </div>
           </div>
         )}
       </div>

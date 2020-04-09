@@ -11,4 +11,10 @@ class V1::GiversController < ApplicationController
       render json: { result: 'Not found' }
     end
   end
+
+  def add_giver
+    wish = Wish.find(params[:id])
+    profile = User.find_by(email: params[:email]).profile
+    wish.givers.build(friend_id: profile.id).save
+  end
 end

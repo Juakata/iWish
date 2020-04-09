@@ -16,6 +16,7 @@ Rails.application.routes.draw do
     get 'acceptfriend', to: 'friends#accept_friend'
     get 'destroyrelation', to: 'friends#destroy_relation'
     get 'getgivers', to: 'givers#get_givers'
+    get 'addgiver', to: 'givers#add_giver'
   end
 
   get '*page', to: 'static#index', constraints: ->(req) do

@@ -15,6 +15,66 @@
   margin-left: 10px;
 }
 
+#givers-btns-cont {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: RGBA(0, 0, 0, .6);
+  z-index: 7;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+#givers-btns-cont button {
+  font-size: 20px;
+  background: linear-gradient(to right, #051937, #004d7a);
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  font-weight: bolder;
+}
+
+#givers-btns-cont .fa-times {
+  padding: 20px 20px;
+}
+
+#givers-btns-cont .fa-user-plus {
+  padding: 20px 15px;
+}
+
+.givers-cont {
+  display: grid;
+  margin: 20px 0;
+  width: 80%;
+  grid-gap: 10px;
+  max-height: 60vh;
+  overflow: auto;
+}
+
+.giver-cont {
+  background: RGBA(255, 255, 255, .3);
+  padding: 5px;
+  width: 100%;
+  border-radius: 5px;
+}
+
+.giver-cont img {
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+}
+
+.giver-cont span {
+  font-size: 20px;
+  color: white;
+  font-weight: bold;
+  text-shadow: 1px 1px #913300;
+}
+
 .btn-friends-cont {
   filter: drop-shadow(-1px 6px 3px rgba(50, 50, 0, 0.5));
   width: 100%;

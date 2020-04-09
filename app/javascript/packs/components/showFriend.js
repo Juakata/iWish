@@ -2,13 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const ShowFriend = ({
-  name, goBack, source, birthday, wishesgivers,
+  name, goBack, source, birthday, wishesgivers, showGivers,
 }) => {
   const renderWishes = wishesgivers.wishes.map(wish => {
     const wishGivers = wishesgivers.wishgivers.filter(wishGivers => wishGivers.id === wish.id);
     return (
       <button
         id={wish.id}
+        onClick={showGivers.bind(this, {
+          profile: wish.profile_id,
+          wish: wish.id,
+        })}
         className="btn-wish"
         type="button"
         key={wish.id}
@@ -47,6 +51,7 @@ ShowFriend.propTypes = {
   source: PropTypes.string.isRequired,
   birthday: PropTypes.instanceOf(Object).isRequired,
   wishesgivers: PropTypes.instanceOf(Object).isRequired,
+  showGivers: PropTypes.func.isRequired,
 };
 
 export default ShowFriend;
