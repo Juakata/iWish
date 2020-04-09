@@ -33,6 +33,7 @@ const REMOVE_SENT = 'REMOVE_SENT';
 const REMOVE_RECEIVED = 'REMOVE_RECEIVED';
 const ADD_FRIEND = 'ADD_FRIEND';
 const REMOVE_FRIEND = 'REMOVE_FRIEND';
+const ADD_WISHESGIVERS = 'ADD_WISHESGIVERS';
 
 const faces = [
   { id: 1, src: Face }, { id: 2, src: Face2 }, { id: 3, src: Face3 },
@@ -127,8 +128,13 @@ const removeFriend = id => ({
   id,
 });
 
+const addWishesgivers = wishesgivers => ({
+  type: ADD_WISHESGIVERS,
+  wishesgivers,
+});
+
 export {
   createSession, destroySession, getFaces, createProfile, addWish, openMenu,
   updateWish, deleteWish, createRequests, addSent, addNew, removeNew, removeSent,
-  removeReceived, addFriend, removeFriend,
+  removeReceived, addFriend, removeFriend, addWishesgivers,
 };

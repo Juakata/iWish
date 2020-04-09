@@ -19,7 +19,7 @@ const months = {
 const HumanDate = ({
   day, month, year,
 }) => (
-  <div>
+  <div className="margin-bottom">
     <i className="fas fa-birthday-cake" />
     {`${months[month]} ${day}, ${year}`}
   </div>

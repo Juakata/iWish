@@ -4,9 +4,10 @@ import faces from './faces';
 import profile from './profile';
 import functions from './functions';
 import requests from './requests';
+import wishesgivers from './wishesgivers';
 
 const rootReducer = combineReducers({
-  session, faces, profile, functions, requests,
+  session, faces, profile, functions, requests, wishesgivers,
 });
 
 export default rootReducer;

@@ -155,7 +155,40 @@
   border: 2px white solid;
 }
 
+.margin-bottom {
+  margin-bottom: 20px;
+}
+
 .fa-birthday-cake {
+  margin-right: 5px;
+}
+
+.show-friend-cont {
+  width: 100%;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.show-friend-cont img{
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  border: 4px RGBA(7, 7, 7, .7) solid;
+}
+
+.btn-wish span {
+  color: white;
+  position: absolute;
+  top: 9px;
+  right: 20px;
+  z-index: 6;
+}
+
+.btn-wish:hover span {
+  color: #913900;
+}
+
+.btn-wish span i {
   margin-right: 5px;
 }
 

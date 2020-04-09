@@ -30,7 +30,7 @@ class Friends extends React.Component {
       name: '',
       source: '',
       birthday: '',
-      wishes: [],
+      sendWishGivers: {},
     };
   }
 
@@ -151,29 +151,36 @@ class Friends extends React.Component {
       .catch(() => {});
   }
 
+  showGivers = id => {
+    const { wishesgivers } = this.props;
+    const givers = wishesgivers.filter(givers => givers.id === id);
+    const renderGivers = givers.map(giver => (
+      <div key={giver.id}>{giver.name}</div>
+    ));
+    return renderGivers;
+  }
+
   profileAction = friend => {
     if (friend !== 0) {
       const {
         id, name, birthday, picture,
       } = friend;
+      const { wishesgivers } = this.props;
+      const sendWishGivers = wishesgivers.filter(e => e.id === id)[0];
       const month = birthday.split('-')[1];
       const day = birthday.split('-')[2];
       const year = birthday.split('-')[0];
-      axios.get(`v1/getwishes?id=${id}`)
-        .then(response => {
-          this.setState(state => ({
-            showFriend: !state.showFriend,
-            name,
-            source: picture,
-            wishes: response.data,
-            birthday: <HumanDate
-              month={month}
-              day={day}
-              year={year}
-            />,
-          }));
-        })
-        .catch(() => {});
+      this.setState(state => ({
+        showFriend: !state.showFriend,
+        name,
+        source: picture,
+        birthday: <HumanDate
+          month={month}
+          day={day}
+          year={year}
+        />,
+        sendWishGivers,
+      }));
     } else {
       this.setState(state => ({
         showFriend: !state.showFriend,
@@ -185,7 +192,7 @@ class Friends extends React.Component {
     const { destroySession } = this.props;
     const {
       myFriends, txt1, txt2, change, showFriend,
-      name, source, birthday, wishes,
+      name, source, birthday, sendWishGivers,
     } = this.state;
     const { requests } = this.props;
     const {
@@ -261,13 +268,16 @@ class Friends extends React.Component {
             {!myFriends && txt1 === 'Sent' && renderSentRequests}
           </div>
         ) : (
-          <ShowFriend
-            name={name}
-            goBack={() => this.profileAction(0)}
-            source={source}
-            birthday={birthday}
-            wishes={wishes}
-          />
+          <div>
+            <ShowFriend
+              name={name}
+              goBack={() => this.profileAction(0)}
+              source={source}
+              birthday={birthday}
+              handleGivers={id => this.handleGivers(id)}
+              wishesgivers={sendWishGivers}
+            />
+          </div>
         )}
       </div>
     );
@@ -288,12 +298,14 @@ Friends.propTypes = {
   removeReceived: PropTypes.func.isRequired,
   removeFriend: PropTypes.func.isRequired,
   addFriend: PropTypes.func.isRequired,
+  wishesgivers: PropTypes.instanceOf(Object).isRequired,
 };
 
 const mapStateToProps = state => ({
   session: state.session,
   functions: state.functions,
   requests: state.requests,
+  wishesgivers: state.wishesgivers,
 });
 
 const mapDispatchToProps = dispatch => ({

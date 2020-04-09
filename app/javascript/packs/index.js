@@ -15,6 +15,7 @@ const data = {
     newRequests: [],
     sent: [],
   },
+  wishesgivers: [],
 };
 
 const store = createStore(rootReducer, data);

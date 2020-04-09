@@ -8,6 +8,7 @@ import Face from '../assets/bakiFace.png';
 import Logo from '../assets/logo.png';
 import {
   destroySession, createProfile, addWish, openMenu, createRequests,
+  addWishesgivers,
 } from '../actions/index';
 
 class Home extends React.Component {
@@ -19,7 +20,10 @@ class Home extends React.Component {
   }
 
   componentDidMount() {
-    const { session, history, createProfile } = this.props;
+    const {
+      session, history, createProfile, addWishesgivers,
+    } = this.props;
+    const wishgivers = [];
     if (session === '' || session === 'destroy') {
       history.push('/');
     } else {
@@ -27,6 +31,26 @@ class Home extends React.Component {
         .then(response => {
           const { createRequests } = this.props;
           createRequests(response.data);
+          response.data.friends.forEach(friend => {
+            axios.get(`v1/getwishes?id=${friend.id}`)
+              .then(response2 => {
+                response2.data.forEach(wish => {
+                  axios.get(`v1/getgivers?id=${wish.id}`)
+                    .then(response3 => {
+                      wishgivers.push(response3.data);
+                    })
+                    .catch(() => {});
+                });
+
+                const wishesgivers = {
+                  id: friend.id,
+                  wishes: response2.data,
+                  wishgivers,
+                };
+                addWishesgivers(wishesgivers);
+              })
+              .catch(() => {});
+          });
         })
         .catch(() => {});
       let profile;
@@ -111,6 +135,7 @@ Home.propTypes = {
   functions: PropTypes.instanceOf(Object).isRequired,
   openMenu: PropTypes.func.isRequired,
   createRequests: PropTypes.func.isRequired,
+  addWishesgivers: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -124,6 +149,7 @@ const mapDispatchToProps = dispatch => ({
   addWish: wish => dispatch(addWish(wish)),
   openMenu: open => dispatch(openMenu(open)),
   createRequests: requests => dispatch(createRequests(requests)),
+  addWishesgivers: wishesgivers => dispatch(addWishesgivers(wishesgivers)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Home));
