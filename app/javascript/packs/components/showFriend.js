@@ -10,7 +10,7 @@ const ShowFriend = ({
       <button
         id={wish.id}
         onClick={showGivers.bind(this, {
-          profile: wish.profile_id,
+          profileId: wish.profile_id,
           wish: wish.id,
         })}
         className="btn-wish"

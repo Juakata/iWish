@@ -68,6 +68,7 @@ class Home extends React.Component {
                     }
                   ));
                   profile = {
+                    id: response.data.id,
                     name: response.data.name,
                     birthday: response.data.birthday,
                     picture: response.data.picture === '' ? Face : response.data.picture,

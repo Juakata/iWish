@@ -42,7 +42,7 @@
   padding: 20px 20px;
 }
 
-#givers-btns-cont .fa-user-plus {
+#givers-btns-cont .fa-user-plus, #givers-btns-cont .fa-user-minus {
   padding: 20px 15px;
 }
 

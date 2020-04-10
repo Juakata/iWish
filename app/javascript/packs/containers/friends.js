@@ -7,7 +7,7 @@ import Header from '../components/header';
 import Logo from '../assets/logo.png';
 import {
   destroySession, openMenu, addNew, addSent, removeNew, removeSent,
-  removeReceived, removeFriend, addFriend,
+  removeReceived, removeFriend, addFriend, addGiver, removeGiver,
 } from '../actions/index';
 import BtnsHeader from '../components/btnsHeader';
 import Friend from '../components/friend';
@@ -33,6 +33,8 @@ class Friends extends React.Component {
       sendWishGivers: {},
       renderGivers: '',
       currentWish: '',
+      currentProfile: '',
+      isGiver: false,
     };
   }
 
@@ -186,32 +188,54 @@ class Friends extends React.Component {
     giversCont.style.display = 'none';
   }
 
-  addMeAsGiver = wish => {
-    const { session } = this.props;
+  addMeAsGiver = (profileId, wish) => {
+    const { session, addGiver, profile } = this.props;
     axios.get(`v1/addgiver?email=${session}&id=${wish}`)
       .then(() => {
+        const giver = {
+          id: profile.id,
+          name: profile.name,
+          picture: profile.picture,
+        };
+        addGiver(profileId, wish, giver);
+        this.hideGivers();
+      })
+      .catch(() => {});
+  }
+
+  removeAsGiver = (profileId, wish) => {
+    const { removeGiver, profile } = this.props;
+    axios.get(`v1/removegiver?profile=${profile.id}&id=${wish}`)
+      .then(() => {
+        removeGiver(profileId, wish, profile.id);
         this.hideGivers();
       })
       .catch(() => {});
   }
 
   showGivers = ids => {
-    console.log("test");
-    const { profile, wish } = ids;
-    const { wishesgivers } = this.props;
-    console.log(wishesgivers);
-    const wishGivers = wishesgivers.filter(wishGiver => wishGiver.id === profile);
+    const { profileId, wish } = ids;
+    const { wishesgivers, profile } = this.props;
+    let isGiver = false;
+    const wishGivers = wishesgivers.filter(wishGivers => wishGivers.id === profileId);
     const givers = wishGivers[0].wishgivers.filter(wishGiver => wishGiver.id === wish);
-    const renderGivers = givers[0].givers.map(giver => (
-      <div className="giver-cont" key={giver.id}>
-        <img src={giver.picture} alt="giver" />
-        <span>{giver.name}</span>
-      </div>
-    ));
+    const renderGivers = givers[0].givers.map(giver => {
+      if (profile.id === giver.id) {
+        isGiver = true;
+      }
+      return (
+        <div className="giver-cont" key={giver.id}>
+          <img src={giver.picture} alt="giver" />
+          <span>{giver.name}</span>
+        </div>
+      );
+    });
     document.getElementById('givers-btns-cont').style.display = 'flex';
     this.setState({
       renderGivers,
       currentWish: wish,
+      currentProfile: profileId,
+      isGiver,
     });
   }
 
@@ -220,6 +244,7 @@ class Friends extends React.Component {
     const {
       myFriends, txt1, txt2, change, showFriend, name,
       source, birthday, sendWishGivers, renderGivers, currentWish,
+      currentProfile, isGiver,
     } = this.state;
     const { requests } = this.props;
     const {
@@ -312,9 +337,16 @@ class Friends extends React.Component {
               <div className="givers-cont">
                 {renderGivers}
               </div>
-              <button onClick={() => this.addMeAsGiver(currentWish)} type="button">
-                <i className="fas fa-user-plus" />
-              </button>
+              {isGiver ? (
+                <button onClick={() => this.removeAsGiver(currentProfile, currentWish)} type="button">
+                  <i className="fas fa-user-minus" />
+                </button>
+              ) : (
+                <button onClick={() => this.addMeAsGiver(currentProfile, currentWish)} type="button">
+                  <i className="fas fa-user-plus" />
+                </button>
+              )}
+
             </div>
           </div>
         )}
@@ -338,6 +370,9 @@ Friends.propTypes = {
   removeFriend: PropTypes.func.isRequired,
   addFriend: PropTypes.func.isRequired,
   wishesgivers: PropTypes.instanceOf(Object).isRequired,
+  addGiver: PropTypes.func.isRequired,
+  removeGiver: PropTypes.func.isRequired,
+  profile: PropTypes.instanceOf(Object).isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -345,6 +380,7 @@ const mapStateToProps = state => ({
   functions: state.functions,
   requests: state.requests,
   wishesgivers: state.wishesgivers,
+  profile: state.profile,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -357,6 +393,8 @@ const mapDispatchToProps = dispatch => ({
   removeReceived: id => dispatch(removeReceived(id)),
   removeFriend: id => dispatch(removeFriend(id)),
   addFriend: friend => dispatch(addFriend(friend)),
+  addGiver: (profile, wish, giver) => dispatch(addGiver(profile, wish, giver)),
+  removeGiver: (profile, wish, giver) => dispatch(removeGiver(profile, wish, giver)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Friends));

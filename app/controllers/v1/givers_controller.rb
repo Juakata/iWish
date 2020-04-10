@@ -20,7 +20,6 @@ class V1::GiversController < ApplicationController
 
   def remove_giver
     wish = Wish.find(params[:id])
-    profile = User.find_by(email: params[:email]).profile
-    wish.givers.find_by(friend_id: profile.id).destroy
+    wish.givers.find_by(friend_id: params[:profile]).destroy
   end
 end
