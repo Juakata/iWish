@@ -17,4 +17,10 @@ class V1::GiversController < ApplicationController
     profile = User.find_by(email: params[:email]).profile
     wish.givers.build(friend_id: profile.id).save
   end
+
+  def remove_giver
+    wish = Wish.find(params[:id])
+    profile = User.find_by(email: params[:email]).profile
+    wish.givers.find_by(friend_id: profile.id).destroy
+  end
 end
