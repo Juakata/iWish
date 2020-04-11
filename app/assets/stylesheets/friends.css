@@ -93,11 +93,13 @@
 }
 
 .btn-friends-left {
+  -webkit-clip-path: polygon(50% 0%, 100% 0, 100% 35%, 100% 100%, 81% 100%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 0 0);
   clip-path: polygon(50% 0%, 100% 0, 100% 35%, 100% 100%, 81% 100%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 0 0);
   padding: 20px 10px 20px 40px;
 }
 
 .btn-friends-right {
+  -webkit-clip-path: polygon(50% 0%, 100% 0, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 27% 100%, 0 100%, 0% 35%, 0 0);
   clip-path: polygon(50% 0%, 100% 0, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 27% 100%, 0 100%, 0% 35%, 0 0);
   padding: 20px 40px 20px 10px;
 }
@@ -161,6 +163,7 @@
   text-align: center;
   border-top-left-radius: 20px;
   border-bottom-left-radius: 20px;
+  -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
   clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
   position: relative;
   height: 50px;

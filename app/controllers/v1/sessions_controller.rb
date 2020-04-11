@@ -5,10 +5,14 @@ class V1::SessionsController < ApplicationController
     user = User.find(params[:id])
     if user
       session = user.sessions.find_by(key: params[:key])
-      if session.authenticate_token(params[:token])
-        render json: { email: user.email }
+      if session
+        if session.authenticate_token(params[:token])
+          render json: { email: user.email }
+        else
+          render json: { result: 'unverified' }, status: 404
+        end
       else
-        render json: { result: 'unverified' }, status: 404
+        sign_out
       end
     else
       render json: { result: 'Unable to find an account.' }, status: 404
