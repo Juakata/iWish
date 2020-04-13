@@ -56,45 +56,35 @@ class Home extends React.Component {
       let profile;
       axios.get(`v1/getprofile?email=${session}`)
         .then(response => {
-          if (typeof response.data.result === 'undefined') {
-            axios.get(`v1/getwishes?email=${session}`)
-              .then(response2 => {
-                if (typeof response2.data.result === 'undefined') {
-                  const wishes = response2.data.map(wish => (
-                    {
-                      id: wish.id,
-                      title: wish.title,
-                      description: wish.description,
-                    }
-                  ));
-                  profile = {
-                    id: response.data.id,
-                    name: response.data.name,
-                    birthday: response.data.birthday,
-                    picture: response.data.picture === '' ? Face : response.data.picture,
-                    wishes,
-                  };
-                  createProfile(profile);
-                } else {
-                  profile = {
-                    name: response.data.name,
-                    birthday: response.data.birthday,
-                    picture: response.data.picture === '' ? Face : response.data.picture,
-                    wishes: [],
-                  };
-                  createProfile(profile);
-                }
-              })
-              .catch(() => {});
-          } else {
-            profile = {
-              name: '',
-              birthday: '1995-03-12',
-              picture: Face,
-              wishes: [],
-            };
-            createProfile(profile);
-          }
+          axios.get(`v1/getwishes?email=${session}`)
+            .then(response2 => {
+              if (typeof response2.data.result === 'undefined') {
+                const wishes = response2.data.map(wish => (
+                  {
+                    id: wish.id,
+                    title: wish.title,
+                    description: wish.description,
+                  }
+                ));
+                profile = {
+                  id: response.data.id,
+                  name: response.data.name,
+                  birthday: response.data.birthday,
+                  picture: response.data.picture === '' ? Face : response.data.picture,
+                  wishes,
+                };
+                createProfile(profile);
+              } else {
+                profile = {
+                  name: response.data.name,
+                  birthday: response.data.birthday,
+                  picture: response.data.picture === '' ? Face : response.data.picture,
+                  wishes: [],
+                };
+                createProfile(profile);
+              }
+            })
+            .catch(() => {});
         })
         .catch(() => {});
     }

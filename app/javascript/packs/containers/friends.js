@@ -305,19 +305,19 @@ class Friends extends React.Component {
               handleMyFriends={this.handleMyFriends}
               handleNewFriends={this.handleNewFriends}
             />
-            {myFriends && renderFriends}
-            {!myFriends && (
-              <HandleRequests
-                backwardAction={this.backwardAction}
-                furtherAction={this.furtherAction}
-                text={txt1}
-                text2={txt2}
-                change={change}
-              />
-            )}
-            {!myFriends && txt1 === 'New' && renderNewRequests}
-            {!myFriends && txt1 === 'Received' && renderReceivedRequests }
-            {!myFriends && txt1 === 'Sent' && renderSentRequests}
+            {!myFriends ? renderFriends
+              : (
+                <HandleRequests
+                  backwardAction={this.backwardAction}
+                  furtherAction={this.furtherAction}
+                  text={txt1}
+                  text2={txt2}
+                  change={change}
+                />
+              )}
+            {myFriends && txt1 === 'New' && renderNewRequests}
+            {myFriends && txt1 === 'Received' && renderReceivedRequests }
+            {myFriends && txt1 === 'Sent' && renderSentRequests}
           </div>
         ) : (
           <div>

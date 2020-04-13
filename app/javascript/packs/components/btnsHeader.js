@@ -10,14 +10,14 @@ const BtnsHeader = ({
       type="button"
       onClick={handleMyFriends}
     >
-      My Friends
+      New Friends
     </button>
     <button
       className="btn-friends-right"
       type="button"
       onClick={handleNewFriends}
     >
-      New Friends
+      My Friends
     </button>
   </div>
 );

@@ -211,9 +211,17 @@ header ul {
 }
 
 .logoHome {
+  background: #b55800;
   width: 100px;
   position: relative;
   z-index: 5;
+  box-shadow: 5px 5px 5px #242424;
+  border-radius: 50%;
+  transition: transform .5s, box-shadow .5s;
+}
+
+.logoHome:hover {
+  box-shadow: -5px -5px 5px #242424;
 }
 
 .sign-in-form, .sign-up-form {
@@ -579,12 +587,6 @@ header ul {
   .logo {
     width: 150px;
     top: -50px;
-  }
-
-  .logoHome {
-    box-shadow: 5px 5px 5px #242424;
-    border-radius: 50%;
-    transition: transform .5s, box-shadow .5s;
   }
 }
 

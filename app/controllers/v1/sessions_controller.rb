@@ -5,8 +5,8 @@ class V1::SessionsController < ApplicationController
     unless params[:id].match(/[azAZ]/)
       user = User.where("id = (?)", params[:id]).first
       if user
-        session = user.sessions.where("key = (?)", params[:key]).first
-        unless session
+        session = user.sessions.find_by(key: params[:key])
+        if session
           if session.authenticate_token(params[:token])
             render json: { email: user.email }
           else

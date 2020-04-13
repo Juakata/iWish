@@ -10,7 +10,7 @@ class V1::WishesController < ApplicationController
         description: params[:description])
       if wish.valid?
         wish.save
-        render json: { result: 'created'}
+        render json: { id: wish.id, result: 'created'}
       else
         render json: wish.errors
       end

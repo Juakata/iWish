@@ -79,9 +79,9 @@ class Profile extends React.Component {
         break;
       case 'btnAddWish':
         axios.get(`v1/createwish?email=${session}&title=${title}&description=${description}`)
-          .then(() => {
+          .then(response => {
             const wish = {
-              id: wishes[wishes.length - 1].id + 1,
+              id: response.data.id,
               title,
               description,
             };
