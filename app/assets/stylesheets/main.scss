@@ -507,7 +507,8 @@ header ul {
   right: 0;
   left: 0;
   margin: auto;
-  transition: transform 2s, opacity 1s;
+  z-index: 20;
+  transition: transform 1s, opacity .5s;
 }
 
 @media(max-width: 900px) {
