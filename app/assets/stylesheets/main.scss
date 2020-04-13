@@ -496,8 +496,9 @@ header ul {
 
 .p-message-ok {
   opacity: 1;
-  background: green;
-  max-width: 200px;
+  text-align: center;
+  background: RGBA(34, 135, 0, .9);
+  max-width: 250px;
   padding: 5px;
   border-radius: 5px;
   color: white;

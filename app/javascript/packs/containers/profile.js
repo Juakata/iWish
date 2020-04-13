@@ -87,7 +87,7 @@ class Profile extends React.Component {
               setTimeout(() => {
                 styleElement.opacity = '0';
                 styleElement.transform = 'translateY(0)';
-                document.querySelector('.cont-title-list').focus();
+                document.getElementById('title').focus();
               }, 2000);
             }
           })
@@ -203,6 +203,7 @@ class Profile extends React.Component {
             <form id="wishlistform" className="profile-form-list" onSubmit={this.handleSubmit}>
               <input
                 type="text"
+                id="title"
                 name="title"
                 value={title}
                 placeholder="Gift's name."
