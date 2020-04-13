@@ -5,6 +5,7 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import Header from '../components/header';
 import Wish from '../components/wish';
+import Message from '../components/message';
 import Logo from '../assets/logo.png';
 import {
   destroySession, getFaces, addWish, openMenu, updateWish, deleteWish,
@@ -25,6 +26,7 @@ class Profile extends React.Component {
       title: '',
       description: '',
       wishCreated: false,
+      message: '',
     };
   }
 
@@ -69,12 +71,25 @@ class Profile extends React.Component {
     const {
       name, birthday, picture, wishId, title, description,
     } = this.state;
-    const { profile } = this.props;
-    const { wishes } = profile;
     switch (id) {
       case 'btnProfile':
         axios.get(`v1/setprofile?email=${session}&name=${name}&birthday=${birthday}&picture=${picture}`)
-          .then(() => {})
+          .then(response => {
+            if (response.data.result === 'Profile updated.') {
+              this.setState({
+                message: 'Profile successfully updated.',
+              });
+              const styleElement = document.querySelector('.p-message-ok').style;
+              styleElement.bottom = '0';
+              styleElement.transform = 'translateY(-40px)';
+              styleElement.opacity = '1';
+              styleElement.bottom = '-20px';
+              setTimeout(() => {
+                styleElement.opacity = '0';
+                styleElement.transform = 'translateY(0)';
+              }, 2000);
+            }
+          })
           .catch(() => {});
         break;
       case 'btnAddWish':
@@ -148,7 +163,7 @@ class Profile extends React.Component {
   render() {
     const {
       name, birthday, openWindow, picture, openForm,
-      title, description, wishCreated,
+      title, description, wishCreated, message,
     } = this.state;
     const { profile } = this.props;
     const wishes = typeof profile.wishes !== 'undefined' ? profile.wishes : [];
@@ -189,14 +204,14 @@ class Profile extends React.Component {
                 type="text"
                 name="title"
                 value={title}
-                placeholder="Title"
+                placeholder="Gift's name."
                 onChange={this.handleChange}
                 required
               />
               <textarea
                 name="description"
                 value={description}
-                placeholder="Description"
+                placeholder="Gift's description."
                 onChange={this.handleChange}
                 required
               />
@@ -216,6 +231,7 @@ class Profile extends React.Component {
           </div>
         )}
         <div className="container">
+          <Message text={message} />
           <form className="profile-form" onSubmit={this.handleSubmit}>
             <i className="fas fa-user profile-icon profile-i-user" />
             <i className="fas fa-calendar profile-icon profile-i-birthday" />

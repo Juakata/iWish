@@ -58,30 +58,23 @@ class Home extends React.Component {
         .then(response => {
           axios.get(`v1/getwishes?email=${session}`)
             .then(response2 => {
-              if (typeof response2.data.result === 'undefined') {
-                const wishes = response2.data.map(wish => (
-                  {
-                    id: wish.id,
-                    title: wish.title,
-                    description: wish.description,
-                  }
-                ));
-                profile = {
-                  id: response.data.id,
-                  name: response.data.name,
-                  birthday: response.data.birthday,
-                  picture: response.data.picture === '' ? Face : response.data.picture,
-                  wishes,
-                };
-                createProfile(profile);
-              } else {
-                profile = {
-                  name: response.data.name,
-                  birthday: response.data.birthday,
-                  picture: response.data.picture === '' ? Face : response.data.picture,
-                  wishes: [],
-                };
-                createProfile(profile);
+              const wishes = response2.data.map(wish => (
+                {
+                  id: wish.id,
+                  title: wish.title,
+                  description: wish.description,
+                }
+              ));
+              profile = {
+                id: response.data.id,
+                name: response.data.name,
+                birthday: response.data.birthday,
+                picture: response.data.picture === '' ? Face : response.data.picture,
+                wishes,
+              };
+              createProfile(profile);
+              if (response.data.name === '') {
+                history.push('/profile');
               }
             })
             .catch(() => {});

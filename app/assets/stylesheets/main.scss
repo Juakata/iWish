@@ -494,6 +494,21 @@ header ul {
   text-align: center;
 }
 
+.p-message-ok {
+  opacity: 1;
+  background: green;
+  max-width: 200px;
+  padding: 5px;
+  border-radius: 5px;
+  color: white;
+  box-shadow: 0 0 5px black;
+  position: fixed;
+  bottom: -20px;
+  right: 0;
+  left: 0;
+  margin: auto;
+  transition: transform 2s, opacity 1s;
+}
 
 @media(max-width: 900px) {
   .cont-wishes {
