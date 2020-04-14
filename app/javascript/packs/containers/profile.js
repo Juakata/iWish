@@ -87,7 +87,6 @@ class Profile extends React.Component {
               setTimeout(() => {
                 styleElement.opacity = '0';
                 styleElement.transform = 'translateY(0)';
-                document.getElementById('title').focus();
               }, 2000);
             }
           })
