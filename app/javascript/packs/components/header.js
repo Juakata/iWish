@@ -33,10 +33,10 @@ const Header = ({
       </li>
       <li>
         <Link className="link" to="/profile">
-          <button type="button" onClick={menu}>
+          <div>
             <i className="fas fa-user i-header" />
             <p>Profile</p>
-          </button>
+          </div>
         </Link>
       </li>
       <li>

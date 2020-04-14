@@ -16,9 +16,6 @@ button::-moz-focus-inner {
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
-textarea:-webkit-autofill,
-textarea:-webkit-autofill:hover,
-textarea:-webkit-autofill:focus,
 select:-webkit-autofill,
 select:-webkit-autofill:hover,
 select:-webkit-autofill:focus {
@@ -55,6 +52,28 @@ header ul {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
+}
+
+input {
+  width: 100%;
+  color: #fff;
+  outline: none;
+  font-size: 20px;
+  border: none;
+  padding: 5px;
+  padding-left: 40px;
+  border-bottom: solid black 1px;
+  background: RGBA(82, 45, 0, .5);
+  border-radius: 10px;
+}
+
+textarea {
+  width: 100%;
+  color: #fff;
+  background: RGBA(82, 45, 0, .5);
+  border-radius: 10px;
+  height: 100px;
+  padding: 10px;
 }
 
 #menu-cover {
@@ -125,14 +144,6 @@ header ul {
   display: grid;
   grid-gap: 20px;
   justify-items: center;
-}
-
-.profile-form-list textarea {
-  width: 100%;
-  border-radius: 10px;
-  height: 100px;
-  background: #fff5e8;
-  padding: 10px;
 }
 
 .mylist-btn:hover .my-plus {
@@ -279,19 +290,6 @@ header ul {
 
 .repeat {
   top: 265px;
-}
-
-.sign-in-form input, .sign-up-form input, .profile-form-list input {
-  width: 100%;
-  color: #fff;
-  outline: none;
-  font-size: 20px;
-  border: none;
-  padding: 5px;
-  padding-left: 40px;
-  border-bottom: solid black 1px;
-  background: RGBA(82, 45, 0, .5);
-  border-radius: 10px;
 }
 
 .sign-in-form button, .sign-up-form button, .profile-form-list button {

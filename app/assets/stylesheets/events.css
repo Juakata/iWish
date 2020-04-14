@@ -1,0 +1,33 @@
+#btn-myEvents {
+  border-bottom: 4px solid #c73f00;
+}
+
+.events-menu {
+  background: black;
+  display: flex;
+  justify-content: space-around;
+}
+
+.events-menu button {
+  width: 100%;
+  padding: 10px;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #6b4700;
+  background: #ffbf40;
+  transition: border-bottom .1s;
+  border: 1px solid grey;
+}
+
+.event-form {
+  display: grid;
+  grid-gap: 10px;
+  padding: 50px;
+}
+
+@media(max-width: 600px) {
+  .events-menu button {
+    font-size: 15px;
+  }
+}

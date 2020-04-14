@@ -35,6 +35,7 @@ class Friends extends React.Component {
       currentWish: '',
       currentProfile: '',
       isGiver: false,
+      filter: '',
     };
   }
 
@@ -239,12 +240,19 @@ class Friends extends React.Component {
     });
   }
 
+  handleChange = event => {
+    const { name, value } = event.target;
+    this.setState({
+      [name]: value,
+    });
+  }
+
   render() {
     const { destroySession } = this.props;
     const {
       myFriends, txt1, txt2, change, showFriend, name,
       source, birthday, sendWishGivers, renderGivers, currentWish,
-      currentProfile, isGiver,
+      currentProfile, isGiver, filter,
     } = this.state;
     const { requests } = this.props;
     const {
@@ -252,48 +260,69 @@ class Friends extends React.Component {
     } = requests;
     let renderFriends; let renderNewRequests;
     let renderSentRequests; let renderReceivedRequests;
+    const reg = new RegExp(filter, 'i');
     if (!showFriend) {
-      renderNewRequests = newRequests.map(request => (
-        <Friend
-          source={request.picture}
-          key={request.id}
-          name={request.name}
-          text="Add Friend"
-          onClick={() => this.addFriend(request.id)}
-        />
-      ));
+      renderNewRequests = newRequests.map(request => {
+        if (reg.exec(request.name)) {
+          return (
+            <Friend
+              source={request.picture}
+              key={request.id}
+              name={request.name}
+              text="Add Friend"
+              onClick={() => this.addFriend(request.id)}
+            />
+          );
+        }
+        return null;
+      });
 
-      renderReceivedRequests = received.map(request => (
-        <Friend
-          source={request.picture}
-          key={request.id}
-          name={request.name}
-          text="Accept"
-          onClick={() => this.acceptFriend(request.id)}
-        />
-      ));
-      renderSentRequests = sent.map(request => (
-        <Friend
-          source={request.picture}
-          key={request.id}
-          name={request.name}
-          text="Cancel"
-          icon="fas fa-user-minus"
-          onClick={() => this.cancelRequest(request.id)}
-        />
-      ));
-      renderFriends = friends.map(friend => (
-        <Friend
-          source={friend.picture}
-          key={friend.id}
-          name={friend.name}
-          text="Delete friend"
-          icon="fas fa-user-minus"
-          onClick={() => this.deleteFriend(friend.id)}
-          profileAction={() => this.profileAction(friend)}
-          status
-        />
-      ));
+      renderReceivedRequests = received.map(request => {
+        if (reg.exec(request.name)) {
+          return (
+            <Friend
+              source={request.picture}
+              key={request.id}
+              name={request.name}
+              text="Accept"
+              onClick={() => this.acceptFriend(request.id)}
+            />
+          );
+        }
+        return null;
+      });
+      renderSentRequests = sent.map(request => {
+        if (reg.exec(request.name)) {
+          return (
+            <Friend
+              source={request.picture}
+              key={request.id}
+              name={request.name}
+              text="Cancel"
+              icon="fas fa-user-minus"
+              onClick={() => this.cancelRequest(request.id)}
+            />
+          );
+        }
+        return null;
+      });
+      renderFriends = friends.map(friend => {
+        if (reg.exec(friend.name)) {
+          return (
+            <Friend
+              source={friend.picture}
+              key={friend.id}
+              name={friend.name}
+              text="Delete friend"
+              icon="fas fa-user-minus"
+              onClick={() => this.deleteFriend(friend.id)}
+              profileAction={() => this.profileAction(friend)}
+              status
+            />
+          );
+        }
+        return null;
+      });
     }
 
     return (
@@ -315,6 +344,15 @@ class Friends extends React.Component {
                   change={change}
                 />
               )}
+            <form className="people-filter">
+              <input
+                type="text"
+                name="filter"
+                value={filter}
+                onChange={this.handleChange}
+              />
+              <i className="fas fa-search" />
+            </form>
             {myFriends && txt1 === 'New' && renderNewRequests}
             {myFriends && txt1 === 'Received' && renderReceivedRequests }
             {myFriends && txt1 === 'Sent' && renderSentRequests}
