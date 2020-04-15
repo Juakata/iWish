@@ -8,7 +8,7 @@ import Face from '../assets/bakiFace.png';
 import Logo from '../assets/logo.png';
 import {
   destroySession, createProfile, addWish, openMenu, createRequests,
-  addWishesgivers,
+  addWishesgivers, addMyevents,
 } from '../actions/index';
 
 class Home extends React.Component {
@@ -21,7 +21,7 @@ class Home extends React.Component {
 
   componentDidMount() {
     const {
-      session, history, createProfile, addWishesgivers,
+      session, history, createProfile, addWishesgivers, addMyevents,
     } = this.props;
     const wishgivers = [];
     if (session === '' || session === 'destroy') {
@@ -120,6 +120,7 @@ Home.propTypes = {
   openMenu: PropTypes.func.isRequired,
   createRequests: PropTypes.func.isRequired,
   addWishesgivers: PropTypes.func.isRequired,
+  addMyevents: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -134,6 +135,7 @@ const mapDispatchToProps = dispatch => ({
   openMenu: open => dispatch(openMenu(open)),
   createRequests: requests => dispatch(createRequests(requests)),
   addWishesgivers: wishesgivers => dispatch(addWishesgivers(wishesgivers)),
+  addMyevents: myEvent => dispatch(addMyevents(myEvent)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Home));

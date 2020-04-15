@@ -1,10 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import axios from 'axios';
 import PropTypes from 'prop-types';
 import Header from '../components/header';
 import Logo from '../assets/logo.png';
-import { destroySession, openMenu } from '../actions/index';
+import { destroySession, openMenu, addMyevents } from '../actions/index';
 import MenuEvents from '../components/menuEvents';
 import Wish from '../components/wish';
 
@@ -89,6 +90,37 @@ class Events extends React.Component {
 
   handleSubmit = event => {
     event.preventDefault();
+    const {
+      session, addMyevents, events, profile,
+    } = this.props;
+    const {
+      title, description, date, time, items,
+    } = this.state;
+    axios.get(`v1/createevent?email=${session}&title=${title}&description=${description}&date=${date}&time=${time}}`)
+      .then(response => {
+        if (response.data.result === 'Event created') {
+          const n = events.myevents.length;
+          const myevent = {
+            id: n === 0 ? 1 : events.myevents[n - 1].id + 1,
+            title,
+            description,
+            date,
+            time,
+            profile,
+            people: [],
+            items,
+          };
+          addMyevents(myevent);
+          this.setState({
+            title: '',
+            description: '',
+            time: '',
+            date: '',
+            items: [],
+          });
+        }
+      })
+      .catch(() => {});
   }
 
   handleWishList = () => {
@@ -111,6 +143,7 @@ class Events extends React.Component {
       id: items.length + 1,
       title: iTitle,
       description: iDescription,
+      people: [],
     };
     const currentItems = [...items, item];
     this.setState(state => ({
@@ -126,7 +159,13 @@ class Events extends React.Component {
       render, title, description, date, time, openForm, items,
       iTitle, iDescription,
     } = this.state;
-    const { destroySession } = this.props;
+    const { destroySession, events } = this.props;
+    const renderMyEvents = events.myevents.map(myevent => (
+      <div key={myevent.id}>
+        <img src={myevent.profile.picture} alt="Imgperson" />
+        <h2>{myevent.profile.name}</h2>
+      </div>
+    ));
     const renderItems = items.map(item => (
       <Wish
         key={item.id}
@@ -145,7 +184,11 @@ class Events extends React.Component {
             createEvent={this.createEvent}
             comingEvents={this.comingEvents}
           />
-          {render === 'myEvents'}
+          {render === 'myEvents' && (
+            <div>
+              {renderMyEvents}
+            </div>
+          )}
           {render === 'createEvent' && (
             <form className="event-form" onSubmit={this.handleSubmit}>
               <input
@@ -224,20 +267,26 @@ class Events extends React.Component {
 
 Events.propTypes = {
   history: PropTypes.instanceOf(Object).isRequired,
+  events: PropTypes.instanceOf(Object).isRequired,
   session: PropTypes.string.isRequired,
   destroySession: PropTypes.func.isRequired,
   functions: PropTypes.instanceOf(Object).isRequired,
   openMenu: PropTypes.func.isRequired,
+  addMyevents: PropTypes.func.isRequired,
+  profile: PropTypes.instanceOf(Object).isRequired,
 };
 
 const mapStateToProps = state => ({
   session: state.session,
   functions: state.functions,
+  events: state.events,
+  profile: state.profile,
 });
 
 const mapDispatchToProps = dispatch => ({
   destroySession: () => dispatch(destroySession()),
   openMenu: open => dispatch(openMenu(open)),
+  addMyevents: myEvent => dispatch(addMyevents(myEvent)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Events));

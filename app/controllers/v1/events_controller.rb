@@ -11,7 +11,7 @@ class V1::EventsController < ApplicationController
         time: params[:time]
       )
       if event.save
-        render json: { result: "Event created." }
+        render json: { result: "Event created" }
       else
         render json: { result: "Unable to save event" }
       end
