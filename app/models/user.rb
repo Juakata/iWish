@@ -9,7 +9,8 @@ class User < ApplicationRecord
   has_one :profile
   has_many :sessions
   has_many :friends
-  
+  has_many :events
+
   def self.digest(string)
     cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST : BCrypt::Engine.cost
     BCrypt::Password.create(string, cost: cost)

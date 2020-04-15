@@ -26,6 +26,19 @@
   padding: 50px;
 }
 
+.event-form button[type="submit"]{
+  outline: none;
+  margin: 0 auto;
+  width: 70%;
+  height: 40px;
+  background: #e0b000;
+  cursor: pointer;
+  color: white;
+  font-size: 17px;
+  border-radius: 20px;
+  transition: width .6s, background .6s;
+}
+
 @media(max-width: 600px) {
   .events-menu button {
     font-size: 15px;

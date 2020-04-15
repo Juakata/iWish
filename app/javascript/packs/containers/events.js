@@ -6,6 +6,7 @@ import Header from '../components/header';
 import Logo from '../assets/logo.png';
 import { destroySession, openMenu } from '../actions/index';
 import MenuEvents from '../components/menuEvents';
+import Wish from '../components/wish';
 
 class Events extends React.Component {
   constructor(props) {
@@ -16,6 +17,10 @@ class Events extends React.Component {
       description: '',
       date: '',
       time: '',
+      openForm: false,
+      items: [],
+      iTitle: '',
+      iDescription: '',
     };
   }
 
@@ -86,11 +91,51 @@ class Events extends React.Component {
     event.preventDefault();
   }
 
+  handleWishList = () => {
+    this.setState(state => ({
+      openForm: !state.openForm,
+      iTitle: '',
+      iDescription: '',
+    }));
+  }
+
+  handleWish = item => {
+    this.setState(state => ({
+      items: state.items.filter(e => e.id !== item.id),
+    }));
+  }
+
+  handleItems = () => {
+    const { iTitle, iDescription, items } = this.state;
+    const item = {
+      id: items.length + 1,
+      title: iTitle,
+      description: iDescription,
+    };
+    const currentItems = [...items, item];
+    this.setState(state => ({
+      openForm: !state.openForm,
+      iTitle: '',
+      iDescription: '',
+      items: currentItems,
+    }));
+  }
+
   render() {
     const {
-      render, title, description, date, time,
+      render, title, description, date, time, openForm, items,
+      iTitle, iDescription,
     } = this.state;
     const { destroySession } = this.props;
+    const renderItems = items.map(item => (
+      <Wish
+        key={item.id}
+        id={item.id}
+        title={item.title}
+        description={item.description}
+        onClick={() => this.handleWish(item)}
+      />
+    ));
     return (
       <div>
         <Header source={Logo} menu={this.menu} out={destroySession} />
@@ -133,6 +178,40 @@ class Events extends React.Component {
                 onChange={this.handleChange}
                 required
               />
+              {openForm && (
+                <div className="cover-img-selector">
+                  <div id="wishlistform" className="profile-form-list">
+                    <input
+                      type="text"
+                      name="iTitle"
+                      value={iTitle}
+                      placeholder="Item's name."
+                      onChange={this.handleChange}
+                      required
+                    />
+                    <textarea
+                      name="iDescription"
+                      value={iDescription}
+                      placeholder="Item's description."
+                      onChange={this.handleChange}
+                      required
+                    />
+                    <div className="btnsCont">
+                      <button type="button" onClick={this.handleWishList}>Close</button>
+                      <button type="button" onClick={this.handleItems}>Save</button>
+                    </div>
+                  </div>
+                </div>
+              )}
+              <div className="cont-title-list">
+                <button className="mylist-btn" onClick={this.handleWishList} type="button">
+                  <h2 className="title">Items List</h2>
+                  <i className="fas fa-plus my-plus" />
+                </button>
+                <div className="cont-wishes">
+                  {renderItems}
+                </div>
+              </div>
               <button type="submit">Save</button>
             </form>
           )}
