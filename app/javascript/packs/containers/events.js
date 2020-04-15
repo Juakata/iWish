@@ -96,7 +96,7 @@ class Events extends React.Component {
     const {
       title, description, date, time, items,
     } = this.state;
-    axios.get(`v1/createevent?email=${session}&title=${title}&description=${description}&date=${date}&time=${time}}`)
+    axios.get(`v1/createevent?email=${session}&title=${title}&description=${description}&date=${date}&time=${time}`)
       .then(response => {
         if (response.data.result === 'Event created') {
           const n = events.myevents.length;
@@ -161,10 +161,18 @@ class Events extends React.Component {
     } = this.state;
     const { destroySession, events } = this.props;
     const renderMyEvents = events.myevents.map(myevent => (
-      <div key={myevent.id}>
+      <article className="event-cont" key={myevent.id}>
         <img src={myevent.profile.picture} alt="Imgperson" />
-        <h2>{myevent.profile.name}</h2>
-      </div>
+        <div>
+          <h2>{myevent.profile.name}</h2>
+          <h3>{myevent.date}</h3>
+          <h3>{myevent.time}</h3>
+        </div>
+        <div className="people-count-i">
+          <i className="fas fa-users" />
+          <span>0</span>
+        </div>
+      </article>
     ));
     const renderItems = items.map(item => (
       <Wish
@@ -185,7 +193,7 @@ class Events extends React.Component {
             comingEvents={this.comingEvents}
           />
           {render === 'myEvents' && (
-            <div>
+            <div className="events-cont">
               {renderMyEvents}
             </div>
           )}
@@ -241,7 +249,7 @@ class Events extends React.Component {
                     />
                     <div className="btnsCont">
                       <button type="button" onClick={this.handleWishList}>Close</button>
-                      <button type="button" onClick={this.handleItems}>Save</button>
+                      <button type="button" onClick={this.handleItems}>Add</button>
                     </div>
                   </div>
                 </div>

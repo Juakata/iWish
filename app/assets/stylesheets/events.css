@@ -39,6 +39,46 @@
   transition: width .6s, background .6s;
 }
 
+.events-cont {
+  display: grid;
+  grid-gap: 20px;
+  padding: 20px;
+}
+
+.event-cont {
+  position: relative;
+  display: grid;
+  grid-template-columns: 200px calc(100% - 200px);
+  justify-content: space-around;
+  background: RGBA(0, 0, 0, 0.5);
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px white solid;
+}
+
+.event-cont img{
+  width: 150px;
+  height: 150px;
+  margin: 0 auto;
+  border: 2px RGBA(255, 255, 255, .7) solid;
+  border-radius: 50%;
+}
+
+.people-count-i {
+  position: absolute;
+  right: -10px;
+  top: -10px;
+  color: white;
+  background: black;
+  padding: 15px 10px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.people-count-i span{
+  margin-left: 5px;
+}
+
 @media(max-width: 600px) {
   .events-menu button {
     font-size: 15px;

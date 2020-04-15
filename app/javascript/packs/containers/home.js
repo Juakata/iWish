@@ -80,6 +80,23 @@ class Home extends React.Component {
             .catch(() => {});
         })
         .catch(() => {});
+      axios.get(`v1/getmyevents?email=${session}`)
+        .then(response => {
+          response.data.events.forEach(myevent => {
+            const addevent = {
+              id: myevent.id,
+              title: myevent.title,
+              description: myevent.description,
+              date: myevent.date,
+              time: myevent.time,
+              profile: response.data.profile,
+              people: [],
+              items: [],
+            };
+            addMyevents(addevent);
+          });
+        })
+        .catch(() => {});
     }
   }
 

@@ -19,6 +19,7 @@ Rails.application.routes.draw do
     get 'addgiver', to: 'givers#add_giver'
     get 'removegiver', to: 'givers#remove_giver'
     get 'createevent', to: 'events#create_event'
+    get 'getmyevents', to: 'events#get_myevents'
   end
 
   get '*page', to: 'static#index', constraints: ->(req) do

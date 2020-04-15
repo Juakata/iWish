@@ -19,4 +19,9 @@ class V1::EventsController < ApplicationController
       render json: { result: "Not found." }
     end
   end
+
+  def get_myevents
+    user = User.find_by(email: params[:email])
+    render json: { events: user.events, profile: user.profile }
+  end
 end
