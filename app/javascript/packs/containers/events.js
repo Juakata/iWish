@@ -9,7 +9,7 @@ import { destroySession, openMenu, addMyevents } from '../actions/index';
 import MenuEvents from '../components/menuEvents';
 import Wish from '../components/wish';
 import Event from '../components/event';
-import HumanDate from '../components/humanDate'
+import HumanDate from '../components/humanDate';
 
 class Events extends React.Component {
   constructor(props) {
@@ -167,6 +167,7 @@ class Events extends React.Component {
         key={myevent.id}
         currentEvent={myevent}
         date=<HumanDate date={myevent.date} time={myevent.time} />
+        my
       />
     ));
     const renderItems = items.map(item => (
