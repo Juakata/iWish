@@ -2,13 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const Event = ({
-  currentEvent, date, my, all,
+  currentEvent, date, my, all, seeItems,
 }) => {
   let btns;
   if (my) {
     btns = (
       <div>
-        <button type="button">See Items</button>
+        <button type="button" onClick={seeItems}>See Items</button>
         <button type="button">Delete</button>
       </div>
     );
@@ -47,11 +47,13 @@ Event.propTypes = {
   date: PropTypes.instanceOf(Object).isRequired,
   my: PropTypes.bool,
   all: PropTypes.bool,
+  seeItems: PropTypes.func,
 };
 
 Event.defaultProps = {
   my: false,
   all: false,
+  seeItems: () => {},
 };
 
 export default Event;

@@ -79,6 +79,14 @@
   margin-left: 5px;
 }
 
+.showItems-cont {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  background: RGBA(255, 169, 71, .5);
+}
+
 @media(max-width: 600px) {
   .events-menu button {
     font-size: 15px;

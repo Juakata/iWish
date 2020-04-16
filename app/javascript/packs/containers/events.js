@@ -24,6 +24,8 @@ class Events extends React.Component {
       items: [],
       iTitle: '',
       iDescription: '',
+      openWindow: false,
+      index: 0,
     };
   }
 
@@ -98,7 +100,7 @@ class Events extends React.Component {
     const {
       title, description, date, time, items,
     } = this.state;
-    axios.get(`v1/createevent?email=${session}&title=${title}&description=${description}&date=${date}&time=${time}`)
+    axios.get(`v1/createevent?email=${session}&title=${title}&description=${description}&date=${date}&time=${time}&items=${items}`)
       .then(response => {
         if (response.data.result === 'Event created') {
           const n = events.myevents.length;
@@ -156,18 +158,34 @@ class Events extends React.Component {
     }));
   }
 
+  handleWindow = index => {
+    this.setState(state => ({
+      openWindow: !state.openWindow,
+      index,
+    }));
+  }
+
+
   render() {
     const {
       render, title, description, date, time, openForm, items,
-      iTitle, iDescription,
+      iTitle, iDescription, openWindow, index,
     } = this.state;
+    let showItems;
     const { destroySession, events } = this.props;
-    const renderMyEvents = events.myevents.map(myevent => (
+    if (openWindow) {
+      showItems = events.myevents[index].items.map(item => (
+        <div key={item.id}>{item.title}</div>
+      ));
+    }
+    const renderMyEvents = events.myevents.map((myevent, index) => (
       <Event
         key={myevent.id}
         currentEvent={myevent}
         date=<HumanDate date={myevent.date} time={myevent.time} />
         my
+        add
+        seeItems={() => this.handleWindow(index)}
       />
     ));
     const renderItems = items.map(item => (
@@ -264,6 +282,20 @@ class Events extends React.Component {
           )}
           {render === 'comingEvents'}
         </div>
+        {openWindow && (
+          <div
+            type="button"
+            tabIndex={0}
+            role="button"
+            className="cover-img-selector"
+            onClick={this.handleWindow}
+            onKeyPress={this.onKeyPressHandler}
+          >
+            <div className="showItems-cont">
+              {showItems}
+            </div>
+          </div>
+        )}
       </div>
     );
   }
