@@ -84,17 +84,21 @@ class Home extends React.Component {
       axios.get(`v1/getmyevents?email=${session}`)
         .then(response => {
           response.data.events.forEach(myevent => {
-            const addevent = {
-              id: myevent.id,
-              title: myevent.title,
-              description: myevent.description,
-              date: myevent.date,
-              time: myevent.time,
-              profile: response.data.profile,
-              people: [],
-              items: [],
-            };
-            myEvents.push(addevent);
+            axios.get(`v1/getitems?event=${myevent.id}`)
+              .then(response2 => {
+                const addevent = {
+                  id: myevent.id,
+                  title: myevent.title,
+                  description: myevent.description,
+                  date: myevent.date,
+                  time: myevent.time,
+                  profile: response.data.profile,
+                  people: [],
+                  items: response2.data,
+                };
+                myEvents.push(addevent);
+              })
+              .catch(() => {});
           });
           createMyEvents(myEvents);
         })

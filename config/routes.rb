@@ -21,6 +21,7 @@ Rails.application.routes.draw do
     get 'createevent', to: 'events#create_event'
     get 'getmyevents', to: 'events#get_myevents'
     get 'createitem', to: 'items#create_item'
+    get 'getitems', to: 'items#get_items'
   end
 
   get '*page', to: 'static#index', constraints: ->(req) do
