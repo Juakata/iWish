@@ -95,17 +95,21 @@ class Events extends React.Component {
   handleSubmit = event => {
     event.preventDefault();
     const {
-      session, addMyevents, events, profile,
+      session, addMyevents, profile,
     } = this.props;
     const {
       title, description, date, time, items,
     } = this.state;
-    axios.get(`v1/createevent?email=${session}&title=${title}&description=${description}&date=${date}&time=${time}&items=${items}`)
+    axios.get(`v1/createevent?email=${session}&title=${title}&description=${description}&date=${date}&time=${time}`)
       .then(response => {
         if (response.data.result === 'Event created') {
-          const n = events.myevents.length;
+          items.forEach(item => {
+            axios.get(`v1/createitem?event=${response.data.id}&title=${item.title}&description=${item.description}`)
+              .then(() => {})
+              .catch(() => {});
+          });
           const myevent = {
-            id: n === 0 ? 1 : events.myevents[n - 1].id + 1,
+            id: response.data.id,
             title,
             description,
             date,

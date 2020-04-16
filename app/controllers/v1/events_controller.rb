@@ -11,10 +11,7 @@ class V1::EventsController < ApplicationController
         time: params[:time]
       )
       if event.save
-        params[:items].each do |item|
-          event.items.build(title: item.title, description: item.description)
-        end
-        render json: { result: "Event created" }
+        render json: { result: "Event created", id: event.id }
       else
         render json: { result: "Unable to save event" }
       end
