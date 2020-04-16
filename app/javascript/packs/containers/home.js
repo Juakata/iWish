@@ -8,7 +8,7 @@ import Face from '../assets/bakiFace.png';
 import Logo from '../assets/logo.png';
 import {
   destroySession, createProfile, addWish, openMenu, createRequests,
-  addWishesgivers, addMyevents,
+  addWishesgivers, createMyEvents,
 } from '../actions/index';
 
 class Home extends React.Component {
@@ -21,7 +21,7 @@ class Home extends React.Component {
 
   componentDidMount() {
     const {
-      session, history, createProfile, addWishesgivers, addMyevents,
+      session, history, createProfile, addWishesgivers, createMyEvents,
     } = this.props;
     const wishgivers = [];
     if (session === '' || session === 'destroy') {
@@ -80,6 +80,7 @@ class Home extends React.Component {
             .catch(() => {});
         })
         .catch(() => {});
+      const myEvents = [];
       axios.get(`v1/getmyevents?email=${session}`)
         .then(response => {
           response.data.events.forEach(myevent => {
@@ -93,8 +94,9 @@ class Home extends React.Component {
               people: [],
               items: [],
             };
-            addMyevents(addevent);
+            myEvents.push(addevent);
           });
+          createMyEvents(myEvents);
         })
         .catch(() => {});
     }
@@ -137,7 +139,7 @@ Home.propTypes = {
   openMenu: PropTypes.func.isRequired,
   createRequests: PropTypes.func.isRequired,
   addWishesgivers: PropTypes.func.isRequired,
-  addMyevents: PropTypes.func.isRequired,
+  createMyEvents: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -152,7 +154,7 @@ const mapDispatchToProps = dispatch => ({
   openMenu: open => dispatch(openMenu(open)),
   createRequests: requests => dispatch(createRequests(requests)),
   addWishesgivers: wishesgivers => dispatch(addWishesgivers(wishesgivers)),
-  addMyevents: myEvent => dispatch(addMyevents(myEvent)),
+  createMyEvents: myEvents => dispatch(createMyEvents(myEvents)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Home));

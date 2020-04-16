@@ -38,6 +38,7 @@ const ADD_GIVER = 'ADD_GIVER';
 const REMOVE_GIVER = 'REMOVE_GIVER';
 const ADD_MYEVENTS = 'ADD_MYEVENTS';
 const ADD_ALLEVENTS = 'ADD_ALLEVENTS';
+const CREATE_EVENTS = 'CREATE_EVENTS';
 
 const faces = [
   { id: 1, src: Face }, { id: 2, src: Face2 }, { id: 3, src: Face3 },
@@ -161,9 +162,14 @@ const addAllevents = event => ({
   event,
 });
 
+const createMyEvents = myevents => ({
+  type: CREATE_EVENTS,
+  myevents,
+});
+
 export {
   createSession, destroySession, getFaces, createProfile, addWish, openMenu,
   updateWish, deleteWish, createRequests, addSent, addNew, removeNew, removeSent,
   removeReceived, addFriend, removeFriend, addWishesgivers, addGiver, removeGiver,
-  addMyevents, addAllevents,
+  addMyevents, addAllevents, createMyEvents,
 };

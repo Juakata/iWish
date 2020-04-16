@@ -1,10 +1,14 @@
 const ADD_MYEVENTS = 'ADD_MYEVENTS';
 const ADD_ALLEVENTS = 'ADD_ALLEVENTS';
+const CREATE_EVENTS = 'CREATE_EVENTS';
 const initial = { myevents: [], allevents: [] };
 
 const eventsReducer = (state = initial, action) => {
   const clone = { ...state };
   switch (action.type) {
+    case CREATE_EVENTS:
+      clone.myevents = action.myevents;
+      return clone;
     case ADD_MYEVENTS:
       clone.myevents.push(action.event);
       return clone;
