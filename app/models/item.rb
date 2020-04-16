@@ -1,3 +1,3 @@
 class Item < ApplicationRecord
-  belogns_to :event
+  belongs_to :event
 end
