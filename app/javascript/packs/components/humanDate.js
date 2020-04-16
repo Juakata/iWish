@@ -17,18 +17,45 @@ const months = {
 };
 
 const HumanDate = ({
-  day, month, year,
-}) => (
-  <div className="margin-bottom">
-    <i className="fas fa-birthday-cake" />
-    {`${months[month]} ${day}, ${year}`}
-  </div>
-);
+  date, time,
+}) => {
+  const month = date.split('-')[1];
+  const day = date.split('-')[2];
+  const year = date.split('-')[0];
+  let hour = time.split(':')[0];
+  const minutes = time.split(':')[1];
+  let final = 'AM';
+  if (hour - 12 > 0) {
+    final = 'PM';
+    hour -= 12;
+  } else if (hour - 12 === 0) {
+    final = 'PM';
+  } else if (hour - 12 === -12) {
+    hour = 12;
+  }
+  return (
+    <div className="margin-bottom">
+      {hour === '-1' ? (
+        <div>
+          <i className="fas fa-birthday-cake" />
+          {`${months[month]} ${day}, ${year}`}
+        </div>
+      ) : (
+        <div>
+          {`${months[month]} ${day}, ${year} ${hour}:${minutes} ${final}`}
+        </div>
+      )}
+    </div>
+  );
+};
 
 HumanDate.propTypes = {
-  month: PropTypes.string.isRequired,
-  day: PropTypes.string.isRequired,
-  year: PropTypes.string.isRequired,
+  date: PropTypes.string.isRequired,
+  time: PropTypes.string,
+};
+
+HumanDate.defaultProps = {
+  time: '-1:-1',
 };
 
 export default HumanDate;

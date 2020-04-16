@@ -8,6 +8,8 @@ import Logo from '../assets/logo.png';
 import { destroySession, openMenu, addMyevents } from '../actions/index';
 import MenuEvents from '../components/menuEvents';
 import Wish from '../components/wish';
+import Event from '../components/event';
+import HumanDate from '../components/humanDate'
 
 class Events extends React.Component {
   constructor(props) {
@@ -161,18 +163,11 @@ class Events extends React.Component {
     } = this.state;
     const { destroySession, events } = this.props;
     const renderMyEvents = events.myevents.map(myevent => (
-      <article className="event-cont" key={myevent.id}>
-        <img src={myevent.profile.picture} alt="Imgperson" />
-        <div>
-          <h2>{myevent.profile.name}</h2>
-          <h3>{myevent.date}</h3>
-          <h3>{myevent.time}</h3>
-        </div>
-        <div className="people-count-i">
-          <i className="fas fa-users" />
-          <span>0</span>
-        </div>
-      </article>
+      <Event
+        key={myevent.id}
+        currentEvent={myevent}
+        date=<HumanDate date={myevent.date} time={myevent.time} />
+      />
     ));
     const renderItems = items.map(item => (
       <Wish

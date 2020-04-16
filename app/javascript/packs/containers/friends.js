@@ -163,17 +163,12 @@ class Friends extends React.Component {
       } = friend;
       const { wishesgivers } = this.props;
       const sendWishGivers = wishesgivers.filter(e => e.id === id)[0];
-      const month = birthday.split('-')[1];
-      const day = birthday.split('-')[2];
-      const year = birthday.split('-')[0];
       this.setState(state => ({
         showFriend: !state.showFriend,
         name,
         source: picture,
         birthday: <HumanDate
-          month={month}
-          day={day}
-          year={year}
+          date={birthday}
         />,
         sendWishGivers,
       }));
