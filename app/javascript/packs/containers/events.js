@@ -179,7 +179,13 @@ class Events extends React.Component {
     const { destroySession, events } = this.props;
     if (openWindow) {
       showItems = events.myevents[index].items.map(item => (
-        <div key={item.id}>{item.title}</div>
+        <div key={item.id}>
+          <span>{item.title}</span>
+          <button type="button">
+            <i className="fas fa-users" />
+            <span>0</span>
+          </button>
+        </div>
       ));
     }
     const renderMyEvents = events.myevents.map((myevent, index) => (
@@ -291,7 +297,7 @@ class Events extends React.Component {
             type="button"
             tabIndex={0}
             role="button"
-            className="cover-img-selector"
+            className="cover-items"
             onClick={this.handleWindow}
             onKeyPress={this.onKeyPressHandler}
           >
