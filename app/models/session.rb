@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Session < ApplicationRecord
   belongs_to :user
   validates :token_digest, presence: true
@@ -12,5 +14,4 @@ class Session < ApplicationRecord
   def authenticate_token(string)
     BCrypt::Password.new(token_digest).is_password?(string)
   end
-
 end

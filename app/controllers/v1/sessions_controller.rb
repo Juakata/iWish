@@ -2,24 +2,11 @@
 
 class V1::SessionsController < ApplicationController
   def auto_sign_in
-    unless params[:id].match(/[azAZ]/)
-      user = User.where("id = (?)", params[:id]).first
-      if user
-        session = user.sessions.find_by(key: params[:key])
-        if session
-          if session.authenticate_token(params[:token])
-            render json: { email: user.email }
-          else
-            sign_out
-          end
-        else
-          sign_out
-        end
-      else
-        sign_out
-      end
-    else
+    if params[:id].match(/[azAZ]/)
       sign_out
+    else
+      user = User.where('id = (?)', params[:id]).first
+      check_user(user, params[:key], params[:token])
     end
   end
 
@@ -56,5 +43,22 @@ class V1::SessionsController < ApplicationController
       session.save
     end
     render json: { email: user.email }
+  end
+
+  def check_user(user, key, token)
+    if user
+      session = user.sessions.find_by(key: key)
+      if session
+        if session.authenticate_token(token)
+          render json: { email: user.email }
+        else
+          sign_out
+        end
+      else
+        sign_out
+      end
+    else
+      sign_out
+    end
   end
 end

@@ -48,24 +48,24 @@ class SigninForm extends React.Component {
                 if (response.data.email) {
                   createSession(response.data.email);
                   axios.get(`v1/getallevents?email=${response.data.email}`)
-                    .then(response => {
-                      if (response.data.events.length === 0) {
+                    .then(response2 => {
+                      if (response2.data.events.length === 0) {
                         history.push('/home');
                       }
-                      response.data.events.forEach(allevent => {
+                      response2.data.events.forEach(allevent => {
                         axios.get(`v1/getitems?event=${allevent.id}`)
-                          .then(response2 => {
+                          .then(response3 => {
                             axios.get(`v1/getprofile?id=${allevent.user_id}`)
-                              .then(response3 => {
+                              .then(response4 => {
                                 const addevent = {
                                   id: allevent.id,
                                   title: allevent.title,
                                   description: allevent.description,
                                   date: allevent.date,
                                   time: allevent.time,
-                                  profile: response3.data,
+                                  profile: response4.data,
                                   people: [],
-                                  items: response2.data,
+                                  items: response3.data,
                                 };
                                 allEvents.push(addevent);
                                 history.push('/home');

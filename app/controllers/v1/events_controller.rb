@@ -11,23 +11,22 @@ class V1::EventsController < ApplicationController
         time: params[:time]
       )
       if event.save
-        render json: { result: "Event created", id: event.id }
+        render json: { result: 'Event created', id: event.id }
       else
-        render json: { result: "Unable to save event" }
+        render json: { result: 'Unable to save event' }
       end
     else
-      render json: { result: "Not found." }
+      render json: { result: 'Not found.' }
     end
   end
 
-  def get_myevents
+  def pull_myevents
     user = User.find_by(email: params[:email])
     render json: { events: user.events.order(date: :asc), profile: user.profile }
   end
 
-  def get_allevents
+  def pull_allevents
     user = User.find_by(email: params[:email])
-    events = []
     ids = get_array(Friend.select(:sender).where('receiver = (?) AND status = TRUE', user.id), 'sender')
     ids += get_array(Friend.select(:receiver).where('sender = (?)  AND status = TRUE', user.id), 'receiver')
     events = Event.where('user_id IN (?)', ids).order(date: :asc)

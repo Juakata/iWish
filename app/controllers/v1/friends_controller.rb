@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class V1::FriendsController < ApplicationController
-  def get_friends
+  def pull_friends
     user = User.find_by(email: params[:email])
     if user
       ids = get_array(Friend.select(:sender).where('receiver = (?) AND status = TRUE', user.id), 'sender')
@@ -35,18 +35,13 @@ class V1::FriendsController < ApplicationController
 
   def add_friend
     sender = User.find_by(email: params[:email])
-    profile = Profile.find(params[:id])
-    if profile
-      receiver = profile.user
-      if sender && receiver
-        friend = Friend.new(sender: sender, receiver: receiver)
-        if friend.save
-          render json: { result: 'Created.' }
-        else
-          render json: { result: friend.errors }
-        end
+    receiver = Profile.find(params[:id]).user
+    if sender && receiver
+      friend = Friend.new(sender: sender, receiver: receiver)
+      if friend.save
+        render json: { result: 'Created.' }
       else
-        render json: { result: 'Not found.' }
+        render json: { result: friend.errors }
       end
     else
       render json: { result: 'Not found.' }
@@ -75,7 +70,7 @@ class V1::FriendsController < ApplicationController
     receiver = Profile.find(params[:id]).user
 
     friend = Friend.where('sender = (?) AND receiver = (?)', sender.id, receiver.id).first
-    friend = Friend.where('sender = (?) AND receiver = (?)', receiver.id, sender.id).first unless friend
+    friend ||= Friend.where('sender = (?) AND receiver = (?)', receiver.id, sender.id).first
     if friend
       sender.profile.wishes.each do |wish|
         wish.giver.find_by(friend_id: receiver.id).destroy
