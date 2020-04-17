@@ -1,4 +1,5 @@
 const CREATE_PROFILE = 'CREATE_PROFILE';
+const UPDATE_PROFILE = 'UPDATE_PROFILE';
 const ADD_WISH = 'ADD_WISH';
 const UPDATE_WISH = 'UPDATE_WISH';
 const DELETE_WISH = 'DELETE_WISH';
@@ -9,6 +10,11 @@ const profileReducer = (state = {}, action) => {
   switch (action.type) {
     case CREATE_PROFILE:
       return action.profile;
+    case UPDATE_PROFILE:
+      clone.name = action.name;
+      clone.birthday = action.birthday;
+      clone.picture = action.picture;
+      return clone;
     case ADD_WISH:
       clone.wishes.push(action.wish);
       return clone;

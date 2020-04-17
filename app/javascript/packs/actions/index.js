@@ -21,6 +21,7 @@ const CREATE_SESSION = 'CREATE_SESSION';
 const DESTROY_SESSION = 'DESTROY_SESSION';
 const GET_FACES = 'GET_FACES';
 const CREATE_PROFILE = 'CREATE_PROFILE';
+const UPDATE_PROFILE = 'UPDATE_PROFILE';
 const ADD_WISH = 'ADD_WISH';
 const OPEN_MENU = 'OPEN_MENU';
 const UPDATE_WISH = 'UPDATE_WISH';
@@ -67,6 +68,13 @@ const getFaces = () => ({
 const createProfile = profile => ({
   type: CREATE_PROFILE,
   profile,
+});
+
+const updateProfile = (name, birthday, picture) => ({
+  type: UPDATE_PROFILE,
+  name,
+  birthday,
+  picture,
 });
 
 const addWish = wish => ({
@@ -177,5 +185,5 @@ export {
   createSession, destroySession, getFaces, createProfile, addWish, openMenu,
   updateWish, deleteWish, createRequests, addSent, addNew, removeNew, removeSent,
   removeReceived, addFriend, removeFriend, addWishesgivers, addGiver, removeGiver,
-  addMyevents, addAllevents, createMyEvents, createAllEvents,
+  addMyevents, addAllevents, createMyEvents, createAllEvents, updateProfile,
 };

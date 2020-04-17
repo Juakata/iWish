@@ -9,7 +9,7 @@ import Message from '../components/message';
 import Logo from '../assets/logo.png';
 import {
   destroySession, getFaces, addWish, openMenu, updateWish, deleteWish,
-  createProfile,
+  updateProfile,
 } from '../actions/index';
 import ImgBtn from '../components/imgBtn';
 
@@ -69,7 +69,7 @@ class Profile extends React.Component {
     event.preventDefault();
     const { id } = event.target[event.target.length - 1];
     const {
-      session, addWish, updateWish, createProfile,
+      session, addWish, updateWish, updateProfile,
     } = this.props;
     const {
       name, birthday, picture, wishId, title, description,
@@ -79,7 +79,7 @@ class Profile extends React.Component {
         axios.get(`v1/setprofile?email=${session}&name=${name}&birthday=${birthday}&picture=${picture}`)
           .then(response => {
             if (response.data.result === 'Profile updated.') {
-              createProfile(response.data.profile);
+              updateProfile(name, birthday, picture);
               this.setState({
                 message: 'Profile successfully updated.',
               });
@@ -284,7 +284,7 @@ Profile.propTypes = {
   openMenu: PropTypes.func.isRequired,
   updateWish: PropTypes.func.isRequired,
   deleteWish: PropTypes.func.isRequired,
-  createProfile: PropTypes.func.isRequired,
+  updateProfile: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -300,7 +300,7 @@ const mapDispatchToProps = dispatch => ({
   openMenu: open => dispatch(openMenu(open)),
   updateWish: wish => dispatch(updateWish(wish)),
   deleteWish: wishId => dispatch(deleteWish(wishId)),
-  createProfile: profile => dispatch(createProfile(profile)),
+  updateProfile: (name, birthday, picture) => dispatch(updateProfile(name, birthday, picture)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Profile));
