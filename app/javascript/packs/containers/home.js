@@ -6,6 +6,8 @@ import PropTypes from 'prop-types';
 import Header from '../components/header';
 import Face from '../assets/bakiFace.png';
 import Logo from '../assets/logo.png';
+import Event from '../components/event';
+import HumanDate from '../components/humanDate';
 import {
   destroySession, createProfile, addWish, openMenu, createRequests,
   addWishesgivers, createMyEvents,
@@ -14,8 +16,10 @@ import {
 class Home extends React.Component {
   constructor(props) {
     super(props);
+    const { events } = this.props;
+    const n = events.allevents.length;
     this.state = {
-      test: 'Home ',
+      message: n === 0 ? 'No events to show.' : '',
     };
   }
 
@@ -119,15 +123,30 @@ class Home extends React.Component {
     openMenu(open);
   }
 
+  assistEvent = index => {
+    console.log(index);
+  }
+
   render() {
-    const { test } = this.state;
-    const { session, destroySession } = this.props;
+    const { message } = this.state;
+    const { destroySession, events } = this.props;
+    const renderAllevents = events.allevents.map((allevent, index) => (
+      <Event
+        key={allevent.id}
+        currentEvent={allevent}
+        date=<HumanDate date={allevent.date} time={allevent.time} />
+        all
+        assistEvent={() => this.assistEvent(index)}
+      />
+    ));
     return (
       <div>
         <Header source={Logo} menu={this.menu} out={destroySession} />
         <div className="container">
-          <span>{test}</span>
-          <span>{session}</span>
+          {message}
+          <div className="grid">
+            {renderAllevents}
+          </div>
         </div>
       </div>
     );
@@ -144,11 +163,13 @@ Home.propTypes = {
   createRequests: PropTypes.func.isRequired,
   addWishesgivers: PropTypes.func.isRequired,
   createMyEvents: PropTypes.func.isRequired,
+  events: PropTypes.instanceOf(Object).isRequired,
 };
 
 const mapStateToProps = state => ({
   session: state.session,
   functions: state.functions,
+  events: state.events,
 });
 
 const mapDispatchToProps = dispatch => ({

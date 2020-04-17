@@ -64,6 +64,29 @@
   border-radius: 50%;
 }
 
+.event-cont h4 {
+  font-size: 12px;
+  margin: 5px;
+}
+
+.center-pic-h4 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.center-hs {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.center-hs h2, h3{
+  margin: 5px;
+}
+
 .people-count-i {
   position: absolute;
   right: -10px;
@@ -126,17 +149,22 @@
   border: 2px black solid;
 }
 
+.grid {
+  display: grid;
+  grid-gap: 10px;
+}
+
 @media(max-width: 600px) {
   .events-menu button {
     font-size: 15px;
   }
 
   .event-cont h2{
-    font-size: 20px;
+    font-size: 18px;
   }
 
   .event-cont h3{
-    font-size: 15px;
+    font-size: 12px;
   }
 
   .event-cont {

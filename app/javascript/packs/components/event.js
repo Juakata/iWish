@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const Event = ({
-  currentEvent, date, my, all, seeItems,
+  currentEvent, date, my, all, seeItems, assistEvent,
 }) => {
   let btns;
   if (my) {
@@ -15,7 +15,7 @@ const Event = ({
   } else if (all) {
     btns = (
       <div>
-        <button type="button">Assist</button>
+        <button onClick={assistEvent} type="button">Assist</button>
       </div>
     );
   } else {
@@ -28,8 +28,11 @@ const Event = ({
   }
   return (
     <article className="event-cont">
-      <img src={currentEvent.profile.picture} alt="Imgperson" />
-      <div>
+      <div className="center-pic-h4">
+        <img src={currentEvent.profile.picture} alt="Imgperson" />
+        <h4>{currentEvent.profile.name}</h4>
+      </div>
+      <div className="center-hs">
         <h2>{currentEvent.title}</h2>
         <h3>{date}</h3>
         {btns}
@@ -48,12 +51,14 @@ Event.propTypes = {
   my: PropTypes.bool,
   all: PropTypes.bool,
   seeItems: PropTypes.func,
+  assistEvent: PropTypes.func,
 };
 
 Event.defaultProps = {
   my: false,
   all: false,
   seeItems: () => {},
+  assistEvent: () => {},
 };
 
 export default Event;

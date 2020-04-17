@@ -194,7 +194,6 @@ class Events extends React.Component {
         currentEvent={myevent}
         date=<HumanDate date={myevent.date} time={myevent.time} />
         my
-        add
         seeItems={() => this.handleWindow(index)}
       />
     ));
