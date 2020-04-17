@@ -60,7 +60,11 @@ class V1::FriendsController < ApplicationController
     friend = Friend.where('sender = (?) AND receiver = (?)', sender.id, receiver.id).first
     if friend
       friend.update_attribute(:status, true)
-      render json: { result: 'Accepted' }
+      wishgivers = []
+      sender.profile.wishes.each do |wish|
+        wishgivers.push({ id: wish.id, givers: wish.givers })
+      end
+      render json: { result: 'Accepted', wishes: sender.profile.wishes, wishgivers: wishgivers }
     else
       render json: { result: 'Realation: not found.' }
     end
@@ -73,6 +77,12 @@ class V1::FriendsController < ApplicationController
     friend = Friend.where('sender = (?) AND receiver = (?)', sender.id, receiver.id).first
     friend = Friend.where('sender = (?) AND receiver = (?)', receiver.id, sender.id).first unless friend
     if friend
+      sender.profile.wishes.each do |wish|
+        wish.giver.find_by(friend_id: receiver.id).destroy
+      end
+      receiver.profile.wishes.each do |wish|
+        wish.givers.find_by(friend_id: sender.id).destroy
+      end
       friend.destroy
       render json: { result: 'Destroy' }
     else

@@ -7,7 +7,7 @@ import Header from '../components/header';
 import Logo from '../assets/logo.png';
 import {
   destroySession, openMenu, addNew, addSent, removeNew, removeSent,
-  removeReceived, removeFriend, addFriend, addGiver, removeGiver,
+  removeReceived, removeFriend, addFriend, addGiver, removeGiver, addWishesgivers,
 } from '../actions/index';
 import BtnsHeader from '../components/btnsHeader';
 import Friend from '../components/friend';
@@ -130,13 +130,19 @@ class Friends extends React.Component {
 
   acceptFriend = id => {
     const {
-      session, removeReceived, addFriend, requests,
+      session, removeReceived, addFriend, requests, addWishesgivers,
     } = this.props;
     axios.get(`v1/acceptfriend?email=${session}&id=${id}`)
-      .then(() => {
+      .then(response => {
         const friend = requests.received.filter(ele => ele.id === id)[0];
         removeReceived(id);
         addFriend(friend);
+        const wishesgivers = {
+          id: friend.id,
+          wishes: response.data.wishes,
+          wishgivers: response.data.wishgivers,
+        };
+        addWishesgivers(wishesgivers);
       })
       .catch(() => {});
   }
@@ -329,6 +335,15 @@ class Friends extends React.Component {
               handleMyFriends={this.handleMyFriends}
               handleNewFriends={this.handleNewFriends}
             />
+            <form className="people-filter">
+              <input
+                type="text"
+                name="filter"
+                value={filter}
+                onChange={this.handleChange}
+              />
+              <i className="fas fa-search" />
+            </form>
             {!myFriends ? renderFriends
               : (
                 <HandleRequests
@@ -339,15 +354,6 @@ class Friends extends React.Component {
                   change={change}
                 />
               )}
-            <form className="people-filter">
-              <input
-                type="text"
-                name="filter"
-                value={filter}
-                onChange={this.handleChange}
-              />
-              <i className="fas fa-search" />
-            </form>
             {myFriends && txt1 === 'New' && renderNewRequests}
             {myFriends && txt1 === 'Received' && renderReceivedRequests }
             {myFriends && txt1 === 'Sent' && renderSentRequests}
@@ -406,6 +412,7 @@ Friends.propTypes = {
   addGiver: PropTypes.func.isRequired,
   removeGiver: PropTypes.func.isRequired,
   profile: PropTypes.instanceOf(Object).isRequired,
+  addWishesgivers: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -428,6 +435,7 @@ const mapDispatchToProps = dispatch => ({
   addFriend: friend => dispatch(addFriend(friend)),
   addGiver: (profile, wish, giver) => dispatch(addGiver(profile, wish, giver)),
   removeGiver: (profile, wish, giver) => dispatch(removeGiver(profile, wish, giver)),
+  addWishesgivers: wishesgivers => dispatch(addWishesgivers(wishesgivers)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Friends));

@@ -179,9 +179,9 @@ class Events extends React.Component {
     const { destroySession, events } = this.props;
     if (openWindow) {
       showItems = events.myevents[index].items.map(item => (
-        <div key={item.id}>
+        <div className="item-cont" key={item.id}>
           <span>{item.title}</span>
-          <button type="button">
+          <button className="btn-item-people" type="button">
             <i className="fas fa-users" />
             <span>0</span>
           </button>
