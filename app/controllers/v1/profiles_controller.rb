@@ -10,7 +10,7 @@ class V1::ProfilesController < ApplicationController
           birthday: params[:birthday],
           picture: params[:picture]
         )
-        render json: { result: 'Profile updated.' }
+        render json: { result: 'Profile updated.', profile: user.profile }
       else
         profile = user.build_profile(
           name: params[:name],
