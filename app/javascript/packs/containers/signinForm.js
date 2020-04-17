@@ -49,6 +49,9 @@ class SigninForm extends React.Component {
                   createSession(response.data.email);
                   axios.get(`v1/getallevents?email=${response.data.email}`)
                     .then(response => {
+                      if (response.data.events.length === 0) {
+                        history.push('/home');
+                      }
                       response.data.events.forEach(allevent => {
                         axios.get(`v1/getitems?event=${allevent.id}`)
                           .then(response2 => {
