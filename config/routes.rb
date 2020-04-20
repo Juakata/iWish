@@ -23,6 +23,7 @@ Rails.application.routes.draw do
     get 'createitem', to: 'items#create_item'
     get 'getitems', to: 'items#pull_items'
     get 'getallevents', to: 'events#pull_allevents'
+    get 'createeventguest', to: 'event_guests#create_event_guest'
   end
 
   get '*page', to: 'static#index', constraints: ->(req) do
