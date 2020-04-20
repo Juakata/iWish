@@ -4,8 +4,8 @@ class V1::FriendsController < ApplicationController
   def pull_friends
     user = User.find_by(email: params[:email])
     if user
-      ids = get_array(Friend.select(:sender).where('receiver = (?) AND status = TRUE', user.id), 'sender')
-      ids += get_array(Friend.select(:receiver).where('sender = (?)  AND status = TRUE', user.id), 'receiver')
+      ids = get_array(Friend.select(:sender).where('receiver = (?) AND status = TRUE', user.id), :sender)
+      ids += get_array(Friend.select(:receiver).where('sender = (?)  AND status = TRUE', user.id), :receiver)
       friends = Profile.where('user_id IN (?)', ids)
       render json: { friends: friends }
     else
@@ -16,12 +16,12 @@ class V1::FriendsController < ApplicationController
   def all_requests
     user = User.find_by(email: params[:email])
     if user
-      ids = get_array(Friend.select(:sender).where('receiver = (?) AND status = TRUE', user.id), 'sender')
-      ids += get_array(Friend.select(:receiver).where('sender = (?)  AND status = TRUE', user.id), 'receiver')
+      ids = get_array(Friend.select(:sender).where('receiver = (?) AND status = TRUE', user.id), :sender)
+      ids += get_array(Friend.select(:receiver).where('sender = (?)  AND status = TRUE', user.id), :receiver)
       friends = Profile.where('user_id IN (?)', ids)
 
-      id_senders = get_array(Friend.select(:sender).where('receiver = (?) AND status = FALSE', user.id), 'sender')
-      id_receivers = get_array(Friend.select(:receiver).where('sender = (?) AND status = FALSE', user.id), 'receiver')
+      id_senders = get_array(Friend.select(:sender).where('receiver = (?) AND status = FALSE', user.id), :sender)
+      id_receivers = get_array(Friend.select(:receiver).where('sender = (?) AND status = FALSE', user.id), :receiver)
       ids_new = id_senders + id_receivers + ids + [user.id]
 
       received = Profile.where('user_id IN (?)', id_senders)

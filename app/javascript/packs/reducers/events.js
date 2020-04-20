@@ -1,23 +1,37 @@
-const ADD_MYEVENTS = 'ADD_MYEVENTS';
-const ADD_ALLEVENTS = 'ADD_ALLEVENTS';
-const CREATE_EVENTS = 'CREATE_EVENTS';
+const CREATE_MYEVENTS = 'CREATE_MYEVENTS';
 const CREATE_ALLEVENTS = 'CREATE_ALLEVENTS';
-const initial = { myevents: [], allevents: [] };
+const CREATE_COMINGEVENTS = 'CREATE_COMINGEVENTS';
+const ADD_MYEVENT = 'ADD_MYEVENT';
+const ADD_ALLEVENT = 'ADD_ALLEVENT';
+const ADD_COMINGEVENT = 'ADD_COMINGEVENT';
+const REMOVE_ALLEVENT = 'REMOVE_ALLEVENT';
+const initial = { myevents: [], allevents: [], comingevents: [] };
 
 const eventsReducer = (state = initial, action) => {
   const clone = { ...state };
+  let allevents;
   switch (action.type) {
-    case CREATE_EVENTS:
+    case CREATE_MYEVENTS:
       clone.myevents = action.myevents;
       return clone;
     case CREATE_ALLEVENTS:
       clone.allevents = action.allevents;
       return clone;
-    case ADD_MYEVENTS:
+    case CREATE_COMINGEVENTS:
+      clone.comingevents = action.comingevents;
+      return clone;
+    case ADD_MYEVENT:
       clone.myevents.push(action.event);
       return clone;
-    case ADD_ALLEVENTS:
+    case ADD_ALLEVENT:
       clone.allevents.push(action.event);
+      return clone;
+    case ADD_COMINGEVENT:
+      clone.comingevents.push(action.event);
+      return clone;
+    case REMOVE_ALLEVENT:
+      allevents = clone.allevents.filter(e => e.id !== action.id);
+      clone.allevents = allevents;
       return clone;
     default:
       return state;

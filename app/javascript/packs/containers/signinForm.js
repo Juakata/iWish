@@ -69,12 +69,14 @@ class SigninForm extends React.Component {
                                 };
                                 allEvents.push(addevent);
                                 history.push('/home');
+                                createAllEvents(
+                                  allEvents.sort((a, b) => new Date(a.date) - new Date(b.date)),
+                                );
                               })
                               .catch(() => {});
                           })
                           .catch(() => {});
                       });
-                      createAllEvents(allEvents);
                     })
                     .catch(() => {});
                 }

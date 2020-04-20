@@ -10,7 +10,7 @@ import Event from '../components/event';
 import HumanDate from '../components/humanDate';
 import {
   destroySession, createProfile, addWish, openMenu, createRequests,
-  addWishesgivers, createMyEvents,
+  addWishesgivers, createMyEvents, removeAllevent, addComingevent,
 } from '../actions/index';
 
 class Home extends React.Component {
@@ -124,8 +124,16 @@ class Home extends React.Component {
   }
 
   assistEvent = index => {
-    const result = index + 2;
-    return result;
+    const {
+      session, events, removeAllevent, addComingevent,
+    } = this.props;
+    const comingEvent = events.allevents[index];
+    axios.get(`v1/createeventguest?email=${session}&id=${comingEvent.id}`)
+      .then(() => {
+        removeAllevent(comingEvent.id);
+        addComingevent(comingEvent);
+      })
+      .catch(() => {});
   }
 
   render() {
@@ -165,6 +173,8 @@ Home.propTypes = {
   addWishesgivers: PropTypes.func.isRequired,
   createMyEvents: PropTypes.func.isRequired,
   events: PropTypes.instanceOf(Object).isRequired,
+  removeAllevent: PropTypes.func.isRequired,
+  addComingevent: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -181,6 +191,8 @@ const mapDispatchToProps = dispatch => ({
   createRequests: requests => dispatch(createRequests(requests)),
   addWishesgivers: wishesgivers => dispatch(addWishesgivers(wishesgivers)),
   createMyEvents: myEvents => dispatch(createMyEvents(myEvents)),
+  removeAllevent: allEvent => dispatch(removeAllevent(allEvent)),
+  addComingevent: comingEvent => dispatch(addComingevent(comingEvent)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Home));
