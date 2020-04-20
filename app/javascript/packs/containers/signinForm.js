@@ -3,8 +3,10 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Link, withRouter } from 'react-router-dom';
 import axios from 'axios';
+import Fingerprint2 from 'fingerprintjs2';
 import Logo from '../assets/logo.png';
-import { createSession } from '../actions/index';
+import Background from '../assets/background.jpg';
+import { createSession, createAllEvents } from '../actions/index';
 
 class SigninForm extends React.Component {
   constructor(props) {
@@ -13,36 +15,117 @@ class SigninForm extends React.Component {
       email: '',
       password: '',
       error: '',
+      key: '',
     };
   }
 
   componentDidMount() {
-    const decodedCookie = decodeURIComponent(document.cookie);
-    const { history, createSession } = this.props;
-    if (decodedCookie !== '') {
-      const ca = decodedCookie.split(';');
-      const id = ca[0].split('=')[1];
-      const token = ca[1].split('=')[1];
-      axios.get(`v1/autosignin?id=${id}&token=${token}`)
-        .then(response => {
-          if (response.data.email) {
-            createSession(response.data.email);
+    document.querySelector('.background').style.backgroundImage = `url(${Background})`;
+    if (window.requestIdleCallback) {
+      requestIdleCallback(() => {
+        Fingerprint2.get(components => {
+          this.setState({
+            key: components[0].value.replace(';', ','),
+          });
+          const decodedCookie = decodeURIComponent(document.cookie);
+          const {
+            history, createSession, session, createAllEvents,
+          } = this.props;
+          if (session !== 'destroy' && session !== '') {
             history.push('/home');
+          } else if (session === 'destroy') {
+            axios.get('v1/signout')
+              .then(() => {})
+              .catch(() => {});
+          } else if (decodedCookie !== '') {
+            const ca = decodedCookie.split(';');
+            const id = ca[0].split('=')[1];
+            const token = ca[1].split('=')[1];
+            const { key } = this.state;
+            const allEvents = [];
+            axios.get(`v1/autosignin?id=${id}&token=${token}&key=${key}`)
+              .then(response => {
+                if (response.data.email) {
+                  createSession(response.data.email);
+                  axios.get(`v1/getallevents?email=${response.data.email}`)
+                    .then(response2 => {
+                      if (response2.data.events.length === 0) {
+                        history.push('/home');
+                      }
+                      response2.data.events.forEach(allevent => {
+                        axios.get(`v1/getitems?event=${allevent.id}`)
+                          .then(response3 => {
+                            axios.get(`v1/getprofile?id=${allevent.user_id}`)
+                              .then(response4 => {
+                                const addevent = {
+                                  id: allevent.id,
+                                  title: allevent.title,
+                                  description: allevent.description,
+                                  date: allevent.date,
+                                  time: allevent.time,
+                                  profile: response4.data,
+                                  people: [],
+                                  items: response3.data,
+                                };
+                                allEvents.push(addevent);
+                                history.push('/home');
+                              })
+                              .catch(() => {});
+                          })
+                          .catch(() => {});
+                      });
+                      createAllEvents(allEvents);
+                    })
+                    .catch(() => {});
+                }
+              })
+              .catch(error => this.setState({ error }));
           }
-        })
-        .catch(error => this.setState({ error }));
+        });
+      });
+    } else {
+      setTimeout(() => {
+        Fingerprint2.get(components => {
+          this.setState({
+            key: components[0].value.replace(';', ','),
+          });
+        });
+      }, 500);
     }
   }
 
   handleSubmit = event => {
     event.preventDefault();
-    const { email, password } = this.state;
+    const { email, password, key } = this.state;
     const { history, createSession } = this.props;
-    axios.get(`v1/signin?email=${email}&password=${password}`)
+    const allEvents = [];
+    axios.get(`v1/signin?email=${email}&password=${password}&key=${key}`)
       .then(response => {
         if (response.data.email) {
           createSession(response.data.email);
-          history.push('/home');
+          axios.get(`v1/getallevents?email=${response.data.email}`)
+            .then(response => {
+              response.data.events.forEach(allevent => {
+                axios.get(`v1/getitems?event=${allevent.id}`)
+                  .then(response2 => {
+                    const addevent = {
+                      id: allevent.id,
+                      title: allevent.title,
+                      description: allevent.description,
+                      date: allevent.date,
+                      time: allevent.time,
+                      profile: response.data.profile,
+                      people: [],
+                      items: response2.data,
+                    };
+                    allEvents.push(addevent);
+                    history.push('/home');
+                  })
+                  .catch(() => {});
+              });
+              createAllEvents(allEvents);
+            })
+            .catch(() => {});
         } else {
           this.setState({ error: response.data.result });
         }
@@ -94,10 +177,17 @@ class SigninForm extends React.Component {
 SigninForm.propTypes = {
   history: PropTypes.instanceOf(Object).isRequired,
   createSession: PropTypes.func.isRequired,
+  session: PropTypes.string.isRequired,
+  createAllEvents: PropTypes.func.isRequired,
 };
+
+const mapStateToProps = state => ({
+  session: state.session,
+});
 
 const mapDispatchToProps = dispatch => ({
   createSession: user => dispatch(createSession(user)),
+  createAllEvents: allEvents => dispatch(createAllEvents(allEvents)),
 });
 
-export default withRouter(connect(null, mapDispatchToProps)(SigninForm));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SigninForm));

@@ -6,7 +6,7 @@ const sessionReducer = (state = '', action) => {
     case CREATE_SESSION:
       return action.user;
     case DESTROY_SESSION:
-      return '';
+      return 'destroy';
     default:
       return state;
   }

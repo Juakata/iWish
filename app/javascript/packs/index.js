@@ -7,6 +7,16 @@ import rootReducer from './reducers/index';
 
 const data = {
   session: '',
+  profile: {},
+  functions: { open: true },
+  requests: {
+    friends: [],
+    received: [],
+    newRequests: [],
+    sent: [],
+  },
+  wishesgivers: [],
+  events: { myevents: [], allevents: [] },
 };
 
 const store = createStore(rootReducer, data);
