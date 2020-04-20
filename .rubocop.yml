@@ -9,7 +9,6 @@ AllCops:
     - "Rakefile"
     - "node_modules/**/*"
   DisplayCopNames: true
-  EnabledByDefault: true
 
 Layout/LineLength:
   Max: 120
@@ -27,6 +26,12 @@ Metrics/BlockLength:
 Style/Documentation:
   Enabled: false
 Style/ClassAndModuleChildren:
+  Enabled: false
+Style/HashEachMethods:
+  Enabled: false
+Style/HashTransformKeys:
+  Enabled: false
+Style/HashTransformValues:
   Enabled: false
 
 Layout/HashAlignment:
