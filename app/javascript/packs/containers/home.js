@@ -124,7 +124,8 @@ class Home extends React.Component {
   }
 
   assistEvent = index => {
-    console.log(index);
+    const result = index + 2;
+    return result;
   }
 
   render() {

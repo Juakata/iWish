@@ -16,11 +16,7 @@ require('channels');
 // const imagePath = (name) => images(name, true)
 
 if ('serviceWorker' in navigator) {
-  console.log('Will the service worker register?');
   navigator.serviceWorker.register('service-worker.js')
-    .then(() => {
-      console.log('Yes, it did.');
-    }).catch(err => {
-      console.log('No it did not. This happened:', err);
-    });
+    .then(() => {})
+    .catch(() => {});
 }
