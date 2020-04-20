@@ -335,6 +335,15 @@ class Friends extends React.Component {
               handleMyFriends={this.handleMyFriends}
               handleNewFriends={this.handleNewFriends}
             />
+            {myFriends && (
+            <HandleRequests
+              backwardAction={this.backwardAction}
+              furtherAction={this.furtherAction}
+              text={txt1}
+              text2={txt2}
+              change={change}
+            />
+            )}
             <form className="people-filter">
               <input
                 type="text"
@@ -344,19 +353,10 @@ class Friends extends React.Component {
               />
               <i className="fas fa-search" />
             </form>
-            {!myFriends ? renderFriends
-              : (
-                <HandleRequests
-                  backwardAction={this.backwardAction}
-                  furtherAction={this.furtherAction}
-                  text={txt1}
-                  text2={txt2}
-                  change={change}
-                />
-              )}
             {myFriends && txt1 === 'New' && renderNewRequests}
             {myFriends && txt1 === 'Received' && renderReceivedRequests }
             {myFriends && txt1 === 'Sent' && renderSentRequests}
+            {!myFriends && renderFriends }
           </div>
         ) : (
           <div>
