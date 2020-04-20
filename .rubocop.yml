@@ -23,6 +23,11 @@ Metrics/ClassLength:
 Metrics/BlockLength:
   ExcludedMethods: ['describe']
 
+Lint/RaiseException:
+  Enabled: false
+Lint/StructNewOverride:
+  Enabled: false
+  
 Style/Documentation:
   Enabled: false
 Style/ClassAndModuleChildren:
