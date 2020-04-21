@@ -6,4 +6,10 @@ class V1::EventGuestsController < ApplicationController
     event = Event.find(params[:id])
     event.event_guests.build(profile_id: profile.id).save
   end
+
+  def pull_guests
+    ids = get_array(EventGuest.select(:profile_id).where('event_id = (?)', params[:id]), :profile_id)
+    guests = Profile.where('id IN (?)', ids)
+    render json: { guests: guests }
+  end
 end

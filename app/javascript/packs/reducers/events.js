@@ -28,6 +28,7 @@ const eventsReducer = (state = initial, action) => {
       return clone;
     case ADD_COMINGEVENT:
       clone.comingevents.unshift(action.event);
+      clone.comingevents[0].people.push(action.profile);
       return clone;
     case REMOVE_ALLEVENT:
       allevents = clone.allevents.filter(e => e.id !== action.id);

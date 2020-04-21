@@ -57,21 +57,25 @@ class SigninForm extends React.Component {
                           .then(response3 => {
                             axios.get(`v1/getprofile?id=${allevent.user_id}`)
                               .then(response4 => {
-                                const addevent = {
-                                  id: allevent.id,
-                                  title: allevent.title,
-                                  description: allevent.description,
-                                  date: allevent.date,
-                                  time: allevent.time,
-                                  profile: response4.data,
-                                  people: [],
-                                  items: response3.data,
-                                };
-                                allEvents.push(addevent);
-                                history.push('/home');
-                                createAllEvents(
-                                  allEvents.sort((a, b) => new Date(a.date) - new Date(b.date)),
-                                );
+                                axios.get(`v1/pullguests?id=${allevent.id}`)
+                                  .then(response5 => {
+                                    const addevent = {
+                                      id: allevent.id,
+                                      title: allevent.title,
+                                      description: allevent.description,
+                                      date: allevent.date,
+                                      time: allevent.time,
+                                      profile: response4.data,
+                                      people: response5.data.guests,
+                                      items: response3.data,
+                                    };
+                                    allEvents.push(addevent);
+                                    history.push('/home');
+                                    createAllEvents(
+                                      allEvents.sort((a, b) => new Date(a.date) - new Date(b.date)),
+                                    );
+                                  })
+                                  .catch(() => {});
                               })
                               .catch(() => {});
                           })

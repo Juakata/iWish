@@ -25,7 +25,6 @@ class Events extends React.Component {
       iTitle: '',
       iDescription: '',
       openWindow: false,
-      index: 0,
       currentArray: [],
     };
   }
@@ -165,10 +164,19 @@ class Events extends React.Component {
 
   handleWindow = (index, arr) => {
     const { events } = this.props;
+    let array;
+    switch (arr) {
+      case 'my':
+        array = events.myevents[index].items;
+        break;
+      case 'coming':
+        array = events.comingevents[index].items;
+        break;
+      default:
+    }
     this.setState(state => ({
       openWindow: !state.openWindow,
-      index,
-      currentArray: arr === 'my' ? events.myevents : events.comingevents,
+      currentArray: array,
     }));
   }
 
@@ -177,23 +185,51 @@ class Events extends React.Component {
     return h;
   }
 
+  seeGuests = (index, arr) => {
+    const { events } = this.props;
+    let guests;
+    switch (arr) {
+      case 'my':
+        guests = events.myevents[index].people;
+        break;
+      case 'coming':
+        guests = events.comingevents[index].people;
+        break;
+      default:
+    }
+    this.setState(state => ({
+      openWindow: !state.openWindow,
+      currentArray: guests,
+    }));
+  }
+
   render() {
     const {
       render, title, description, date, time, openForm, items,
-      iTitle, iDescription, openWindow, index, currentArray,
+      iTitle, iDescription, openWindow, currentArray,
     } = this.state;
     let showItems;
     const { destroySession, events } = this.props;
     if (openWindow) {
-      showItems = currentArray[index].items.map(item => (
-        <div className="item-cont" key={item.id}>
-          <span>{item.title}</span>
-          <button className="btn-item-people" type="button">
-            <i className="fas fa-users" />
-            <span>0</span>
-          </button>
-        </div>
-      ));
+      showItems = currentArray.map(item => {
+        if (typeof item.title !== 'undefined') {
+          return (
+            <div className="item-cont" key={item.id}>
+              <span>{item.title}</span>
+              <button className="btn-item-people" type="button">
+                <i className="fas fa-users" />
+                <span>0</span>
+              </button>
+            </div>
+          );
+        }
+        return (
+          <div className="giver-cont" key={item.id}>
+            <img src={item.picture} alt="user.pic" />
+            <span>{item.name}</span>
+          </div>
+        );
+      });
     }
     const renderMyEvents = events.myevents.map((myevent, index) => (
       <Event
@@ -202,6 +238,7 @@ class Events extends React.Component {
         date=<HumanDate date={myevent.date} time={myevent.time} />
         my
         seeItems={() => this.handleWindow(index, 'my')}
+        seeGuests={() => this.seeGuests(index, 'my')}
       />
     ));
     const renderComingEvents = events.comingevents.map((comingevent, index) => (
@@ -212,6 +249,7 @@ class Events extends React.Component {
         coming
         seeItems={() => this.handleWindow(index, 'coming')}
         forgetEvent={() => this.forgetEvent(index)}
+        seeGuests={() => this.seeGuests(index, 'coming')}
       />
     ));
     const renderItems = items.map(item => (

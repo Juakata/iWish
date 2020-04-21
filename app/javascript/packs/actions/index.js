@@ -174,9 +174,10 @@ const addAllevents = event => ({
   event,
 });
 
-const addComingevent = event => ({
+const addComingevent = (event, profile) => ({
   type: ADD_COMINGEVENT,
   event,
+  profile,
 });
 
 const removeAllevent = id => ({
