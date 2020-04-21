@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const Event = ({
-  currentEvent, date, my, all, seeItems, assistEvent,
+  currentEvent, date, my, all, seeItems, assistEvent, forgetEvent,
 }) => {
   let btns;
   if (my) {
@@ -21,8 +21,8 @@ const Event = ({
   } else {
     btns = (
       <div>
-        <button type="button">Forget event</button>
-        <button type="button">See Items</button>
+        <button type="button" onClick={forgetEvent}>Forget event</button>
+        <button type="button" onClick={seeItems}>See Items</button>
       </div>
     );
   }
@@ -52,6 +52,7 @@ Event.propTypes = {
   all: PropTypes.bool,
   seeItems: PropTypes.func,
   assistEvent: PropTypes.func,
+  forgetEvent: PropTypes.func,
 };
 
 Event.defaultProps = {
@@ -59,6 +60,7 @@ Event.defaultProps = {
   all: false,
   seeItems: () => {},
   assistEvent: () => {},
+  forgetEvent: () => {},
 };
 
 export default Event;

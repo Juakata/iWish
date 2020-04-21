@@ -26,6 +26,7 @@ class Events extends React.Component {
       iDescription: '',
       openWindow: false,
       index: 0,
+      currentArray: [],
     };
   }
 
@@ -162,10 +163,12 @@ class Events extends React.Component {
     }));
   }
 
-  handleWindow = index => {
+  handleWindow = (index, arr) => {
+    const { events } = this.props;
     this.setState(state => ({
       openWindow: !state.openWindow,
       index,
+      currentArray: arr === 'my' ? events.myevents : events.comingevents,
     }));
   }
 
@@ -177,12 +180,12 @@ class Events extends React.Component {
   render() {
     const {
       render, title, description, date, time, openForm, items,
-      iTitle, iDescription, openWindow, index,
+      iTitle, iDescription, openWindow, index, currentArray,
     } = this.state;
     let showItems;
     const { destroySession, events } = this.props;
     if (openWindow) {
-      showItems = events.myevents[index].items.map(item => (
+      showItems = currentArray[index].items.map(item => (
         <div className="item-cont" key={item.id}>
           <span>{item.title}</span>
           <button className="btn-item-people" type="button">
@@ -198,7 +201,7 @@ class Events extends React.Component {
         currentEvent={myevent}
         date=<HumanDate date={myevent.date} time={myevent.time} />
         my
-        seeItems={() => this.handleWindow(index)}
+        seeItems={() => this.handleWindow(index, 'my')}
       />
     ));
     const renderComingEvents = events.comingevents.map((comingevent, index) => (
@@ -207,7 +210,7 @@ class Events extends React.Component {
         currentEvent={comingevent}
         date=<HumanDate date={comingevent.date} time={comingevent.time} />
         coming
-        seeItems={() => this.handleWindow(index)}
+        seeItems={() => this.handleWindow(index, 'coming')}
         forgetEvent={() => this.forgetEvent(index)}
       />
     ));
