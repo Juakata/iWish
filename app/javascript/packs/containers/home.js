@@ -11,21 +11,14 @@ import HumanDate from '../components/humanDate';
 import {
   destroySession, createProfile, addWish, openMenu, createRequests,
   addWishesgivers, createMyEvents, removeAllevent, addComingevent,
+  createComingevents,
 } from '../actions/index';
 
 class Home extends React.Component {
-  constructor(props) {
-    super(props);
-    const { events } = this.props;
-    const n = events.allevents.length;
-    this.state = {
-      message: n === 0 ? 'No events to show.' : '',
-    };
-  }
-
   componentDidMount() {
     const {
       session, history, createProfile, addWishesgivers, createMyEvents,
+      createComingevents,
     } = this.props;
     const wishgivers = [];
     if (session === '' || session === 'destroy') {
@@ -101,10 +94,41 @@ class Home extends React.Component {
                   items: response2.data,
                 };
                 myEvents.push(addevent);
+                createMyEvents(
+                  myEvents.sort((a, b) => new Date(a.date) - new Date(b.date)),
+                );
               })
               .catch(() => {});
           });
-          createMyEvents(myEvents);
+        })
+        .catch(() => {});
+      const comingEvents = [];
+      axios.get(`v1/pullcomingevents?email=${session}`)
+        .then(response => {
+          response.data.events.forEach(comingEvent => {
+            axios.get(`v1/getitems?event=${comingEvent.id}`)
+              .then(response2 => {
+                axios.get(`v1/getprofile?id=${comingEvent.user_id}`)
+                  .then(response3 => {
+                    const addevent = {
+                      id: comingEvent.id,
+                      title: comingEvent.title,
+                      description: comingEvent.description,
+                      date: comingEvent.date,
+                      time: comingEvent.time,
+                      profile: response3.data,
+                      people: [],
+                      items: response2.data,
+                    };
+                    comingEvents.push(addevent);
+                    createComingevents(
+                      comingEvents.sort((a, b) => new Date(a.date) - new Date(b.date)),
+                    );
+                  })
+                  .catch(() => {});
+              })
+              .catch(() => {});
+          });
         })
         .catch(() => {});
     }
@@ -137,7 +161,6 @@ class Home extends React.Component {
   }
 
   render() {
-    const { message } = this.state;
     const { destroySession, events } = this.props;
     const renderAllevents = events.allevents.map((allevent, index) => (
       <Event
@@ -152,7 +175,6 @@ class Home extends React.Component {
       <div>
         <Header source={Logo} menu={this.menu} out={destroySession} />
         <div className="container">
-          {message}
           <div className="grid">
             {renderAllevents}
           </div>
@@ -175,6 +197,7 @@ Home.propTypes = {
   events: PropTypes.instanceOf(Object).isRequired,
   removeAllevent: PropTypes.func.isRequired,
   addComingevent: PropTypes.func.isRequired,
+  createComingevents: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -193,6 +216,7 @@ const mapDispatchToProps = dispatch => ({
   createMyEvents: myEvents => dispatch(createMyEvents(myEvents)),
   removeAllevent: allEvent => dispatch(removeAllevent(allEvent)),
   addComingevent: comingEvent => dispatch(addComingevent(comingEvent)),
+  createComingevents: comingEvent => dispatch(createComingevents(comingEvent)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Home));

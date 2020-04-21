@@ -24,7 +24,7 @@ class V1::EventsController < ApplicationController
     time = Time.new
     date = "#{time.year}-#{time.month}-#{time.day}"
     user = User.find_by(email: params[:email])
-    events = user.events.where('date >= (?)', date).order(date: :asc)
+    events = user.events.where('date >= (?)', date)
     render json: { events: events , profile: user.profile }
   end
 
@@ -35,7 +35,16 @@ class V1::EventsController < ApplicationController
     noIds = get_array(EventGuest.select(:event_id).where('profile_id = (?)', user.profile.id), :event_id)
     ids = get_array(Friend.select(:sender).where('receiver = (?) AND status = TRUE', user.id), :sender)
     ids += get_array(Friend.select(:receiver).where('sender = (?)  AND status = TRUE', user.id), :receiver)
-    events = Event.where('user_id IN (?) AND id NOT IN (?) AND date >= (?)', ids, noIds, date).order(date: :asc)
+    events = Event.where('user_id IN (?) AND id NOT IN (?) AND date >= (?)', ids, noIds, date)
+    render json: { events: events }
+  end
+
+  def pull_comingevents
+    time = Time.new
+    date = "#{time.year}-#{time.month}-#{time.day}"
+    user = User.find_by(email: params[:email])
+    ids = get_array(EventGuest.select(:event_id).where('profile_id = (?)', user.profile.id), :event_id)
+    events = Event.where('id IN (?) AND date >= (?)', ids, date)
     render json: { events: events }
   end
 end

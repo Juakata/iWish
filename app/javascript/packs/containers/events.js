@@ -169,6 +169,10 @@ class Events extends React.Component {
     }));
   }
 
+  forgetEvent = index => {
+    const h = index + 1;
+    return h;
+  }
 
   render() {
     const {
@@ -195,6 +199,16 @@ class Events extends React.Component {
         date=<HumanDate date={myevent.date} time={myevent.time} />
         my
         seeItems={() => this.handleWindow(index)}
+      />
+    ));
+    const renderComingEvents = events.comingevents.map((comingevent, index) => (
+      <Event
+        key={comingevent.id}
+        currentEvent={comingevent}
+        date=<HumanDate date={comingevent.date} time={comingevent.time} />
+        coming
+        seeItems={() => this.handleWindow(index)}
+        forgetEvent={() => this.forgetEvent(index)}
       />
     ));
     const renderItems = items.map(item => (
@@ -289,7 +303,11 @@ class Events extends React.Component {
               <button type="submit">Save</button>
             </form>
           )}
-          {render === 'comingEvents'}
+          {render === 'comingEvents' && (
+            <div className="events-cont">
+              {renderComingEvents}
+            </div>
+          )}
         </div>
         {openWindow && (
           <div

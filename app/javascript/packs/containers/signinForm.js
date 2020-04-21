@@ -106,26 +106,35 @@ class SigninForm extends React.Component {
         if (response.data.email) {
           createSession(response.data.email);
           axios.get(`v1/getallevents?email=${response.data.email}`)
-            .then(response => {
-              response.data.events.forEach(allevent => {
+            .then(response2 => {
+              if (response2.data.events.length === 0) {
+                history.push('/home');
+              }
+              response2.data.events.forEach(allevent => {
                 axios.get(`v1/getitems?event=${allevent.id}`)
-                  .then(response2 => {
-                    const addevent = {
-                      id: allevent.id,
-                      title: allevent.title,
-                      description: allevent.description,
-                      date: allevent.date,
-                      time: allevent.time,
-                      profile: response.data.profile,
-                      people: [],
-                      items: response2.data,
-                    };
-                    allEvents.push(addevent);
-                    history.push('/home');
+                  .then(response3 => {
+                    axios.get(`v1/getprofile?id=${allevent.user_id}`)
+                      .then(response4 => {
+                        const addevent = {
+                          id: allevent.id,
+                          title: allevent.title,
+                          description: allevent.description,
+                          date: allevent.date,
+                          time: allevent.time,
+                          profile: response4.data,
+                          people: [],
+                          items: response3.data,
+                        };
+                        allEvents.push(addevent);
+                        history.push('/home');
+                        createAllEvents(
+                          allEvents.sort((a, b) => new Date(a.date) - new Date(b.date)),
+                        );
+                      })
+                      .catch(() => {});
                   })
                   .catch(() => {});
               });
-              createAllEvents(allEvents);
             })
             .catch(() => {});
         } else {
