@@ -57,7 +57,11 @@ class V1::FriendsController < ApplicationController
       friend.update_attribute(:status, true)
       wishgivers = []
       sender.profile.wishes.each do |wish|
-        wishgivers.push({ id: wish.id, givers: wish.givers })
+        givers = []
+        wish.givers.each do |giver|
+          givers.push(giver.friend)
+        end
+        wishgivers.push({ id: wish.id, givers: givers })
       end
       render json: { result: 'Accepted', wishes: sender.profile.wishes, wishgivers: wishgivers }
     else
@@ -71,17 +75,28 @@ class V1::FriendsController < ApplicationController
 
     friend = Friend.where('sender = (?) AND receiver = (?)', sender.id, receiver.id).first
     friend ||= Friend.where('sender = (?) AND receiver = (?)', receiver.id, sender.id).first
+    destroy_guests(sender, receiver)
+    destroy_guests(receiver, sender)
     if friend
       sender.profile.wishes.each do |wish|
-        wish.giver.find_by(friend_id: receiver.id).destroy
+        giver = wish.givers.find_by(friend_id: receiver.id)
+        giver.destroy if giver
       end
       receiver.profile.wishes.each do |wish|
-        wish.givers.find_by(friend_id: sender.id).destroy
+        giver = wish.givers.find_by(friend_id: sender.id)
+        giver.destroy if giver
       end
       friend.destroy
       render json: { result: 'Destroy' }
     else
       render json: { result: 'Realation: not found.' }
+    end
+  end
+
+  def destroy_guests (first, second)
+    first.events.each do |event|
+      eventGuest = second.profile.event_guests.find_by(event_id: event.id)
+      eventGuest.destroy if eventGuest
     end
   end
 end

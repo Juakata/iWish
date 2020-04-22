@@ -24,7 +24,7 @@ const eventsReducer = (state = initial, action) => {
       clone.myevents.push(action.event);
       return clone;
     case ADD_ALLEVENT:
-      clone.allevents.push(action.event);
+      clone.allevents.unshift(action.event);
       return clone;
     case ADD_COMINGEVENT:
       clone.comingevents.unshift(action.event);

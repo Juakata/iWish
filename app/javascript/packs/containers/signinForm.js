@@ -19,7 +19,7 @@ class SigninForm extends React.Component {
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     document.querySelector('.background').style.backgroundImage = `url(${Background})`;
     if (window.requestIdleCallback) {
       requestIdleCallback(() => {
@@ -50,9 +50,11 @@ class SigninForm extends React.Component {
                   axios.get(`v1/getallevents?email=${response.data.email}`)
                     .then(response2 => {
                       if (response2.data.events.length === 0) {
+                        createAllEvents(allEvents);
                         history.push('/home');
                       }
-                      response2.data.events.forEach(allevent => {
+                      const { events } = response2.data;
+                      events.forEach(allevent => {
                         axios.get(`v1/getitems?event=${allevent.id}`)
                           .then(response3 => {
                             axios.get(`v1/getprofile?id=${allevent.user_id}`)
@@ -70,10 +72,14 @@ class SigninForm extends React.Component {
                                       items: response3.data,
                                     };
                                     allEvents.push(addevent);
-                                    history.push('/home');
-                                    createAllEvents(
-                                      allEvents.sort((a, b) => new Date(a.date) - new Date(b.date)),
-                                    );
+                                    if (events[events.length - 1] === allevent) {
+                                      history.push('/home');
+                                      createAllEvents(
+                                        allEvents.sort(
+                                          (a, b) => new Date(a.date) - new Date(b.date),
+                                        ),
+                                      );
+                                    }
                                   })
                                   .catch(() => {});
                               })
@@ -100,10 +106,17 @@ class SigninForm extends React.Component {
     }
   }
 
+  handleChange = event => {
+    const { name, value } = event.target;
+    this.setState({
+      [name]: value,
+    });
+  }
+
   handleSubmit = event => {
     event.preventDefault();
     const { email, password, key } = this.state;
-    const { history, createSession } = this.props;
+    const { history, createSession, createAllEvents } = this.props;
     const allEvents = [];
     axios.get(`v1/signin?email=${email}&password=${password}&key=${key}`)
       .then(response => {
@@ -111,10 +124,12 @@ class SigninForm extends React.Component {
           createSession(response.data.email);
           axios.get(`v1/getallevents?email=${response.data.email}`)
             .then(response2 => {
-              if (response2.data.events.length === 0) {
+              const { events } = response2.data;
+              if (events.length === 0) {
+                createAllEvents(allEvents);
                 history.push('/home');
               }
-              response2.data.events.forEach(allevent => {
+              events.forEach(allevent => {
                 axios.get(`v1/getitems?event=${allevent.id}`)
                   .then(response3 => {
                     axios.get(`v1/getprofile?id=${allevent.user_id}`)
@@ -130,10 +145,12 @@ class SigninForm extends React.Component {
                           items: response3.data,
                         };
                         allEvents.push(addevent);
-                        history.push('/home');
-                        createAllEvents(
-                          allEvents.sort((a, b) => new Date(a.date) - new Date(b.date)),
-                        );
+                        if (events[events.length - 1] === allevent) {
+                          createAllEvents(
+                            allEvents.sort((a, b) => new Date(a.date) - new Date(b.date)),
+                          );
+                          history.push('/home');
+                        }
                       })
                       .catch(() => {});
                   })
@@ -146,13 +163,6 @@ class SigninForm extends React.Component {
         }
       })
       .catch(error => this.setState({ error }));
-  }
-
-  handleChange = event => {
-    const { name, value } = event.target;
-    this.setState({
-      [name]: value,
-    });
   }
 
   render() {

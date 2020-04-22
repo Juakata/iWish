@@ -8,6 +8,7 @@ import Logo from '../assets/logo.png';
 import {
   destroySession, openMenu, addNew, addSent, removeNew, removeSent,
   removeReceived, removeFriend, addFriend, addGiver, removeGiver, addWishesgivers,
+  addAllevent,
 } from '../actions/index';
 import BtnsHeader from '../components/btnsHeader';
 import Friend from '../components/friend';
@@ -131,6 +132,7 @@ class Friends extends React.Component {
   acceptFriend = id => {
     const {
       session, removeReceived, addFriend, requests, addWishesgivers,
+      addAllevent,
     } = this.props;
     axios.get(`v1/acceptfriend?email=${session}&id=${id}`)
       .then(response => {
@@ -143,6 +145,35 @@ class Friends extends React.Component {
           wishgivers: response.data.wishgivers,
         };
         addWishesgivers(wishesgivers);
+        axios.get(`v1/pullalleventsfriend?id=${id}`)
+          .then(response2 => {
+            response2.data.events.forEach(allevent => {
+              axios.get(`v1/getitems?event=${allevent.id}`)
+                .then(response3 => {
+                  axios.get(`v1/getprofile?id=${allevent.user_id}`)
+                    .then(response4 => {
+                      axios.get(`v1/pullguests?id=${allevent.id}`)
+                        .then(response5 => {
+                          const addevent = {
+                            id: allevent.id,
+                            title: allevent.title,
+                            description: allevent.description,
+                            date: allevent.date,
+                            time: allevent.time,
+                            profile: response4.data,
+                            people: response5.data.guests,
+                            items: response3.data,
+                          };
+                          addAllevent(addevent);
+                        })
+                        .catch(() => {});
+                    })
+                    .catch(() => {});
+                })
+                .catch(() => {});
+            });
+          })
+          .catch(() => {});
       })
       .catch(() => {});
   }
@@ -413,6 +444,7 @@ Friends.propTypes = {
   removeGiver: PropTypes.func.isRequired,
   profile: PropTypes.instanceOf(Object).isRequired,
   addWishesgivers: PropTypes.func.isRequired,
+  addAllevent: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -436,6 +468,7 @@ const mapDispatchToProps = dispatch => ({
   addGiver: (profile, wish, giver) => dispatch(addGiver(profile, wish, giver)),
   removeGiver: (profile, wish, giver) => dispatch(removeGiver(profile, wish, giver)),
   addWishesgivers: wishesgivers => dispatch(addWishesgivers(wishesgivers)),
+  addAllevent: allevent => dispatch(addAllevent(allevent)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Friends));

@@ -169,7 +169,7 @@ const addMyevents = event => ({
   event,
 });
 
-const addAllevents = event => ({
+const addAllevent = event => ({
   type: ADD_ALLEVENT,
   event,
 });
@@ -204,6 +204,6 @@ export {
   createSession, destroySession, getFaces, createProfile, addWish, openMenu,
   updateWish, deleteWish, createRequests, addSent, addNew, removeNew, removeSent,
   removeReceived, addFriend, removeFriend, addWishesgivers, addGiver, removeGiver,
-  addMyevents, addAllevents, createMyEvents, createAllEvents, updateProfile,
+  addMyevents, addAllevent, createMyEvents, createAllEvents, updateProfile,
   removeAllevent, createComingevents, addComingevent,
 };

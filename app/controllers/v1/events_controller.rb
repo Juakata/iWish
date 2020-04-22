@@ -39,6 +39,14 @@ class V1::EventsController < ApplicationController
     render json: { events: events }
   end
 
+  def pull_allevents_friend
+    time = Time.new
+    date = "#{time.year}-#{time.month}-#{time.day}"
+    friend = User.find(params[:id])
+    events = Event.where('user_id = (?) AND date >= (?)', friend.id, date)
+    render json: { events: events }
+  end
+
   def pull_comingevents
     time = Time.new
     date = "#{time.year}-#{time.month}-#{time.day}"
