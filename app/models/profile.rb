@@ -2,7 +2,7 @@
 
 class Profile < ApplicationRecord
   belongs_to :user
-  has_many :wishes
-  has_many :givers
-  has_many :event_guests
+  has_many :wishes, dependent: :destroy
+  has_many :givers, dependent: :destroy
+  has_many :event_guests, dependent: :destroy
 end

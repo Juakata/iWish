@@ -169,7 +169,7 @@ class Profile extends React.Component {
       name, birthday, openWindow, picture, openForm,
       title, description, wishCreated, message,
     } = this.state;
-    const { profile } = this.props;
+    const { profile, destroySession, getFaces } = this.props;
     const wishes = typeof profile.wishes !== 'undefined' ? profile.wishes : [];
     const wishesRender = wishes.map(wish => (
       <Wish
@@ -180,7 +180,6 @@ class Profile extends React.Component {
         onClick={() => this.handleWish(wish)}
       />
     ));
-    const { destroySession, getFaces } = this.props;
     const images = getFaces().faces.map(face => (
       <ImgBtn source={face.src} id="img-btn-1" key={face.id} onClick={() => this.handlePicture(face.src)} />
     ));

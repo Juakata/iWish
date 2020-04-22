@@ -6,10 +6,10 @@ class User < ApplicationRecord
                     format: { with: VALID_EMAIL_REGEX },
                     uniqueness: { case_sensitive: false }
   validates :password_digest, presence: true, length: { minimum: 8 }
-  has_one :profile
-  has_many :sessions
-  has_many :friends
-  has_many :events
+  has_one :profile, dependent: :destroy
+  has_many :sessions, dependent: :destroy
+  has_many :friends, dependent: :destroy
+  has_many :events, dependent: :destroy
 
   def self.digest(string)
     cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST : BCrypt::Engine.cost
