@@ -5,7 +5,9 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import Header from '../components/header';
 import Logo from '../assets/logo.png';
-import { destroySession, openMenu, addMyevents } from '../actions/index';
+import {
+  destroySession, openMenu, addMyevents, removeComingevent, addAllevent,
+} from '../actions/index';
 import MenuEvents from '../components/menuEvents';
 import Wish from '../components/wish';
 import Event from '../components/event';
@@ -181,8 +183,17 @@ class Events extends React.Component {
   }
 
   forgetEvent = index => {
-    const h = index + 1;
-    return h;
+    const {
+      session, events, removeComingevent, addAllevent, profile,
+    } = this.props;
+    const comingevent = events.comingevents[index];
+    axios.get(`v1/deleteguest?email=${session}&id=${comingevent.id}`)
+      .then(() => {
+        removeComingevent(comingevent.id);
+        comingevent.people = comingevent.people.filter(e => e.id !== profile.id);
+        addAllevent(comingevent);
+      })
+      .catch(() => {});
   }
 
   seeGuests = (index, arr) => {
@@ -378,6 +389,8 @@ Events.propTypes = {
   openMenu: PropTypes.func.isRequired,
   addMyevents: PropTypes.func.isRequired,
   profile: PropTypes.instanceOf(Object).isRequired,
+  removeComingevent: PropTypes.func.isRequired,
+  addAllevent: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -391,6 +404,8 @@ const mapDispatchToProps = dispatch => ({
   destroySession: () => dispatch(destroySession()),
   openMenu: open => dispatch(openMenu(open)),
   addMyevents: myEvent => dispatch(addMyevents(myEvent)),
+  removeComingevent: id => dispatch(removeComingevent(id)),
+  addAllevent: allevent => dispatch(addAllevent(allevent)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Events));

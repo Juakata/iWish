@@ -12,4 +12,10 @@ class V1::EventGuestsController < ApplicationController
     guests = Profile.where('id IN (?)', ids)
     render json: { guests: guests }
   end
+
+  def delete_guest
+    profile = User.find_by(email: params[:email]).profile
+    event = Event.find(params[:id])
+    event.event_guests.find_by(profile_id: profile.id).destroy
+  end
 end
