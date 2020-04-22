@@ -8,7 +8,7 @@ import Logo from '../assets/logo.png';
 import {
   destroySession, openMenu, addNew, addSent, removeNew, removeSent,
   removeReceived, removeFriend, addFriend, addGiver, removeGiver, addWishesgivers,
-  addAllevent,
+  addAllevent, removeAllevent, removeComingevent,
 } from '../actions/index';
 import BtnsHeader from '../components/btnsHeader';
 import Friend from '../components/friend';
@@ -180,7 +180,8 @@ class Friends extends React.Component {
 
   deleteFriend = id => {
     const {
-      session, removeFriend, addNew, requests,
+      session, removeFriend, addNew, requests, events, removeAllevent,
+      removeComingevent,
     } = this.props;
     axios.get(`v1/destroyrelation?email=${session}&id=${id}`)
       .then(response => {
@@ -188,6 +189,14 @@ class Friends extends React.Component {
           const newRequest = requests.friends.filter(ele => ele.id === id)[0];
           addNew(newRequest);
           removeFriend(id);
+          const removeAllEvents = events.allevents.filter(e => e.profile.id === id);
+          removeAllEvents.forEach(remove => {
+            removeAllevent(remove.id);
+          });
+          const removeComingEvents = events.comingevents.filter(e => e.profile.id === id);
+          removeComingEvents.forEach(remove => {
+            removeComingevent(remove.id);
+          });
         }
       })
       .catch(() => {});
@@ -445,6 +454,9 @@ Friends.propTypes = {
   profile: PropTypes.instanceOf(Object).isRequired,
   addWishesgivers: PropTypes.func.isRequired,
   addAllevent: PropTypes.func.isRequired,
+  events: PropTypes.instanceOf(Object).isRequired,
+  removeAllevent: PropTypes.func.isRequired,
+  removeComingevent: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -453,6 +465,7 @@ const mapStateToProps = state => ({
   requests: state.requests,
   wishesgivers: state.wishesgivers,
   profile: state.profile,
+  events: state.events,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -469,6 +482,8 @@ const mapDispatchToProps = dispatch => ({
   removeGiver: (profile, wish, giver) => dispatch(removeGiver(profile, wish, giver)),
   addWishesgivers: wishesgivers => dispatch(addWishesgivers(wishesgivers)),
   addAllevent: allevent => dispatch(addAllevent(allevent)),
+  removeAllevent: allevent => dispatch(removeAllevent(allevent)),
+  removeComingevent: comingEvent => dispatch(removeComingevent(comingEvent)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Friends));

@@ -44,6 +44,7 @@ const ADD_MYEVENT = 'ADD_MYEVENT';
 const ADD_ALLEVENT = 'ADD_ALLEVENT';
 const ADD_COMINGEVENT = 'ADD_COMINGEVENT';
 const REMOVE_ALLEVENT = 'REMOVE_ALLEVENT';
+const REMOVE_COMINGEVENT = 'REMOVE_COMINGEVENT';
 
 const faces = [
   { id: 1, src: Face }, { id: 2, src: Face2 }, { id: 3, src: Face3 },
@@ -185,6 +186,11 @@ const removeAllevent = id => ({
   id,
 });
 
+const removeComingevent = id => ({
+  type: REMOVE_COMINGEVENT,
+  id,
+});
+
 const createMyEvents = myevents => ({
   type: CREATE_MYEVENTS,
   myevents,
@@ -205,5 +211,5 @@ export {
   updateWish, deleteWish, createRequests, addSent, addNew, removeNew, removeSent,
   removeReceived, addFriend, removeFriend, addWishesgivers, addGiver, removeGiver,
   addMyevents, addAllevent, createMyEvents, createAllEvents, updateProfile,
-  removeAllevent, createComingevents, addComingevent,
+  removeAllevent, createComingevents, addComingevent, removeComingevent,
 };
