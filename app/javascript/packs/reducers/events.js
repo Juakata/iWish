@@ -6,11 +6,12 @@ const ADD_ALLEVENT = 'ADD_ALLEVENT';
 const ADD_COMINGEVENT = 'ADD_COMINGEVENT';
 const REMOVE_ALLEVENT = 'REMOVE_ALLEVENT';
 const REMOVE_COMINGEVENT = 'REMOVE_COMINGEVENT';
+const REMOVE_MYEVENT = 'REMOVE_MYEVENT';
 const initial = { myevents: [], allevents: [], comingevents: [] };
 
 const eventsReducer = (state = initial, action) => {
   const clone = { ...state };
-  let allevents; let comingevents;
+  let allevents; let comingevents; let myevents;
   switch (action.type) {
     case CREATE_MYEVENTS:
       clone.myevents = action.myevents;
@@ -30,6 +31,10 @@ const eventsReducer = (state = initial, action) => {
     case ADD_COMINGEVENT:
       clone.comingevents.unshift(action.event);
       clone.comingevents[0].people.push(action.profile);
+      return clone;
+    case REMOVE_MYEVENT:
+      myevents = clone.myevents.filter(e => e.id !== action.id);
+      clone.myevents = myevents;
       return clone;
     case REMOVE_ALLEVENT:
       allevents = clone.allevents.filter(e => e.id !== action.id);

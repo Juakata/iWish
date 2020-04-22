@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 
 const Event = ({
   currentEvent, date, my, all, seeItems, assistEvent, forgetEvent,
-  seeGuests,
+  seeGuests, deleteEvent,
 }) => {
   let btns;
   if (my) {
     btns = (
       <div>
         <button type="button" onClick={seeItems}>See Items</button>
-        <button type="button">Delete</button>
+        <button type="button" onClick={deleteEvent}>Delete</button>
       </div>
     );
   } else if (all) {
@@ -55,6 +55,7 @@ Event.propTypes = {
   assistEvent: PropTypes.func,
   forgetEvent: PropTypes.func,
   seeGuests: PropTypes.func,
+  deleteEvent: PropTypes.func,
 };
 
 Event.defaultProps = {
@@ -64,6 +65,7 @@ Event.defaultProps = {
   assistEvent: () => {},
   forgetEvent: () => {},
   seeGuests: () => {},
+  deleteEvent: () => {},
 };
 
 export default Event;

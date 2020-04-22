@@ -55,4 +55,9 @@ class V1::EventsController < ApplicationController
     events = Event.where('id IN (?) AND date >= (?)', ids, date)
     render json: { events: events }
   end
+
+  def delete_event
+    event = Event.find(params[:id])
+    event.destroy if event
+  end
 end

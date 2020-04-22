@@ -7,6 +7,7 @@ import Header from '../components/header';
 import Logo from '../assets/logo.png';
 import {
   destroySession, openMenu, addMyevents, removeComingevent, addAllevent,
+  removeMyevent,
 } from '../actions/index';
 import MenuEvents from '../components/menuEvents';
 import Wish from '../components/wish';
@@ -196,6 +197,16 @@ class Events extends React.Component {
       .catch(() => {});
   }
 
+  deleteEvent = index => {
+    const { events, removeMyevent } = this.props;
+    const myevent = events.myevents[index];
+    axios.get(`v1/deleteevent?id=${myevent.id}`)
+      .then(() => {
+        removeMyevent(myevent.id);
+      })
+      .catch(() => {});
+  }
+
   seeGuests = (index, arr) => {
     const { events } = this.props;
     let guests;
@@ -250,6 +261,7 @@ class Events extends React.Component {
         my
         seeItems={() => this.handleWindow(index, 'my')}
         seeGuests={() => this.seeGuests(index, 'my')}
+        deleteEvent={() => this.deleteEvent(index)}
       />
     ));
     const renderComingEvents = events.comingevents.map((comingevent, index) => (
@@ -391,6 +403,7 @@ Events.propTypes = {
   profile: PropTypes.instanceOf(Object).isRequired,
   removeComingevent: PropTypes.func.isRequired,
   addAllevent: PropTypes.func.isRequired,
+  removeMyevent: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -406,6 +419,7 @@ const mapDispatchToProps = dispatch => ({
   addMyevents: myEvent => dispatch(addMyevents(myEvent)),
   removeComingevent: id => dispatch(removeComingevent(id)),
   addAllevent: allevent => dispatch(addAllevent(allevent)),
+  removeMyevent: myEvent => dispatch(removeMyevent(myEvent)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Events));
