@@ -80,6 +80,9 @@ class Home extends React.Component {
       const myEvents = [];
       axios.get(`v1/getmyevents?email=${session}`)
         .then(response => {
+          if (response.data.events.length === 0) {
+            createMyEvents(myEvents);
+          }
           response.data.events.forEach(myevent => {
             axios.get(`v1/getitems?event=${myevent.id}`)
               .then(response2 => {
@@ -109,6 +112,9 @@ class Home extends React.Component {
       const comingEvents = [];
       axios.get(`v1/pullcomingevents?email=${session}`)
         .then(response => {
+          if (response.data.events.length === 0) {
+            createComingevents(comingEvents);
+          }
           response.data.events.forEach(comingEvent => {
             axios.get(`v1/getitems?event=${comingEvent.id}`)
               .then(response2 => {
