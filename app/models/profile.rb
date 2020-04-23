@@ -5,4 +5,5 @@ class Profile < ApplicationRecord
   has_many :wishes, dependent: :destroy
   has_many :givers, dependent: :destroy
   has_many :event_guests, dependent: :destroy
+  has_many :item_guests, dependent: :destroy
 end

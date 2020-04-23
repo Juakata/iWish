@@ -13,6 +13,7 @@ import MenuEvents from '../components/menuEvents';
 import Wish from '../components/wish';
 import Event from '../components/event';
 import HumanDate from '../components/humanDate';
+import Item from '../components/item';
 
 class Events extends React.Component {
   constructor(props) {
@@ -232,17 +233,12 @@ class Events extends React.Component {
     } = this.state;
     let showItems;
     const { destroySession, events } = this.props;
+    console.log(currentArray);
     if (openWindow) {
       showItems = currentArray.map(item => {
         if (typeof item.title !== 'undefined') {
           return (
-            <div className="item-cont" key={item.id}>
-              <span>{item.title}</span>
-              <button className="btn-item-people" type="button">
-                <i className="fas fa-users" />
-                <span>0</span>
-              </button>
-            </div>
+            <Item key={item.id} item={item} />
           );
         }
         return (
