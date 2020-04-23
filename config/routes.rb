@@ -29,8 +29,9 @@ Rails.application.routes.draw do
     get 'pullalleventsfriend', to: 'events#pull_allevents_friend'
     get 'deleteguest', to: 'event_guests#delete_guest'
     get 'deleteevent', to: 'events#delete_event'
-
-
+    get 'createitemguest', to: 'item_guests#create_item_guest'
+    get 'pullitemguests', to: 'item_guests#pull_guests'
+    get 'deleteguestitem', to: 'item_guests#delete_guest'
   end
 
   get '*page', to: 'static#index', constraints: ->(req) do
