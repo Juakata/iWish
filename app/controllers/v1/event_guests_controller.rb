@@ -16,6 +16,10 @@ class V1::EventGuestsController < ApplicationController
   def delete_guest
     profile = User.find_by(email: params[:email]).profile
     event = Event.find(params[:id])
+    event.items.each do |item|
+      item_guest = item.item_guests.find_by(profile_id: profile.id)
+      item_guest.destroy if item_guest
+    end
     event.event_guests.find_by(profile_id: profile.id).destroy
   end
 end

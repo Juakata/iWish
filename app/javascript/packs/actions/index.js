@@ -46,6 +46,8 @@ const ADD_COMINGEVENT = 'ADD_COMINGEVENT';
 const REMOVE_ALLEVENT = 'REMOVE_ALLEVENT';
 const REMOVE_COMINGEVENT = 'REMOVE_COMINGEVENT';
 const REMOVE_MYEVENT = 'REMOVE_MYEVENT';
+const ADD_GUEST_ITEM = 'ADD_GUEST_ITEM';
+const REMOVE_GUEST_ITEM = 'REMOVE_GUEST_ITEM';
 
 const faces = [
   { id: 1, src: Face }, { id: 2, src: Face2 }, { id: 3, src: Face3 },
@@ -212,11 +214,24 @@ const createComingevents = comingevents => ({
   comingevents,
 });
 
+const addGuestItem = (coming, item, profile) => ({
+  type: ADD_GUEST_ITEM,
+  coming,
+  item,
+  profile,
+});
+
+const removeGuestItem = (coming, id) => ({
+  type: REMOVE_GUEST_ITEM,
+  coming,
+  id,
+});
+
 export {
   createSession, destroySession, getFaces, createProfile, addWish, openMenu,
   updateWish, deleteWish, createRequests, addSent, addNew, removeNew, removeSent,
   removeReceived, addFriend, removeFriend, addWishesgivers, addGiver, removeGiver,
   addMyevents, addAllevent, createMyEvents, createAllEvents, updateProfile,
   removeAllevent, createComingevents, addComingevent, removeComingevent,
-  removeMyevent,
+  removeMyevent, addGuestItem, removeGuestItem,
 };

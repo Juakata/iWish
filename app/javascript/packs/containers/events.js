@@ -7,7 +7,7 @@ import Header from '../components/header';
 import Logo from '../assets/logo.png';
 import {
   destroySession, openMenu, addMyevents, removeComingevent, addAllevent,
-  removeMyevent,
+  removeMyevent, addGuestItem, removeGuestItem,
 } from '../actions/index';
 import MenuEvents from '../components/menuEvents';
 import Wish from '../components/wish';
@@ -30,6 +30,7 @@ class Events extends React.Component {
       iDescription: '',
       openWindow: false,
       currentArray: [],
+      index: '',
     };
   }
 
@@ -181,16 +182,19 @@ class Events extends React.Component {
     this.setState(state => ({
       openWindow: !state.openWindow,
       currentArray: array,
+      index,
     }));
   }
 
   forgetEvent = index => {
     const {
       session, events, removeComingevent, addAllevent, profile,
+      removeGuestItem,
     } = this.props;
     const comingevent = events.comingevents[index];
     axios.get(`v1/deleteguest?email=${session}&id=${comingevent.id}`)
       .then(() => {
+        removeGuestItem(index, profile.id);
         removeComingevent(comingevent.id);
         comingevent.people = comingevent.people.filter(e => e.id !== profile.id);
         addAllevent(comingevent);
@@ -226,17 +230,48 @@ class Events extends React.Component {
     }));
   }
 
+  addMe = (id, item) => {
+    const { session, profile, addGuestItem } = this.props;
+    const { index } = this.state;
+    axios.get(`v1/createitemguest?email=${session}&id=${id}`)
+      .then(() => {
+        addGuestItem(index, item, profile);
+      })
+      .catch(() => {});
+  }
+
   render() {
     const {
       render, title, description, date, time, openForm, items,
       iTitle, iDescription, openWindow, currentArray,
     } = this.state;
     let showItems;
-    const { destroySession, events } = this.props;
-    console.log(currentArray);
+    const { destroySession, events, profile } = this.props;
     if (openWindow) {
-      showItems = currentArray.map(item => {
+      showItems = currentArray.map((item, i) => {
         if (typeof item.title !== 'undefined') {
+          if (render === 'comingEvents') {
+            const person = item.people.filter(e => e.id === profile.id);
+            if (person.length > 0) {
+              return (
+                <Item
+                  key={item.id}
+                  item={item}
+                  addMe={() => this.addMe(item.id, i)}
+                  className="btn-add-guest already"
+                  coming
+                />
+              );
+            }
+            return (
+              <Item
+                key={item.id}
+                item={item}
+                addMe={() => this.addMe(item.id, i)}
+                coming
+              />
+            );
+          }
           return (
             <Item key={item.id} item={item} />
           );
@@ -400,6 +435,8 @@ Events.propTypes = {
   removeComingevent: PropTypes.func.isRequired,
   addAllevent: PropTypes.func.isRequired,
   removeMyevent: PropTypes.func.isRequired,
+  addGuestItem: PropTypes.func.isRequired,
+  removeGuestItem: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -416,6 +453,8 @@ const mapDispatchToProps = dispatch => ({
   removeComingevent: id => dispatch(removeComingevent(id)),
   addAllevent: allevent => dispatch(addAllevent(allevent)),
   removeMyevent: myEvent => dispatch(removeMyevent(myEvent)),
+  addGuestItem: (coming, item, profile) => dispatch(addGuestItem(coming, item, profile)),
+  removeGuestItem: (coming, id) => dispatch(removeGuestItem(coming, id)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Events));

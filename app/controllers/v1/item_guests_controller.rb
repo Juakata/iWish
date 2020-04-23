@@ -4,7 +4,12 @@ class V1::ItemGuestsController < ApplicationController
   def create_item_guest
     profile = User.find_by(email: params[:email]).profile
     item = Item.find(params[:id])
-    item.item_guests.build(profile_id: profile.id).save
+    item_guest = item.item_guests.find_by(profile_id: profile.id)
+    if item_guest
+      item_guest.destroy
+    else
+      item.item_guests.build(profile_id: profile.id).save
+    end
   end
 
   def pull_guests

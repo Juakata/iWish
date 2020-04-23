@@ -7,11 +7,14 @@ const ADD_COMINGEVENT = 'ADD_COMINGEVENT';
 const REMOVE_ALLEVENT = 'REMOVE_ALLEVENT';
 const REMOVE_COMINGEVENT = 'REMOVE_COMINGEVENT';
 const REMOVE_MYEVENT = 'REMOVE_MYEVENT';
+const ADD_GUEST_ITEM = 'ADD_GUEST_ITEM';
+const REMOVE_GUEST_ITEM = 'REMOVE_GUEST_ITEM';
 const initial = { myevents: [], allevents: [], comingevents: [] };
 
 const eventsReducer = (state = initial, action) => {
   const clone = { ...state };
   let allevents; let comingevents; let myevents;
+  let people; let found; const items = []; let itemClone;
   switch (action.type) {
     case CREATE_MYEVENTS:
       clone.myevents = action.myevents;
@@ -43,6 +46,23 @@ const eventsReducer = (state = initial, action) => {
     case REMOVE_COMINGEVENT:
       comingevents = clone.comingevents.filter(e => e.id !== action.id);
       clone.comingevents = comingevents;
+      return clone;
+    case ADD_GUEST_ITEM:
+      people = clone.comingevents[action.coming].items[action.item].people;
+      found = people.filter(e => e.id !== action.profile.id);
+      if (people.length === found.length) {
+        people.push(action.profile);
+      } else {
+        clone.comingevents[action.coming].items[action.item].people = found;
+      }
+      return clone;
+    case REMOVE_GUEST_ITEM:
+      clone.comingevents[action.coming].items.forEach(item => {
+        itemClone = item;
+        itemClone.people = item.people.filter(person => person.id !== action.id);
+        items.push(itemClone);
+      });
+      clone.comingevents[action.coming].items = items;
       return clone;
     default:
       return state;
