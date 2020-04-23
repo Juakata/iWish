@@ -24,6 +24,8 @@
   display: grid;
   grid-gap: 10px;
   padding: 50px;
+  margin: 0 auto;
+  max-width: 900px;
 }
 
 .event-form button[type="submit"]{

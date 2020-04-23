@@ -350,7 +350,7 @@ class Events extends React.Component {
                     />
                     <div className="btnsCont">
                       <button type="button" onClick={this.handleWishList}>Close</button>
-                      <button type="button" onClick={this.handleItems}>Add</button>
+                      <button className="btnAdd" type="button" onClick={this.handleItems}>Add</button>
                     </div>
                   </div>
                 </div>
