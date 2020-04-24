@@ -240,6 +240,16 @@ class Events extends React.Component {
       .catch(() => {});
   }
 
+  seeItemGuests = id => {
+    const div = document.getElementById(id);
+    div.style.display = 'flex';
+  }
+
+  closeGuestsView = id => {
+    const div = document.getElementById(id);
+    div.style.display = 'none';
+  }
+
   render() {
     const {
       render, title, description, date, time, openForm, items,
@@ -259,6 +269,8 @@ class Events extends React.Component {
                   item={item}
                   addMe={() => this.addMe(item.id, i)}
                   className="btn-add-guest already"
+                  seeItemGuests={id => this.seeItemGuests(id)}
+                  closeGuestsView={id => this.closeGuestsView(id)}
                   coming
                 />
               );
@@ -268,12 +280,19 @@ class Events extends React.Component {
                 key={item.id}
                 item={item}
                 addMe={() => this.addMe(item.id, i)}
+                seeItemGuests={id => this.seeItemGuests(id)}
+                closeGuestsView={id => this.closeGuestsView(id)}
                 coming
               />
             );
           }
           return (
-            <Item key={item.id} item={item} />
+            <Item
+              key={item.id}
+              item={item}
+              seeItemGuests={id => this.seeItemGuests(id)}
+              closeGuestsView={id => this.closeGuestsView(id)}
+            />
           );
         }
         return (
@@ -405,15 +424,15 @@ class Events extends React.Component {
           )}
         </div>
         {openWindow && (
-          <div
-            type="button"
-            tabIndex={0}
-            role="button"
-            className="cover-items"
-            onClick={this.handleWindow}
-            onKeyPress={this.onKeyPressHandler}
-          >
+          <div className="cover-items">
             <div className="showItems-cont">
+              <button
+                type="button"
+                onClick={this.handleWindow}
+                className="btn-close"
+              >
+                Close
+              </button>
               {showItems}
             </div>
           </div>

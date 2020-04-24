@@ -178,6 +178,54 @@
   color: white;
 }
 
+.guests-item-cont {
+  position: fixed;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 8;
+  left: 0;
+  top: 0;
+  padding: 50px;
+  overflow: auto;
+  width: 100%;
+  height: 100vh;
+  background: RGBA(66, 27, 0, .9);
+}
+
+.guests-item-sub-cont {
+  text-align: center;
+  max-height: 80vh;
+}
+
+.item-person-cont {
+  text-align: center;
+  border-radius: 10px;
+  box-shadow: 0 0 5px grey;
+  padding: 5px 20px;
+  margin: 10px;
+}
+
+.guests-item-cont img {
+  width: 70px;
+  border-radius: 50%;
+}
+
+.guests-item-cont h2 {
+  font-size: 15px;
+  margin: 5px;
+}
+
+.btn-close {
+  font-size: 20px;
+  color: #ff8b3b;
+  background: #612800;
+  border-radius: 10px;
+  padding: 5px;
+  cursor: pointer;
+}
+
 @media(max-width: 600px) {
   .events-menu button {
     font-size: 15px;
