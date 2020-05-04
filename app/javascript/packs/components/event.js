@@ -2,14 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const Event = ({
-  currentEvent, date, my, all, seeItems, assistEvent,
+  currentEvent, date, my, all, seeItems, assistEvent, forgetEvent,
+  seeGuests, deleteEvent,
 }) => {
   let btns;
   if (my) {
     btns = (
       <div>
         <button type="button" onClick={seeItems}>See Items</button>
-        <button type="button">Delete</button>
+        <button type="button" onClick={deleteEvent}>Delete</button>
       </div>
     );
   } else if (all) {
@@ -21,8 +22,8 @@ const Event = ({
   } else {
     btns = (
       <div>
-        <button type="button">Forget event</button>
-        <button type="button">See Items</button>
+        <button type="button" onClick={forgetEvent}>Forget event</button>
+        <button type="button" onClick={seeItems}>See Items</button>
       </div>
     );
   }
@@ -37,10 +38,10 @@ const Event = ({
         <h3>{date}</h3>
         {btns}
       </div>
-      <div className="people-count-i">
+      <button type="button" onClick={seeGuests} className="people-count-i">
         <i className="fas fa-users" />
         <span>{currentEvent.people.length}</span>
-      </div>
+      </button>
     </article>
   );
 };
@@ -52,6 +53,9 @@ Event.propTypes = {
   all: PropTypes.bool,
   seeItems: PropTypes.func,
   assistEvent: PropTypes.func,
+  forgetEvent: PropTypes.func,
+  seeGuests: PropTypes.func,
+  deleteEvent: PropTypes.func,
 };
 
 Event.defaultProps = {
@@ -59,6 +63,9 @@ Event.defaultProps = {
   all: false,
   seeItems: () => {},
   assistEvent: () => {},
+  forgetEvent: () => {},
+  seeGuests: () => {},
+  deleteEvent: () => {},
 };
 
 export default Event;

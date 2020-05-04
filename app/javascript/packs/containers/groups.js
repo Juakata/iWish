@@ -4,13 +4,13 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Header from '../components/header';
 import Logo from '../assets/logo.png';
-import { destroySession, openMenu } from '../actions/index';
+import { destroySession, openMenu, addGroup } from '../actions/index';
 
 class Groups extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      test: 'Groups ',
+      name: '',
     };
   }
 
@@ -34,15 +34,36 @@ class Groups extends React.Component {
     openMenu(open);
   }
 
+  handleChange = event => {
+    const { name, value } = event.target;
+    this.setState({
+      [name]: value,
+    });
+  }
+
+  handleSubmit = () => {
+    const { name } = this.state;
+    const { addGroup } = this.props;
+    addGroup(name);
+  }
+
   render() {
-    const { test } = this.state;
-    const { session, destroySession } = this.props;
+    const { name } = this.state;
+    const { destroySession } = this.props;
     return (
       <div>
         <Header source={Logo} menu={this.menu} out={destroySession} />
         <div className="container">
-          <span>{test}</span>
-          <span>{session}</span>
+          <form onSubmit={this.handleSubmit}>
+            <input
+              type="text"
+              name="name"
+              onChange={this.handleChange}
+              value={name}
+              placeholder="Group's name"
+            />
+            <button type="submit">Add Group</button>
+          </form>
         </div>
       </div>
     );
@@ -55,6 +76,7 @@ Groups.propTypes = {
   destroySession: PropTypes.func.isRequired,
   functions: PropTypes.instanceOf(Object).isRequired,
   openMenu: PropTypes.func.isRequired,
+  addGroup: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -65,6 +87,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   destroySession: () => dispatch(destroySession()),
   openMenu: open => dispatch(openMenu(open)),
+  addGroup: name => dispatch(addGroup(name)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Groups));

@@ -37,11 +37,18 @@ const REMOVE_FRIEND = 'REMOVE_FRIEND';
 const ADD_WISHESGIVERS = 'ADD_WISHESGIVERS';
 const ADD_GIVER = 'ADD_GIVER';
 const REMOVE_GIVER = 'REMOVE_GIVER';
-const ADD_MYEVENTS = 'ADD_MYEVENTS';
-const ADD_ALLEVENTS = 'ADD_ALLEVENTS';
-const CREATE_EVENTS = 'CREATE_EVENTS';
+const CREATE_MYEVENTS = 'CREATE_MYEVENTS';
 const CREATE_ALLEVENTS = 'CREATE_ALLEVENTS';
-
+const CREATE_COMINGEVENTS = 'CREATE_COMINGEVENTS';
+const ADD_MYEVENT = 'ADD_MYEVENT';
+const ADD_ALLEVENT = 'ADD_ALLEVENT';
+const ADD_COMINGEVENT = 'ADD_COMINGEVENT';
+const REMOVE_ALLEVENT = 'REMOVE_ALLEVENT';
+const REMOVE_COMINGEVENT = 'REMOVE_COMINGEVENT';
+const REMOVE_MYEVENT = 'REMOVE_MYEVENT';
+const ADD_GUEST_ITEM = 'ADD_GUEST_ITEM';
+const REMOVE_GUEST_ITEM = 'REMOVE_GUEST_ITEM';
+const ADD_GROUP = 'ADD_GROUP';
 const faces = [
   { id: 1, src: Face }, { id: 2, src: Face2 }, { id: 3, src: Face3 },
   { id: 4, src: Face4 }, { id: 5, src: Face5 }, { id: 6, src: Face6 },
@@ -162,17 +169,38 @@ const removeGiver = (profile, wish, giver) => ({
 });
 
 const addMyevents = event => ({
-  type: ADD_MYEVENTS,
+  type: ADD_MYEVENT,
   event,
 });
 
-const addAllevents = event => ({
-  type: ADD_ALLEVENTS,
+const addAllevent = event => ({
+  type: ADD_ALLEVENT,
   event,
+});
+
+const addComingevent = (event, profile) => ({
+  type: ADD_COMINGEVENT,
+  event,
+  profile,
+});
+
+const removeMyevent = id => ({
+  type: REMOVE_MYEVENT,
+  id,
+});
+
+const removeAllevent = id => ({
+  type: REMOVE_ALLEVENT,
+  id,
+});
+
+const removeComingevent = id => ({
+  type: REMOVE_COMINGEVENT,
+  id,
 });
 
 const createMyEvents = myevents => ({
-  type: CREATE_EVENTS,
+  type: CREATE_MYEVENTS,
   myevents,
 });
 
@@ -181,9 +209,34 @@ const createAllEvents = allevents => ({
   allevents,
 });
 
+const createComingevents = comingevents => ({
+  type: CREATE_COMINGEVENTS,
+  comingevents,
+});
+
+const addGuestItem = (coming, item, profile) => ({
+  type: ADD_GUEST_ITEM,
+  coming,
+  item,
+  profile,
+});
+
+const removeGuestItem = (coming, id) => ({
+  type: REMOVE_GUEST_ITEM,
+  coming,
+  id,
+});
+
+const addGroup = name => ({
+  type: ADD_GROUP,
+  name,
+});
+
 export {
   createSession, destroySession, getFaces, createProfile, addWish, openMenu,
   updateWish, deleteWish, createRequests, addSent, addNew, removeNew, removeSent,
   removeReceived, addFriend, removeFriend, addWishesgivers, addGiver, removeGiver,
-  addMyevents, addAllevents, createMyEvents, createAllEvents, updateProfile,
+  addMyevents, addAllevent, createMyEvents, createAllEvents, updateProfile,
+  removeAllevent, createComingevents, addComingevent, removeComingevent,
+  removeMyevent, addGuestItem, removeGuestItem, addGroup,
 };

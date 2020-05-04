@@ -5,11 +5,15 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import Header from '../components/header';
 import Logo from '../assets/logo.png';
-import { destroySession, openMenu, addMyevents } from '../actions/index';
+import {
+  destroySession, openMenu, addMyevents, removeComingevent, addAllevent,
+  removeMyevent, addGuestItem, removeGuestItem,
+} from '../actions/index';
 import MenuEvents from '../components/menuEvents';
 import Wish from '../components/wish';
 import Event from '../components/event';
 import HumanDate from '../components/humanDate';
+import Item from '../components/item';
 
 class Events extends React.Component {
   constructor(props) {
@@ -25,7 +29,8 @@ class Events extends React.Component {
       iTitle: '',
       iDescription: '',
       openWindow: false,
-      index: 0,
+      currentArray: [],
+      index: '',
     };
   }
 
@@ -162,31 +167,141 @@ class Events extends React.Component {
     }));
   }
 
-  handleWindow = index => {
+  handleWindow = (index, arr) => {
+    const { events } = this.props;
+    let array;
+    switch (arr) {
+      case 'my':
+        array = events.myevents[index].items;
+        break;
+      case 'coming':
+        array = events.comingevents[index].items;
+        break;
+      default:
+    }
     this.setState(state => ({
       openWindow: !state.openWindow,
+      currentArray: array,
       index,
     }));
   }
 
+  forgetEvent = index => {
+    const {
+      session, events, removeComingevent, addAllevent, profile,
+      removeGuestItem,
+    } = this.props;
+    const comingevent = events.comingevents[index];
+    axios.get(`v1/deleteguest?email=${session}&id=${comingevent.id}`)
+      .then(() => {
+        removeGuestItem(index, profile.id);
+        removeComingevent(comingevent.id);
+        comingevent.people = comingevent.people.filter(e => e.id !== profile.id);
+        addAllevent(comingevent);
+      })
+      .catch(() => {});
+  }
+
+  deleteEvent = index => {
+    const { events, removeMyevent } = this.props;
+    const myevent = events.myevents[index];
+    axios.get(`v1/deleteevent?id=${myevent.id}`)
+      .then(() => {
+        removeMyevent(myevent.id);
+      })
+      .catch(() => {});
+  }
+
+  seeGuests = (index, arr) => {
+    const { events } = this.props;
+    let guests;
+    switch (arr) {
+      case 'my':
+        guests = events.myevents[index].people;
+        break;
+      case 'coming':
+        guests = events.comingevents[index].people;
+        break;
+      default:
+    }
+    this.setState(state => ({
+      openWindow: !state.openWindow,
+      currentArray: guests,
+    }));
+  }
+
+  addMe = (id, item) => {
+    const { session, profile, addGuestItem } = this.props;
+    const { index } = this.state;
+    axios.get(`v1/createitemguest?email=${session}&id=${id}`)
+      .then(() => {
+        addGuestItem(index, item, profile);
+      })
+      .catch(() => {});
+  }
+
+  seeItemGuests = id => {
+    const div = document.getElementById(id);
+    div.style.display = 'flex';
+  }
+
+  closeGuestsView = id => {
+    const div = document.getElementById(id);
+    div.style.display = 'none';
+  }
 
   render() {
     const {
       render, title, description, date, time, openForm, items,
-      iTitle, iDescription, openWindow, index,
+      iTitle, iDescription, openWindow, currentArray,
     } = this.state;
     let showItems;
-    const { destroySession, events } = this.props;
+    const { destroySession, events, profile } = this.props;
     if (openWindow) {
-      showItems = events.myevents[index].items.map(item => (
-        <div className="item-cont" key={item.id}>
-          <span>{item.title}</span>
-          <button className="btn-item-people" type="button">
-            <i className="fas fa-users" />
-            <span>0</span>
-          </button>
-        </div>
-      ));
+      showItems = currentArray.map((item, i) => {
+        if (typeof item.title !== 'undefined') {
+          if (render === 'comingEvents') {
+            const person = item.people.filter(e => e.id === profile.id);
+            if (person.length > 0) {
+              return (
+                <Item
+                  key={item.id}
+                  item={item}
+                  addMe={() => this.addMe(item.id, i)}
+                  className="btn-add-guest already"
+                  seeItemGuests={id => this.seeItemGuests(id)}
+                  closeGuestsView={id => this.closeGuestsView(id)}
+                  coming
+                />
+              );
+            }
+            return (
+              <Item
+                key={item.id}
+                item={item}
+                addMe={() => this.addMe(item.id, i)}
+                seeItemGuests={id => this.seeItemGuests(id)}
+                closeGuestsView={id => this.closeGuestsView(id)}
+                coming
+              />
+            );
+          }
+          return (
+            <Item
+              key={item.id}
+              item={item}
+              seeItemGuests={id => this.seeItemGuests(id)}
+              closeGuestsView={id => this.closeGuestsView(id)}
+            />
+          );
+        }
+        return (
+          <div className="giver-cont" key={item.id}>
+            <img src={item.picture} alt="user.pic" />
+            <span>{item.name}</span>
+          </div>
+        );
+      });
     }
     const renderMyEvents = events.myevents.map((myevent, index) => (
       <Event
@@ -194,7 +309,20 @@ class Events extends React.Component {
         currentEvent={myevent}
         date=<HumanDate date={myevent.date} time={myevent.time} />
         my
-        seeItems={() => this.handleWindow(index)}
+        seeItems={() => this.handleWindow(index, 'my')}
+        seeGuests={() => this.seeGuests(index, 'my')}
+        deleteEvent={() => this.deleteEvent(index)}
+      />
+    ));
+    const renderComingEvents = events.comingevents.map((comingevent, index) => (
+      <Event
+        key={comingevent.id}
+        currentEvent={comingevent}
+        date=<HumanDate date={comingevent.date} time={comingevent.time} />
+        coming
+        seeItems={() => this.handleWindow(index, 'coming')}
+        forgetEvent={() => this.forgetEvent(index)}
+        seeGuests={() => this.seeGuests(index, 'coming')}
       />
     ));
     const renderItems = items.map(item => (
@@ -272,7 +400,7 @@ class Events extends React.Component {
                     />
                     <div className="btnsCont">
                       <button type="button" onClick={this.handleWishList}>Close</button>
-                      <button type="button" onClick={this.handleItems}>Add</button>
+                      <button className="btnAdd" type="button" onClick={this.handleItems}>Add</button>
                     </div>
                   </div>
                 </div>
@@ -289,18 +417,22 @@ class Events extends React.Component {
               <button type="submit">Save</button>
             </form>
           )}
-          {render === 'comingEvents'}
+          {render === 'comingEvents' && (
+            <div className="events-cont">
+              {renderComingEvents}
+            </div>
+          )}
         </div>
         {openWindow && (
-          <div
-            type="button"
-            tabIndex={0}
-            role="button"
-            className="cover-items"
-            onClick={this.handleWindow}
-            onKeyPress={this.onKeyPressHandler}
-          >
+          <div className="cover-items">
             <div className="showItems-cont">
+              <button
+                type="button"
+                onClick={this.handleWindow}
+                className="btn-close"
+              >
+                Close
+              </button>
               {showItems}
             </div>
           </div>
@@ -319,6 +451,11 @@ Events.propTypes = {
   openMenu: PropTypes.func.isRequired,
   addMyevents: PropTypes.func.isRequired,
   profile: PropTypes.instanceOf(Object).isRequired,
+  removeComingevent: PropTypes.func.isRequired,
+  addAllevent: PropTypes.func.isRequired,
+  removeMyevent: PropTypes.func.isRequired,
+  addGuestItem: PropTypes.func.isRequired,
+  removeGuestItem: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -332,6 +469,11 @@ const mapDispatchToProps = dispatch => ({
   destroySession: () => dispatch(destroySession()),
   openMenu: open => dispatch(openMenu(open)),
   addMyevents: myEvent => dispatch(addMyevents(myEvent)),
+  removeComingevent: id => dispatch(removeComingevent(id)),
+  addAllevent: allevent => dispatch(addAllevent(allevent)),
+  removeMyevent: myEvent => dispatch(removeMyevent(myEvent)),
+  addGuestItem: (coming, item, profile) => dispatch(addGuestItem(coming, item, profile)),
+  removeGuestItem: (coming, id) => dispatch(removeGuestItem(coming, id)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Events));

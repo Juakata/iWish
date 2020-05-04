@@ -48,14 +48,6 @@ const Header = ({
         </Link>
       </li>
       <li>
-        <Link className="link" to="/groups">
-          <div>
-            <i className="fas fa-users i-header" />
-            <p>Groups</p>
-          </div>
-        </Link>
-      </li>
-      <li>
         <Link className="link" to="/friends">
           <div>
             <i className="fas fa-user-friends i-header" />
@@ -86,14 +78,6 @@ const Header = ({
           <button type="button" onClick={menu}>
             <i className="fas fa-calendar-alt i-header" />
             <p>Events</p>
-          </button>
-        </Link>
-      </li>
-      <li>
-        <Link className="link" to="/groups">
-          <button type="button" onClick={menu}>
-            <i className="fas fa-users i-header" />
-            <p>Groups</p>
           </button>
         </Link>
       </li>

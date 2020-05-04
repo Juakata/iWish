@@ -10,22 +10,15 @@ import Event from '../components/event';
 import HumanDate from '../components/humanDate';
 import {
   destroySession, createProfile, addWish, openMenu, createRequests,
-  addWishesgivers, createMyEvents,
+  addWishesgivers, createMyEvents, removeAllevent, addComingevent,
+  createComingevents,
 } from '../actions/index';
 
 class Home extends React.Component {
-  constructor(props) {
-    super(props);
-    const { events } = this.props;
-    const n = events.allevents.length;
-    this.state = {
-      message: n === 0 ? 'No events to show.' : '',
-    };
-  }
-
   componentDidMount() {
     const {
       session, history, createProfile, addWishesgivers, createMyEvents,
+      createComingevents,
     } = this.props;
     const wishgivers = [];
     if (session === '' || session === 'destroy') {
@@ -87,24 +80,69 @@ class Home extends React.Component {
       const myEvents = [];
       axios.get(`v1/getmyevents?email=${session}`)
         .then(response => {
+          if (response.data.events.length === 0) {
+            createMyEvents(myEvents);
+          }
           response.data.events.forEach(myevent => {
             axios.get(`v1/getitems?event=${myevent.id}`)
               .then(response2 => {
-                const addevent = {
-                  id: myevent.id,
-                  title: myevent.title,
-                  description: myevent.description,
-                  date: myevent.date,
-                  time: myevent.time,
-                  profile: response.data.profile,
-                  people: [],
-                  items: response2.data,
-                };
-                myEvents.push(addevent);
+                axios.get(`v1/pullguests?id=${myevent.id}`)
+                  .then(response3 => {
+                    const addevent = {
+                      id: myevent.id,
+                      title: myevent.title,
+                      description: myevent.description,
+                      date: myevent.date,
+                      time: myevent.time,
+                      profile: response.data.profile,
+                      people: response3.data.guests,
+                      items: response2.data,
+                    };
+                    myEvents.push(addevent);
+                    createMyEvents(
+                      myEvents.sort((a, b) => new Date(a.date) - new Date(b.date)),
+                    );
+                  })
+                  .catch(() => {});
               })
               .catch(() => {});
           });
-          createMyEvents(myEvents);
+        })
+        .catch(() => {});
+      const comingEvents = [];
+      axios.get(`v1/pullcomingevents?email=${session}`)
+        .then(response => {
+          if (response.data.events.length === 0) {
+            createComingevents(comingEvents);
+          }
+          response.data.events.forEach(comingEvent => {
+            axios.get(`v1/getitems?event=${comingEvent.id}`)
+              .then(response2 => {
+                axios.get(`v1/getprofile?id=${comingEvent.user_id}`)
+                  .then(response3 => {
+                    axios.get(`v1/pullguests?id=${comingEvent.id}`)
+                      .then(response4 => {
+                        const addevent = {
+                          id: comingEvent.id,
+                          title: comingEvent.title,
+                          description: comingEvent.description,
+                          date: comingEvent.date,
+                          time: comingEvent.time,
+                          profile: response3.data,
+                          people: response4.data.guests,
+                          items: response2.data,
+                        };
+                        comingEvents.push(addevent);
+                        createComingevents(
+                          comingEvents.sort((a, b) => new Date(a.date) - new Date(b.date)),
+                        );
+                      })
+                      .catch(() => {});
+                  })
+                  .catch(() => {});
+              })
+              .catch(() => {});
+          });
         })
         .catch(() => {});
     }
@@ -124,12 +162,19 @@ class Home extends React.Component {
   }
 
   assistEvent = index => {
-    const result = index + 2;
-    return result;
+    const {
+      session, events, removeAllevent, addComingevent, profile,
+    } = this.props;
+    const comingEvent = events.allevents[index];
+    axios.get(`v1/createeventguest?email=${session}&id=${comingEvent.id}`)
+      .then(() => {
+        removeAllevent(comingEvent.id);
+        addComingevent(comingEvent, profile);
+      })
+      .catch(() => {});
   }
 
   render() {
-    const { message } = this.state;
     const { destroySession, events } = this.props;
     const renderAllevents = events.allevents.map((allevent, index) => (
       <Event
@@ -144,7 +189,6 @@ class Home extends React.Component {
       <div>
         <Header source={Logo} menu={this.menu} out={destroySession} />
         <div className="container">
-          {message}
           <div className="grid">
             {renderAllevents}
           </div>
@@ -165,12 +209,17 @@ Home.propTypes = {
   addWishesgivers: PropTypes.func.isRequired,
   createMyEvents: PropTypes.func.isRequired,
   events: PropTypes.instanceOf(Object).isRequired,
+  removeAllevent: PropTypes.func.isRequired,
+  addComingevent: PropTypes.func.isRequired,
+  createComingevents: PropTypes.func.isRequired,
+  profile: PropTypes.instanceOf(Object).isRequired,
 };
 
 const mapStateToProps = state => ({
   session: state.session,
   functions: state.functions,
   events: state.events,
+  profile: state.profile,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -181,6 +230,9 @@ const mapDispatchToProps = dispatch => ({
   createRequests: requests => dispatch(createRequests(requests)),
   addWishesgivers: wishesgivers => dispatch(addWishesgivers(wishesgivers)),
   createMyEvents: myEvents => dispatch(createMyEvents(myEvents)),
+  removeAllevent: allEvent => dispatch(removeAllevent(allEvent)),
+  addComingevent: (comingEvent, profile) => dispatch(addComingevent(comingEvent, profile)),
+  createComingevents: comingEvent => dispatch(createComingevents(comingEvent)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Home));

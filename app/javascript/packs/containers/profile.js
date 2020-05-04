@@ -169,7 +169,7 @@ class Profile extends React.Component {
       name, birthday, openWindow, picture, openForm,
       title, description, wishCreated, message,
     } = this.state;
-    const { profile } = this.props;
+    const { profile, destroySession, getFaces } = this.props;
     const wishes = typeof profile.wishes !== 'undefined' ? profile.wishes : [];
     const wishesRender = wishes.map(wish => (
       <Wish
@@ -180,7 +180,6 @@ class Profile extends React.Component {
         onClick={() => this.handleWish(wish)}
       />
     ));
-    const { destroySession, getFaces } = this.props;
     const images = getFaces().faces.map(face => (
       <ImgBtn source={face.src} id="img-btn-1" key={face.id} onClick={() => this.handlePicture(face.src)} />
     ));
@@ -223,13 +222,13 @@ class Profile extends React.Component {
               {!wishCreated && (
                 <div className="btnsCont">
                   <button type="button" onClick={this.handleWishList}>Close</button>
-                  <button id="btnAddWish" type="submit">Save</button>
+                  <button className="btnAdd" id="btnAddWish" type="submit">Save</button>
                 </div>
               )}
               {wishCreated && (
                 <div className="btnsCont">
                   <button type="button" onClick={this.deleteWish}>Delete</button>
-                  <button id="btnUpdateWish" type="submit">Update</button>
+                  <button className="btnAdd" id="btnUpdateWish" type="submit">Update</button>
                 </div>
               )}
             </form>
