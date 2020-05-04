@@ -80,11 +80,11 @@ class V1::FriendsController < ApplicationController
     if friend
       sender.profile.wishes.each do |wish|
         giver = wish.givers.find_by(friend_id: receiver.id)
-        giver.destroy if giver
+        giver&.destroy
       end
       receiver.profile.wishes.each do |wish|
         giver = wish.givers.find_by(friend_id: sender.id)
-        giver.destroy if giver
+        giver&.destroy
       end
       friend.destroy
       render json: { result: 'Destroy' }
@@ -93,10 +93,10 @@ class V1::FriendsController < ApplicationController
     end
   end
 
-  def destroy_guests (first, second)
+  def destroy_guests(first, second)
     first.events.each do |event|
-      eventGuest = second.profile.event_guests.find_by(event_id: event.id)
-      eventGuest.destroy if eventGuest
+      event_guest = second.profile.event_guests.find_by(event_id: event.id)
+      event_guest&.destroy
     end
   end
 end

@@ -17,11 +17,11 @@ class V1::ItemsController < ApplicationController
         guests.push(item_guest.profile)
       end
       send.push({
-          id: item.id,
-          title: item.title,
-          description: item.description,
-          people: guests,
-        })
+                  id: item.id,
+                  title: item.title,
+                  description: item.description,
+                  people: guests
+                })
     end
     render json: send
   end

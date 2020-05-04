@@ -18,7 +18,7 @@ class V1::EventGuestsController < ApplicationController
     event = Event.find(params[:id])
     event.items.each do |item|
       item_guest = item.item_guests.find_by(profile_id: profile.id)
-      item_guest.destroy if item_guest
+      item_guest&.destroy
     end
     event.event_guests.find_by(profile_id: profile.id).destroy
   end

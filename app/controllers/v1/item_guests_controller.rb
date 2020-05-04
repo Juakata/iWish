@@ -22,6 +22,6 @@ class V1::ItemGuestsController < ApplicationController
     profile = User.find_by(email: params[:email]).profile
     item = Item.find(params[:id])
     item_guest = item.item_guests.find_by(profile_id: profile.id)
-    item_guest.destroy if item_guest
+    item_guest&.destroy
   end
 end
