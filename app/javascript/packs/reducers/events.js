@@ -14,7 +14,7 @@ const initial = { myevents: [], allevents: [], comingevents: [] };
 const eventsReducer = (state = initial, action) => {
   const clone = { ...state };
   let allevents; let comingevents; let myevents;
-  let found; const items = []; let itemClone;
+  let people; let found; const items = []; let itemClone;
   switch (action.type) {
     case CREATE_MYEVENTS:
       clone.myevents = action.myevents;
@@ -48,8 +48,8 @@ const eventsReducer = (state = initial, action) => {
       clone.comingevents = comingevents;
       return clone;
     case ADD_GUEST_ITEM:
-      const { people } = clone.comingevents[action.coming].items[action.item];
-      found = people.filter(e => e.id !== action.profile.id);
+      people = clone.comingevents[action.coming].items[action.item];
+      found = people.people.filter(e => e.id !== action.profile.id);
       if (people.length === found.length) {
         people.push(action.profile);
       } else {
