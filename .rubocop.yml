@@ -34,6 +34,11 @@ Style/HashTransformKeys:
 Style/HashTransformValues:
   Enabled: false
 
+Lint/RaiseException:
+  Enabled: false
+Lint/StructNewOverride:
+  Enabled: false
+
 Layout/HashAlignment:
   EnforcedColonStyle: key
 Layout/ExtraSpacing:
